@@ -8,10 +8,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PIPOSKY2.Models
 {
-    public class SKYDB : DbContext
+    public class PIPOSKY2DbContext : DbContext
     {
-        public SKYDB()
-            : base("DbContext")
+        public PIPOSKY2DbContext()
+            : base("PIPOSKY2DbContext")
         {
 
         }
