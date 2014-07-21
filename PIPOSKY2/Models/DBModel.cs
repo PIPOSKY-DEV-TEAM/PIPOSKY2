@@ -22,11 +22,10 @@ namespace PIPOSKY2.Models
     {
         [Key]
         public int UserID { set; get; }
-
         [Required]
         public string UserName { set; get; }
-
         [Required]
         public string UserPwd { set; get; }
+        public string UserType { set; get; }
     }
 }
