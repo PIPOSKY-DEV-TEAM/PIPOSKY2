@@ -1,0 +1,30 @@
+﻿@model PIPOSKY2.Models.RegFormModel
+@{
+    ViewBag.Title = "Reg";
+}
+
+<h2>Reg</h2>
+@using (Html.BeginForm()){
+        
+    <p>
+        @Html.LabelFor(m => m.UserName)
+        @Html.EditorFor(m => m.UserName)
+    </p>
+    
+    <p>
+        @Html.LabelFor(m => m.UserPwd)
+        @Html.EditorFor(m => m.UserPwd)
+    </p>
+    
+    <p>
+        @Html.LabelFor(m => m.UserPwd2)
+        @Html.EditorFor(m => m.UserPwd2)
+    </p>
+    
+    <p>
+        @Html.LabelFor(m => m.UserEmail)
+        @Html.EditorFor(m => m.UserEmail)
+    </p>
+    
+    <input type="submit" value="提交"/>
+}
