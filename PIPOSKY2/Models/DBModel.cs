@@ -51,7 +51,7 @@ namespace PIPOSKY2.Models
         [Required]
         public DateTime EndTime { set; get; }
         [Required]
-        public IEnumerable<Problem> Problems { set; get; }
+        public ICollection<Problem> Problems { set; get; }
         public string ScorePath { set; get; }
     }
 }
