@@ -17,6 +17,7 @@ namespace PIPOSKY2.Models
         }
         public DbSet<User> Users { set; get; }
         public DbSet<Problem> Problems { set; get; }
+        public DbSet<Contest> Contests { set; get; }
     }
 
     public class User
