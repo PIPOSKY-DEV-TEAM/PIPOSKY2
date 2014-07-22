@@ -1,5 +1,29 @@
-﻿@{
-    ViewBag.Title = "Add";
+﻿@using PIPOSKY2.Models;
+@model Contest
+
+@{
+    ViewBag.Title = "添加比赛";
 }
 
-<h2>Add</h2>
+@using (Html.BeginForm("Add", "Contest", FormMethod.Post, new { @class="form-horizontal" }))
+{
+    <div class="control-group">
+        <label class="control-label" for="ContestName">比赛名称</label>
+        <div class="controls">
+            @Html.TextBoxFor(model => model.ContestName, new { id="ContestName", placeholder="比赛名称" })
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="StartTime">开始时间</label>
+        <div class="controls">
+            <input type="text" name="StartTime" placeholder="2014-07-08 00:00:00" />
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label" for="EndTime">结束时间</label>
+        <div class="controls">
+            <input type="text" name="EndTime" placeholder="2014-07-08 00:00:00" />
+        </div>
+    </div>
+    <button type="submit" class="btn">确定</button>
+}

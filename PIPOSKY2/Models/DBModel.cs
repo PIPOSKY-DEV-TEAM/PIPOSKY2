@@ -41,6 +41,8 @@ namespace PIPOSKY2.Models
         public string ProblemName { set; get; }
         [Required]
         public string ProblemPath { set; get; }
+        [Required]
+        public bool Visiable { set; get; }
     }
 
     public class Contest
@@ -48,10 +50,11 @@ namespace PIPOSKY2.Models
         [Key]
         public int ContestID { set; get; }
         [Required]
+        public string ContestName { set; get; }
+        [Required]
         public DateTime StartTime { set; get; }
         [Required]
         public DateTime EndTime { set; get; }
-        [Required]
         public IEnumerable<Problem> Problems { set; get; }
         public string ScorePath { set; get; }
     }

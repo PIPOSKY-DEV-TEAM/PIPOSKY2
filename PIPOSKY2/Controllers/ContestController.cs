@@ -21,5 +21,17 @@ namespace PIPOSKY2.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public ActionResult Add(Contest contest)
+        {
+            PIPOSKY2DbContext db = new PIPOSKY2DbContext();
+            Contest newContest = new Contest();
+            newContest.ContestName = contest.ContestName;
+            newContest.StartTime = DateTime.Parse(Request.Form["StartTime"]);
+            newContest.EndTime = DateTime.Parse(Request.Form["EndTime"]);
+            db.Contests.Add(newContest);
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
     }
 }
