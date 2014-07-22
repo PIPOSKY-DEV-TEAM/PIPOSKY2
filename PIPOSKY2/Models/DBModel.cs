@@ -15,7 +15,8 @@ namespace PIPOSKY2.Models
         {
 
         }
-        public DbSet<User> Users { get; set; }
+        public DbSet<User> Users { set; get; }
+        public DbSet<Problem> Problems { set; get; }
     }
 
     public class User
@@ -26,6 +27,31 @@ namespace PIPOSKY2.Models
         public string UserName { set; get; }
         [Required]
         public string UserPwd { set; get; }
+        [Required]
+        public string UserEmail { set; get; }
         public string UserType { set; get; }
+    }
+
+    public class Problem
+    {
+        [Key]
+        public int ProblemID { set; get; }
+        [Required]
+        public string ProblemName { set; get; }
+        [Required]
+        public string ProblemPath { set; get; }
+    }
+
+    public class Contest
+    {
+        [Key]
+        public int ContestID { set; get; }
+        [Required]
+        public DateTime StartTime { set; get; }
+        [Required]
+        public DateTime EndTime { set; get; }
+        [Required]
+        public IEnumerable<Problem> Problems { set; get; }
+        public string ScorePath { set; get; }
     }
 }
