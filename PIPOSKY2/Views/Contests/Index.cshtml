@@ -5,7 +5,7 @@
 @using PIPOSKY2.Models;
 @model IEnumerable<Contest>
 
-@Html.ActionLink("添加比赛", "Add", "Contest")
+@Html.ActionLink("添加比赛", "Add", "Contests")
 <table class="table">
     <tr>
         <th>比赛序号</th>
@@ -17,7 +17,7 @@
     {
         <tr>
             <td>@i.ContestID</td>
-            <td>@i.ContestName</td>
+            <td>@Html.ActionLink(@i.ContestName, "Contest", new { id = @i.ContestID })</td>
             <td>@i.StartTime</td>
             <td>@i.EndTime</td>
         </tr>

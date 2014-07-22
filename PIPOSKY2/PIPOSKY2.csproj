@@ -126,7 +126,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\ContestController.cs" />
+    <Compile Include="Controllers\ContestsController.cs" />
     <Compile Include="Controllers\UserController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -203,7 +203,7 @@
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Contest\Index.cshtml" />
+    <Content Include="Views\Contests\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
@@ -218,7 +218,10 @@
     <Content Include="Views\User\Reg.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Contest\Add.cshtml" />
+    <Content Include="Views\Contests\Add.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Contests\Contest.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

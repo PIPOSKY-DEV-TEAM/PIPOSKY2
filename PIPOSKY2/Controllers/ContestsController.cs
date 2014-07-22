@@ -7,20 +7,20 @@ using PIPOSKY2.Models;
 
 namespace PIPOSKY2.Controllers
 {
-    public class ContestController : Controller
+    public class ContestsController : Controller
     {
-        // GET: /Contest/
         PIPOSKY2DbContext db = new PIPOSKY2DbContext();
+
         public ActionResult Index()
         {
             return View(db.Contests);
         }
 
-        // GET: /Contest/Add
         public ActionResult Add()
         {
             return View();
         }
+
         [HttpPost]
         public ActionResult Add(AddContestFormModel addContest)
         {
@@ -38,6 +38,12 @@ namespace PIPOSKY2.Controllers
             {
                 return View();
             }
+        }
+
+        public ActionResult Contest()
+        {
+            
+            return View(db.Contests.Find(int.Parse(RouteData.Values["id"].ToString())));
         }
     }
 }

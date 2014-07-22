@@ -4,7 +4,7 @@
     ViewBag.Title = "添加比赛";
 }
 
-@using (Html.BeginForm("Add", "Contest", FormMethod.Post, new { @class="form-horizontal" }))
+@using (Html.BeginForm("Add", "Contests", FormMethod.Post, new { @class="form-horizontal" }))
 {
     <div class="control-group">
         @Html.LabelFor(model=>model.ContestName, new { @class="control-label", @for="ContestName" })
