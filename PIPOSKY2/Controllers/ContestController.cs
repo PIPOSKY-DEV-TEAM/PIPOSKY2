@@ -10,9 +10,9 @@ namespace PIPOSKY2.Controllers
     public class ContestController : Controller
     {
         // GET: /Contest/
+        PIPOSKY2DbContext db = new PIPOSKY2DbContext();
         public ActionResult Index()
         {
-            PIPOSKY2DbContext db = new PIPOSKY2DbContext();
             return View(db.Contests);
         }
 
@@ -24,14 +24,20 @@ namespace PIPOSKY2.Controllers
         [HttpPost]
         public ActionResult Add(AddContestFormModel addContest)
         {
-            PIPOSKY2DbContext db = new PIPOSKY2DbContext();
-            Contest contest = new Contest();
-            contest.ContestName = addContest.ContestName;
-            contest.StartTime = DateTime.Parse(addContest.StartTime);
-            contest.EndTime = DateTime.Parse(addContest.EndTime);
-            db.Contests.Add(contest);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+            try
+            {
+                Contest contest = new Contest();
+                contest.ContestName = addContest.ContestName;
+                contest.StartTime = DateTime.Parse(addContest.StartTime);
+                contest.EndTime = DateTime.Parse(addContest.EndTime);
+                db.Contests.Add(contest);
+                db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View();
+            }
         }
     }
 }
