@@ -22,14 +22,14 @@ namespace PIPOSKY2.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult Add(Contest contest)
+        public ActionResult Add(AddContestFormModel addContest)
         {
             PIPOSKY2DbContext db = new PIPOSKY2DbContext();
-            Contest newContest = new Contest();
-            newContest.ContestName = contest.ContestName;
-            newContest.StartTime = DateTime.Parse(Request.Form["StartTime"]);
-            newContest.EndTime = DateTime.Parse(Request.Form["EndTime"]);
-            db.Contests.Add(newContest);
+            Contest contest = new Contest();
+            contest.ContestName = addContest.ContestName;
+            contest.StartTime = DateTime.Parse(addContest.StartTime);
+            contest.EndTime = DateTime.Parse(addContest.EndTime);
+            db.Contests.Add(contest);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

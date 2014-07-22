@@ -34,4 +34,17 @@ namespace PIPOSKY2.Models
         [Display(Name = "Email")]
         public string UserEmail { get; set; }
     }
+
+    public class AddContestFormModel
+    {
+        [Required]
+        [Display(Name = "比赛名称")]
+        public string ContestName { get; set; }
+        [Required]
+        [Display(Name = "开始时间")]
+        public string StartTime { get; set; }
+        [Required]
+        [Display(Name = "结束时间")]
+        public string EndTime { get; set; }
+    }
 }
