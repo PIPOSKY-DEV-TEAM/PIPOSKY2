@@ -6,7 +6,7 @@ using System.Web.Mvc;
 
 namespace PIPOSKY2.Controllers
 {
-    public class RaceController : Controller
+    public class ContestController : Controller
     {
         //
         // GET: /Race/
