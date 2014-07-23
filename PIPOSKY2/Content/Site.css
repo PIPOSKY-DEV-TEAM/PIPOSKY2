@@ -10,11 +10,6 @@ header, footer, nav, section {
     display: block;
 }
 
-form label {
-    width:10em;
-    font-size: 1.2em;
-    text-align: right;
-}
 
 .text-box {
     width: 200px;

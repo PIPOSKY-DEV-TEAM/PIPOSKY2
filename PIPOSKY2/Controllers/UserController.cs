@@ -11,16 +11,17 @@ namespace PIPOSKY2.Controllers
     public class UserController : Controller
     {
         private PIPOSKY2DbContext db = new PIPOSKY2DbContext();
+
         [HttpPost]
         public ActionResult Reg(RegFormModel info)
         {
           
 		//验证输入
-			if (db.Users.Any(_ => _.UserName == info.UserName))
+			if (info.UserName!=null && db.Users.Any(_ => _.UserName == info.UserName))
 			{
 				ModelState.AddModelError("UserName","用户名已经存在");
 			}
-			if (db.Users.Any(_ => _.UserEmail == info.UserEmail))
+			if (info.UserEmail != null && db.Users.Any(_ => _.UserEmail == info.UserEmail))
 			{
 				ModelState.AddModelError("UserName", "Email已经存在");
 			}

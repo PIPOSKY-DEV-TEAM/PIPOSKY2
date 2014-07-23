@@ -41,6 +41,7 @@ namespace PIPOSKY2.Models
         public string UserEmail { get; set; }
     }
 
+
     public class AddContestFormModel
     {
         [Required]
