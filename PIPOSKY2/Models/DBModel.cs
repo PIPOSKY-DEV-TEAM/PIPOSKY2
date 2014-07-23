@@ -43,7 +43,9 @@ namespace PIPOSKY2.Models
         [Required]
         public string ProblemPath { set; get; }
         [Required]
-        public bool Visiable { set; get; }
+        public bool Visible { set; get; }
+        [Required]
+        public bool Downloadable { set; get; }
     }
 
     public class Contest
