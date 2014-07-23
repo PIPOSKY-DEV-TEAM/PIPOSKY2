@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "比赛";
+}
+
+@using PIPOSKY2.Models;
+@model IEnumerable<Contest>
+
+@Html.ActionLink("添加比赛", "Add", "Contests")
+<table class="table">
+    <tr>
+        <th>比赛序号</th>
+        <th>比赛名称</th>
+        <th>开始时间</th>
+        <th>结束时间</th>
+    </tr>
+    @foreach (Contest i in Model)
+    {
+        <tr>
+            <td>@i.ContestID</td>
+            <td>@Html.ActionLink(@i.ContestName, "Contest", new { id = @i.ContestID })</td>
+            <td>@i.StartTime</td>
+            <td>@i.EndTime</td>
+        </tr>
+    }
+</table>
