@@ -1,30 +1,32 @@
 ﻿@model PIPOSKY2.Models.RegFormModel
 @{
-    ViewBag.Title = "Reg";
+    ViewBag.Title = "注册用户";
 }
 
-<h2>Reg</h2>
+<h2>@ViewBag.Title</h2>
+
 @using (Html.BeginForm()){
-        
-    <p>
+
+    <div class="form-group">
         @Html.LabelFor(m => m.UserName)
-        @Html.EditorFor(m => m.UserName)
-    </p>
-    
-    <p>
-        @Html.LabelFor(m => m.UserPwd)
-        @Html.EditorFor(m => m.UserPwd)
-    </p>
-    
-    <p>
-        @Html.LabelFor(m => m.UserPwd2)
-        @Html.EditorFor(m => m.UserPwd2)
-    </p>
-    
-    <p>
-        @Html.LabelFor(m => m.UserEmail)
-        @Html.EditorFor(m => m.UserEmail)
-    </p>
-    
-    <input type="submit" value="提交"/>
+        @Html.TextBoxFor(m => m.UserName,new {@class ="form-control"})
+        @Html.ValidationMessageFor(m => m.UserName)
+    </div>
+<div class="form-group">
+    @Html.LabelFor(m => m.UserPwd)
+    @Html.PasswordFor(m => m.UserPwd,new {@class ="form-control"})
+    @Html.ValidationMessageFor(m => m.UserPwd)
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.UserPwd2)
+    @Html.PasswordFor(m => m.UserPwd2,new {@class ="form-control"})
+    @Html.ValidationMessageFor(m => m.UserPwd2)
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.UserEmail)
+    @Html.TextBoxFor(m => m.UserEmail,new {@class ="form-control",@type = "email"})
+    @Html.ValidationMessageFor(m => m.UserEmail)
+</div>
+
+<button type="submit" class="btn btn-default">Submit</button>
 }
