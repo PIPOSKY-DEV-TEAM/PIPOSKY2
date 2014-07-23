@@ -1,0 +1,12 @@
+﻿@{
+    ViewBag.Title = "Upload";
+}
+
+<h2>Upload</h2>
+@using (Html.BeginForm("Upload","Problem",FormMethod.Post,new {enctype="multipart/form-data"}))
+{
+    <p>题目名称：@Html.TextBox("ProblemName")</p>
+    <input type="file" name="file" accept="zip/rar"/>
+    <br />
+    <input type="submit" value="提交" />
+}
