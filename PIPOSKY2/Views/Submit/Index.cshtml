@@ -1,0 +1,50 @@
+﻿@model List<PIPOSKY2.Models.Submit>
+
+@{
+    ViewBag.Title = "评测状态";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create", "Create","Submit",new {@class="btn btn-default"})
+</p>
+<table class="table table-striped">
+    <tr>
+        <th>#</th>
+        <th>时间</th>
+        <th>题目</th>
+        <th>用户</th>
+        <th>语言</th>
+        <th>状态</th>
+    </tr>
+
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SubmitID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Time)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Prob.ProblemName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Lang)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.State)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.SubmitID }) |
+                @Html.ActionLink("Details", "Details", new { id=item.SubmitID }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.SubmitID })
+            </td>
+        </tr>
+}
+
+</table>

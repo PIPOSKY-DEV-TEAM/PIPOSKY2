@@ -19,6 +19,7 @@ namespace PIPOSKY2.Models
         public DbSet<User> Users { set; get; }
         public DbSet<Problem> Problems { set; get; }
         public DbSet<Contest> Contests { set; get; }
+		public DbSet<Submit> Submits { get; set; }
     }
 
     public class User
@@ -61,4 +62,23 @@ namespace PIPOSKY2.Models
         public List<int> ProblemIDs { set; get; }
         public string ScorePath { set; get; }
     }
+
+	public class Submit
+	{
+		[Key]
+		public int SubmitID { get; set; }
+		[Required]
+		public string Lang { get; set; }
+		[Required]
+		public virtual Problem Prob { get; set; }
+		[Required]
+		public virtual User User { get; set; }
+		[Required]
+		public DateTime Time { get; set; }
+
+		[Required]
+		public string Source { get; set; }
+		public string State { get; set; }
+		public string Result { get; set; }
+	}
 }

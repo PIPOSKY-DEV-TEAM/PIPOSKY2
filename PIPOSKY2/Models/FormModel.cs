@@ -54,4 +54,19 @@ namespace PIPOSKY2.Models
         [Display(Name = "结束时间")]
         public string EndTime { get; set; }
     }
+
+	public class SubmitFormModel
+	{
+		[Required]
+		[Display(Name = "语言")]
+		public string Lang { get; set; }
+
+		[Required]
+		[Display(Name="题目")]
+		public int PID { get; set; }
+
+		[Required]
+		[Display(Name="提交代码")]
+		public string Source { get; set; }
+	}
 }
