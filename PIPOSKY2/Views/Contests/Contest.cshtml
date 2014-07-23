@@ -6,3 +6,17 @@
 @model Contest
 
 <h1>@Model.ContestName</h1>
+<table class="table">
+    <tr>
+        <th>题目ID</th>
+        <th>题目名称</th>
+    </tr>
+    @foreach (int i in Model.ProblemIDs)
+    {
+        Problem problem = new PIPOSKY2DbContext().Problems.Find(i);
+        <tr>
+            <td>@problem.ProblemID</td>
+            <td>@problem.ProblemName</td>
+        </tr>
+    }
+</table>
