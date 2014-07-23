@@ -22,6 +22,14 @@ namespace PIPOSKY2.Models
 		public DbSet<Submit> Submits { get; set; }
     }
 
+	public class DBInitializer : DropCreateDatabaseIfModelChanges<PIPOSKY2DbContext>
+	{
+		protected override void Seed(PIPOSKY2DbContext context)
+		{
+			base.Seed(context);
+		}
+	}
+
     public class User
     {
         [Key]

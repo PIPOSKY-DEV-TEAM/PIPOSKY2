@@ -13,13 +13,22 @@
 
     <div class="form-group">
         @Html.LabelFor(model => model.Lang)
-        <select name="Lang">
+        <select name="Lang" class="form-control">
             <option value="cpp">C++</option>
             <option value="java">Java</option>
         </select>
     </div>
-    @Html.TextAreaFor(model => model.Source)
-            <input type="submit" value="Create" />
+    <div class="form-group">
+        @Html.LabelFor(model => model.PID)
+        @Html.TextBoxFor(model => model.PID,new {@class ="form-control"})
+        @Html.ValidationMessageFor(model => model.PID)
+    </div>
 
-}
+    <div class="form-group">
+        @Html.ValidationMessageFor(model => model.Source)
+        @Html.TextAreaFor(model => model.Source,new {@class ="form-control",@id="SrcEdit"})
+    </div>
+    <input type="submit" value="Create" />
+
+    }
 
