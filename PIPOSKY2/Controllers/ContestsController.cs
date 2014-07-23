@@ -30,6 +30,7 @@ namespace PIPOSKY2.Controllers
                 contest.ContestName = addContest.ContestName;
                 contest.StartTime = DateTime.Parse(addContest.StartTime);
                 contest.EndTime = DateTime.Parse(addContest.EndTime);
+                contest.ProblemIDs = new List<int>();
                 db.Contests.Add(contest);
                 db.SaveChanges();
                 return RedirectToAction("Index");
