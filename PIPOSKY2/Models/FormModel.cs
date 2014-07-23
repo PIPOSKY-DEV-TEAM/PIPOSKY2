@@ -24,14 +24,20 @@ namespace PIPOSKY2.Models
         [Required]
         [Display(Name = "用户名")]
         public string UserName { get; set; }
+
         [Required]
         [Display(Name = "密码")]
+		[DataType(DataType.Password)]
         public string UserPwd { get; set; }
+
         [Required]
         [Display(Name = "确认密码")]
+		[DataType(DataType.Password)]
         public string UserPwd2 { get; set; }
+
         [Required]
         [Display(Name = "Email")]
+		[DataType(DataType.EmailAddress)]
         public string UserEmail { get; set; }
     }
 }

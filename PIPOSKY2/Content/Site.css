@@ -1,9 +1,4 @@
-﻿.starter-template {
-      padding: 40px 15px;
-      text-align: center;
-}
-
-body {
+﻿body {
     font-size: .85em;
     font-family: "Segoe UI", Verdana, Helvetica, Sans-Serif;
     color: #232323;
@@ -15,6 +10,16 @@ header, footer, nav, section {
     display: block;
 }
 
+form label {
+    width:10em;
+    font-size: 1.2em;
+    text-align: right;
+}
+
+.text-box {
+    width: 200px;
+    font-size: 1.2em;
+}
 
 /* Styles for basic forms
 -----------------------------------------------------------*/
