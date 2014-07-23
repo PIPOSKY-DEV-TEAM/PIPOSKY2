@@ -15,6 +15,18 @@ namespace PIPOSKY2.Controllers
         {
             return View();
         }
+        public ActionResult Upload()
+        {
+            return View();
+        }
+        public ActionResult Edit()
+        {
+            return View();
+        }
+        public ActionResult Delete()
+        {
+            return View();
+        }
 
     }
 }
