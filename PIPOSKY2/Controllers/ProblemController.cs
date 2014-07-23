@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.IO;
+using PIPOSKY2.Models;
 
 namespace PIPOSKY2.Controllers
 {
@@ -11,25 +12,31 @@ namespace PIPOSKY2.Controllers
     {
         //
         // GET: /Problem/
-
+        PIPOSKY2DbContext db = new PIPOSKY2DbContext();
         public ActionResult Index()
+        {
+            return View(db.Problems);
+        }
+        public ActionResult Upload()
         {
             return View();
         }
-
-        public ActionResult Upload()
+        [HttpPost]
+        public ActionResult Upload(UploadProblemFormModel form)
         {
-            if (Request.HttpMethod == "POST")
+            Problem problem = new Problem();
+            problem.ProblemName = form.Name;
+            HttpPostedFileBase file = form.File;
+            if (file != null && file.ContentLength > 0)
             {
-                HttpPostedFileBase file = Request.Files["file"];
-                if (file != null && file.ContentLength > 0)
-                {
-                    string filePath = Path.Combine(HttpContext.Server.MapPath("~/Problems"), Path.GetFileName(file.FileName));
-                    file.SaveAs(filePath);
-                    return RedirectToAction("Index", "Problem");
-                }
+                string filePath = Path.Combine(HttpContext.Server.MapPath("~/Problems"), Path.GetFileName(file.FileName));
+                file.SaveAs(filePath);
+                problem.ProblemPath = filePath;
             }
-            return View();
+            else return View();
+            db.Problems.Add(problem);
+            db.SaveChanges();
+            return RedirectToAction("Index", "Problem");
         }
         public ActionResult Edit()
         {

@@ -1,4 +1,6 @@
-﻿@{
+﻿@using PIPOSKY2.Models 
+@model IEnumerable<Problem>
+@{
     ViewBag.Title = "Index";
 }
 
@@ -6,3 +8,21 @@
 @Html.ActionLink("上传题目", "Upload", "Problem")
 @Html.ActionLink("修改题目", "Edit", "Problem")
 @Html.ActionLink("删除题目", "Delete", "Problem")
+
+<table class="table">
+    <tr>
+        <th>题目ID</th>
+        <th>题目名称</th>
+        <th>存储路径</th>
+        <th>上传用户</th>
+    </tr>
+    @foreach (Problem i in Model)
+    {
+        <tr>
+            <td>@i.ProblemID</td>
+            <td>@i.ProblemName</td>
+            <td>@i.ProblemPath</td>
+            <td>@i.Creator</td>
+        </tr>
+    }
+</table>

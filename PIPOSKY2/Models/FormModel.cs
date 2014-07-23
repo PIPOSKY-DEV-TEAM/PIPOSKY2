@@ -54,4 +54,13 @@ namespace PIPOSKY2.Models
         [Display(Name = "结束时间")]
         public string EndTime { get; set; }
     }
+    public class UploadProblemFormModel
+    {
+        [Required]
+        [Display(Name = "题目名称")]
+        public string Name { get; set; }
+        [Required]
+        [Display(Name = "文件路径")]
+        public HttpPostedFileBase File{ get; set; }
+    }
 }

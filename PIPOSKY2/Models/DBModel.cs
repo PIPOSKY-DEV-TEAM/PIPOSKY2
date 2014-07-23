@@ -46,6 +46,8 @@ namespace PIPOSKY2.Models
         public bool Visible { set; get; }
         [Required]
         public bool Downloadable { set; get; }
+        [Required]
+        public int Creator { set; get; }
     }
 
     public class Contest
