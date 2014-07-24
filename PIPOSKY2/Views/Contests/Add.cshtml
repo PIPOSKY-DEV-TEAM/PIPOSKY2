@@ -1,4 +1,5 @@
-﻿@model PIPOSKY2.Models.AddContestFormModel
+﻿@using PIPOSKY2.Models
+@model PIPOSKY2.Models.AddContestFormModel
 
 @{
     ViewBag.Title = "添加比赛";
@@ -24,5 +25,17 @@
             @Html.TextBoxFor(model => model.EndTime, new { placeholder=@DateTime.Now.ToString() })
         </div>
     </div>
+    <ul>
+        @{
+            PIPOSKY2DbContext db = new PIPOSKY2DbContext();
+            foreach (var i in db.Problems)
+            {
+                <li>
+                    @i.ProblemName
+                    <input type="checkbox" name="@i.ProblemName" />
+                </li>
+            }
+        }
+    </ul>
     <button type="submit" class="btn">确定</button>
 }
