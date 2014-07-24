@@ -100,7 +100,10 @@ namespace PIPOSKY2.Controllers
             {
                 User tmp = Session["User"] as User;
             }
-            return View();
+            else
+            {
+                return View();
+            }
         }
     }
 }
