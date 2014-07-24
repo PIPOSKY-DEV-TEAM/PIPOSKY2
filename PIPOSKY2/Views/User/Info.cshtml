@@ -5,5 +5,24 @@
 
 <h2>Personal Info</h2>
 @using (Html.BeginForm()){
-    @Html.DisplayForModel();
+    <div>
+        <div>
+            @Html.ActionLink("修改个人信息","EditInfo","User")
+        </div>
+        <div>
+            @Html.LabelFor(m => m.UserName)
+        </div>
+        <div>
+            @Html.DisplayFor(m => m.UserName)
+        </div>
+        <div>
+            @Html.LabelFor(m => m.UserEmail)
+        </div>
+        <div>
+            @Html.DisplayFor(m => m.UserEmail)
+        </div>
+        <div>
+            @Html.ActionLink("修改密码","EditPwd","User")
+        </div>
+    </div>
 }

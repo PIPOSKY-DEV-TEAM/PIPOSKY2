@@ -41,6 +41,24 @@ namespace PIPOSKY2.Models
         public string UserEmail { get; set; }
     }
 
+    public class ChangePasswordModel {
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "原密码")]
+        public string OldPassword { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "新密码")]
+        public string NewPassword { get; set; }
+
+        [Required]
+        //[ValidatePasswordLength]
+        [DataType(DataType.Password)]
+        [Display(Name = "确认密码")]
+        [Compare("新密码", ErrorMessage = "新密码不匹配")]
+        public string ConfirmPassword { get; set; }
+    }
 
     public class AddContestFormModel
     {
@@ -79,4 +97,5 @@ namespace PIPOSKY2.Models
 		[Display(Name="提交代码")]
 		public string Source { get; set; }
 	}
+
 }

@@ -82,17 +82,19 @@ namespace PIPOSKY2.Controllers
             Session["User"] = null;
             Session["_UserName"] = null;
             Session["_UserID"] = null;
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Login", "User");
         }
 
         [HttpPost]
-        public ActionResult Edit(User EditUser)
+        public ActionResult EditInfo(User EditUser)
         {
             var tmp = Session["User"] as User;
             if (tmp!= null)
             {
-                tmp.UserName = EditUser.UserName;
-                tmp.UserEmail = EditUser.UserEmail;
+                if (EditUser.UserName != null && EditUser.UserName != "" && EditUser.UserName != " ")
+                    tmp.UserName = EditUser.UserName;
+                if (EditUser.UserEmail != null && EditUser.UserEmail != "" && EditUser.UserEmail != " ")
+                    tmp.UserEmail = EditUser.UserEmail;
 
                 db.Users.AddOrUpdate(tmp);
                 db.SaveChanges();
@@ -104,10 +106,35 @@ namespace PIPOSKY2.Controllers
             return RedirectToAction("info", "User");
         }
 
-        public ActionResult Edit()
+        public ActionResult EditInfo()
         {
-            var tmp = Session["_User"] as User;
+            var tmp = Session["User"] as User;
             return View(tmp);
+        }
+
+        [HttpPost]
+        public ActionResult EditPwd(ChangePasswordModel EditPwd)
+        {
+            var tmp = Session["User"] as User;
+            if (tmp.UserPwd != EditPwd.OldPassword) {
+                ModelState.AddModelError("MessageForWrongPwd", "原密码错误！");
+                return View();
+            }
+            if (EditPwd.NewPassword != EditPwd.ConfirmPassword) {
+                ModelState.AddModelError("MessageForWrongConfirmPwd", "新密码不匹配！");
+                return View();
+            }
+            tmp.UserPwd = EditPwd.NewPassword;
+            db.Users.AddOrUpdate(tmp);
+            db.SaveChanges();
+
+            Session["User"] = tmp;
+            return RedirectToAction("info", "User");
+        }
+
+        public ActionResult EditPwd()
+        {
+            return View();
         }
 
         public ActionResult Delete(int id)

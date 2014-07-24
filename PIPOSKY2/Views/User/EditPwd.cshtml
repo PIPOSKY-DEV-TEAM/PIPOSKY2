@@ -1,0 +1,43 @@
+﻿@model PIPOSKY2.Models.ChangePasswordModel
+@{
+    ViewBag.Title = "EditPwd";
+}
+
+<h2>EditPwd</h2>
+@using (Html.BeginForm()) { 
+    <div>
+        <div>
+            <div>
+                @Html.LabelFor(m => m.OldPassword)
+            </div>
+            <div>
+                @Html.EditorFor(m => m.OldPassword)
+            </div>
+            <div>
+                @Html.ValidationMessage("MessageForWrongPwd")
+            </div>
+        </div>
+        <div>
+            <div>
+                 @Html.LabelFor(m => m.NewPassword)
+            </div>
+            <div>
+                @Html.EditorFor(m => m.NewPassword)
+            </div>
+        </div>
+        <div>
+            <div>
+                 @Html.LabelFor(m => m.ConfirmPassword)
+            </div>
+            <div>
+                @Html.EditorFor(m => m.ConfirmPassword)
+            </div>
+            <div>
+                @Html.ValidationMessage("MessageForWrongConfirmPwd")
+            </div>
+        </div>
+        <div>
+            <input type="submit" value="保存" />
+        </div>
+    </div>
+}
