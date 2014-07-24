@@ -4,6 +4,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using System.Data.Entity;
+using System.Web.Mvc;
 using PIPOSKY2.Models;
 
 namespace PIPOSKY2.Controllers
@@ -28,15 +30,25 @@ namespace PIPOSKY2.Controllers
                 ret.ProbID = tmp.Prob.ProblemID;
                 ret.Source = tmp.Source;
                 ret.Lang = tmp.Lang;
+	            tmp.State = "run";
+				db.Entry(tmp).State = EntityState.Modified;
+	            db.SaveChanges();
             }
             return ret;
         }
 
         // POST api/judge
-        public void Post([FromBody]SubmitResultApiModels value)
-        {
-        }
-
+	    public void Post([FromBody] SubmitResultApiModels value)
+	    {
+		    var tmp = db.Submits.Find(value.SubmitID);
+		    if (tmp != null)
+		    {
+			    tmp.Result = value.Result;
+			    tmp.State = value.State;
+			    db.Entry(tmp).State = EntityState.Modified;
+			    db.SaveChanges();
+		    }
+	    }
 
     }
 }

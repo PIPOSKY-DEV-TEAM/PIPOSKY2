@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Web;
 
@@ -27,6 +28,27 @@ namespace PIPOSKY2.Models
 	{
 		protected override void Seed(PIPOSKY2DbContext context)
 		{
+			var user = new User {UserEmail = "test@test.com", UserName = "root", UserPwd = "admin", UserType = "root"};
+			context.Users.AddOrUpdate(user);
+
+			var prob = new Problem {Creator = user, Downloadable = true, ProblemName = "a", Visible = true};
+			context.Problems.AddOrUpdate(prob);
+
+			var submit = new Submit
+			{
+				Lang = "C++",
+				Prob = prob,
+				Result = "",
+				Source = "TEST",
+				State = "wait",
+				Time = DateTime.Now,
+				User = user
+			};
+
+			context.Submits.AddOrUpdate(submit);
+
+			context.SaveChanges();
+
 			base.Seed(context);
 		}
 	}
@@ -57,7 +79,7 @@ namespace PIPOSKY2.Models
         [Required]
         public bool Downloadable { set; get; }
         [Required]
-        public int Creator { set; get; }
+        public virtual User Creator { set; get; }
     }
 
     public class Contest

@@ -57,11 +57,12 @@ namespace PIPOSKY2.Controllers
             var tmp = db.Users.FirstOrDefault( m => m.UserName == currentLogin.UserName);
             if (tmp !=null )
             {
-                Session["User"] = tmp;
+                Session["_User"] = tmp;
+				Session["_UserID"] = tmp.UserID;
                 Session["_UserName"] = tmp.UserName;
                 return RedirectToAction("Index", "Home");
             }
-            ModelState.AddModelError("Message", "登陆失败！");
+			ModelState.AddModelError("KeepLogin", "登陆失败！");
             return View();
         }
 
