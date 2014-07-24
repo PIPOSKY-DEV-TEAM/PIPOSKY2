@@ -1,0 +1,28 @@
+﻿@model PIPOSKY2.Models.LoginFormModel
+@{
+    ViewBag.Title = "登陆";
+}
+
+<h2>Login</h2>
+@using (Html.BeginForm()) { 
+    <div>
+        <div>
+            <p>@Html.LabelFor(m => m.UserName)</p>
+            @Html.TextBoxFor(m => m.UserName)
+            @Html.ValidationMessageFor(m => m.UserName)
+        </div>
+        <div>
+            <p>@Html.LabelFor(m => m.UserPwd)</p>
+            @Html.PasswordFor(m => m.UserPwd)
+            @Html.ValidationMessageFor(m => m.UserPwd)
+        </div>
+        <div>
+            <p>@Html.LabelFor(m => m.KeepLogin)</p>
+            @Html.CheckBoxFor(m => m.KeepLogin)
+            @Html.ValidationMessageFor(m => m.KeepLogin)
+        </div>
+        <div>
+            <input type="submit" value="Login" />
+        </div>
+    </div>
+}
