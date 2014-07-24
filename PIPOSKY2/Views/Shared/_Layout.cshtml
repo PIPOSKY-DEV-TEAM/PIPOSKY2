@@ -18,6 +18,20 @@
                     <li>@Html.ActionLink("Problem", "Index", "Problem")</li>
                     <li>@Html.ActionLink("Status", "Index", "Submit")</li>
                     <li>@Html.ActionLink("Contest", "Index", "Contests")</li>
+                    <li>@{
+                        if(Session["_UserName"] != null){
+                            var temp = (string)Session["_UserName"];
+                            @Html.ActionLink(temp,"Index","Home")
+                        }
+                        else{
+                            @Html.ActionLink("Login","Login","User")
+                        }
+                     }</li>
+                    <li>@{
+                        if(Session["_UserName"] != null){
+                            @Html.ActionLink("Logoff","Logoff","User")
+                        }
+                     }</li>
                 </ul>
             </div><!--/.nav-collapse -->
         </div>
