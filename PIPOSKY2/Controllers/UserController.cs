@@ -57,7 +57,7 @@ namespace PIPOSKY2.Controllers
             var tmp = db.Users.FirstOrDefault( m => m.UserName == currentLogin.UserName);
             if (tmp !=null )
             {
-                Session["_UserID"] = tmp.UserID;
+                Session["User"] = tmp;
                 Session["_UserName"] = tmp.UserName;
                 return RedirectToAction("Index", "Home");
             }
@@ -71,7 +71,6 @@ namespace PIPOSKY2.Controllers
         }
 
         public ActionResult Exit() {
-            Session["_UserID"] = null;
             Session["_UserName"] = null;
             return RedirectToAction("Index", "Home");
         }
@@ -97,6 +96,10 @@ namespace PIPOSKY2.Controllers
 
         public ActionResult Info()
         {
+            if (Session["User"] != null)
+            {
+                User tmp = Session["User"] as User;
+            }
             return View();
         }
     }
