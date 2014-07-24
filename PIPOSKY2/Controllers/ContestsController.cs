@@ -22,15 +22,32 @@ namespace PIPOSKY2.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(AddContestFormModel addContest)
+        public ActionResult Add(AddContestFormModel addContest, FormCollection form)
         {
             try
             {
+                foreach (var i in db.Contests)
+                {
+                    if (i.ContestName == addContest.ContestName)
+                        return View(addContest);
+                }
                 Contest contest = new Contest();
                 contest.ContestName = addContest.ContestName;
                 contest.StartTime = DateTime.Parse(addContest.StartTime);
                 contest.EndTime = DateTime.Parse(addContest.EndTime);
                 db.Contests.Add(contest);
+                db.SaveChanges();
+                PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
+                foreach (var i in dbtemp.Problems)
+                {
+                    if (form[i.ProblemName] == "on")
+                    {
+                        ContestProblem contestProblem = new ContestProblem();
+                        contestProblem.ContestID = db.Contests.First(c => c.ContestName == addContest.ContestName).ContestID;
+                        contestProblem.ProblemID = db.Problems.First(p => p.ProblemName == i.ProblemName).ProblemID;
+                        db.ContestProblems.Add(contestProblem);
+                    }
+                }
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }

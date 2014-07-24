@@ -1,28 +1,40 @@
-﻿@model PIPOSKY2.Models.AddContestFormModel
+﻿@using PIPOSKY2.Models
+@model PIPOSKY2.Models.AddContestFormModel
 
 @{
     ViewBag.Title = "添加比赛";
 }
-
-@using (Html.BeginForm("Add", "Contests", FormMethod.Post, new { @class="form-horizontal" }))
+@using (Html.BeginForm("Add", "Contests", FormMethod.Post, new { role = "form" }))
 {
-    <div class="control-group">
-        @Html.LabelFor(model=>model.ContestName, new { @class="control-label", @for="ContestName" })
-        <div class="controls">
-            @Html.TextBoxFor(model => model.ContestName, new { placeholder="比赛名称" })
-        </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.ContestName, new { @for = "ContestName" })
+        @Html.TextBoxFor(model => model.ContestName, new { @class = "form-control", id = "ContestName", placeholder = "比赛名称" })
     </div>
-    <div class="control-group">
-        @Html.LabelFor(model=>model.StartTime, new { @class="control-label", @for="StartTime" })
-        <div class="controls">
-            @Html.TextBoxFor(model => model.StartTime, new { placeholder=@DateTime.Now.ToString() })
-        </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.StartTime, new { @for = "StartTime" })
+        @Html.TextBoxFor(model => model.StartTime, new { @class = "form-control", id = "StartTime", placeholder = @DateTime.Now.ToString() })
     </div>
-    <div class="control-group">
-        @Html.LabelFor(model=>model.EndTime, new { @class="control-label", @for="EndTime" })
-        <div class="controls">
-            @Html.TextBoxFor(model => model.EndTime, new { placeholder=@DateTime.Now.ToString() })
-        </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.EndTime, new { @class = "control-label", @for = "EndTime" })
+        @Html.TextBoxFor(model => model.EndTime, new { @class = "form-control", id = "EndTime", placeholder = @DateTime.Now.ToString() })
     </div>
-    <button type="submit" class="btn">确定</button>
+    <table class="table">
+        <tr>
+            <th>题目ID</th>
+            <th>题目名称</th>
+            <th>添加题目</th>
+        </tr>
+        @{
+    PIPOSKY2DbContext db = new PIPOSKY2DbContext();
+    foreach (var i in db.Problems)
+    {
+            <tr>
+                <td>@i.ProblemID</td>
+                <td>@i.ProblemName</td>
+                <td><input type="checkbox" name="@i.ProblemName" /></td>
+            </tr>
+    }
+        }
+    </table>
+    <button type="submit" class="btn btn-default">确定</button>
 }

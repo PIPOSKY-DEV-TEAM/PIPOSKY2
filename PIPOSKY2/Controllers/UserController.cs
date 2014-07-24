@@ -57,6 +57,7 @@ namespace PIPOSKY2.Controllers
             var tmp = db.Users.FirstOrDefault( m => m.UserName == currentLogin.UserName);
             if (tmp !=null )
             {
+
                 if (tmp.UserPwd != currentLogin.UserPwd) {
                     ModelState.AddModelError("MessageForPwd", "密码错误，登陆失败！");
                     return View();

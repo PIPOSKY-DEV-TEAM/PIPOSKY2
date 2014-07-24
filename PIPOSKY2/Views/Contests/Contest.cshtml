@@ -5,7 +5,7 @@
 @using PIPOSKY2.Models;
 @model Contest
 
-<h1>@Model.ContestName</h1>
+<h2>@Model.ContestName</h2>
 <table class="table">
     <tr>
         <th>题目ID</th>
@@ -13,12 +13,16 @@
     </tr>
     @{
         PIPOSKY2DbContext db = new PIPOSKY2DbContext();
-        foreach (var i in db.ContestProblems.Where(p=>p.ContestID == Model.ContestID))
+        PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
+        foreach (var i in db.ContestProblems)
         {
-            <tr>
-                <th>@i.ProblemID</th>
-                <th>@db.Problems.Find(i.ProblemID).ProblemName</th>
-            </tr>
+            if (i.ContestID == Model.ContestID)
+            {
+                <tr>
+                    <th>@i.ProblemID</th>
+                    <th>@dbtemp.Problems.Find(i.ProblemID).ProblemName</th>
+                </tr>
+            }
         }
     }
 </table>

@@ -16,9 +16,8 @@ namespace PIPOSKY2.Models
     public class SubmitResultApiModels
     {
         public int SubmitID { get; set; }
-        public string Lang { get; set; }
-        public int ProbID { get; set; }
-        public string Source { get; set; }
+		public string State { get; set; }
+		public string Result { get; set; }
     }
     
 }
