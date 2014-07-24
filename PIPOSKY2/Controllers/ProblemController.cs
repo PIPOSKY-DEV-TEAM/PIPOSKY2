@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.IO;
+using System.IO.Compression;
 using PIPOSKY2.Models;
 
 namespace PIPOSKY2.Controllers
@@ -37,10 +38,10 @@ namespace PIPOSKY2.Controllers
                 file.SaveAs(filePath);
                 problem.ProblemPath = filePath;
                 //解压缩
+                OpenZip(filePath);
                 //获取题目内容
             }
             else return View();
-            
             db.Problems.Add(problem);
             db.SaveChanges();
             return RedirectToAction("Index", "Problem");
@@ -56,6 +57,16 @@ namespace PIPOSKY2.Controllers
         public ActionResult ShowContent()
         {
             return View();
+        }
+        public bool OpenZip(string zipFile)
+        {
+            using (ZipArchive archive = ZipFile.Open(zipFile, ZipArchiveMode.Update))
+            {
+                //archive.CreateEntryFromFile(newFile, "NewEntry.txt");
+                //archive.ExtractToDirectory(extractPath);
+                return true;
+            } 
+            return false;
         }
     }
 }
