@@ -59,9 +59,6 @@ namespace PIPOSKY2.Controllers
             {
                 Session["_UserID"] = tmp.UserID;
                 Session["_UserName"] = tmp.UserName;
-                if (currentLogin.KeepLogin) { 
-                    
-                }
                 return RedirectToAction("Index", "Home");
             }
             ModelState.AddModelError("Message", "登陆失败！");
@@ -73,6 +70,11 @@ namespace PIPOSKY2.Controllers
             return View();
         }
 
+        public ActionResult Exit() {
+            Session["_UserID"] = null;
+            Session["_UserName"] = null;
+            return RedirectToAction("Index", "Home");
+        }
 
         public ActionResult Edit(int id, FormCollection collection)
         {
