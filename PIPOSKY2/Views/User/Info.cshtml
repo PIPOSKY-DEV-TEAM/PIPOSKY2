@@ -1,0 +1,9 @@
+﻿@model PIPOSKY2.Models.User
+@{
+    ViewBag.Title = "Info";
+}
+
+<h2>Personal Info</h2>
+@using (Html.BeginForm()){
+    @Html.DisplayForModel();
+}

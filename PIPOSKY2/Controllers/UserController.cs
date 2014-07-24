@@ -40,7 +40,8 @@ namespace PIPOSKY2.Controllers
 				db.SaveChanges();
 				Session.Add("_massage", "注册成功");
 				Session.Add("_UserID", tmp.UserID);
-				return RedirectToAction("Index", "Home");
+                Session.Add("_UserName", tmp.UserName);
+                return RedirectToAction("Index", "Home");
 			}
 			return View(info);
         }
@@ -53,15 +54,19 @@ namespace PIPOSKY2.Controllers
         [HttpPost]
         public ActionResult Login(LoginFormModel currentLogin)
         {
-
             var tmp = db.Users.FirstOrDefault( m => m.UserName == currentLogin.UserName);
             if (tmp !=null )
             {
+                if (tmp.UserPwd != currentLogin.UserPwd) {
+                    ModelState.AddModelError("MessageForPwd", "密码错误，登陆失败！");
+                    return View();
+                }
                 Session["User"] = tmp;
+                Session["_UserID"] = tmp.UserID;
                 Session["_UserName"] = tmp.UserName;
                 return RedirectToAction("Index", "Home");
             }
-            ModelState.AddModelError("Message", "登陆失败！");
+            ModelState.AddModelError("MessageForName", "用户名不存在，登陆失败！");
             return View();
         }
 
@@ -71,22 +76,28 @@ namespace PIPOSKY2.Controllers
         }
 
         public ActionResult Exit() {
+            Session["User"] = null;
             Session["_UserName"] = null;
+            Session["_UserID"] = null;
             return RedirectToAction("Index", "Home");
         }
 
-        public ActionResult Edit(int id, FormCollection collection)
+        [HttpPost]
+        public ActionResult Edit(User tempUser)
         {
-            try
+            var tmp = (int)Session["_UserID"];
+            if (db.Users.Find(tmp) != null)
             {
-                // TODO: Add update logic here
+                (db.Users.Find(tmp)).UserName = tempUser.UserName;
+                (db.Users.Find(tmp)).UserEmail = tempUser.UserEmail;
+            }
+            return RedirectToAction("info", "User");
+        }
 
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                return View();
-            }
+        public ActionResult Edit()
+        {
+            var tmp = Session["_User"] as User;
+            return View(tmp);
         }
 
         public ActionResult Delete(int id)
@@ -99,10 +110,9 @@ namespace PIPOSKY2.Controllers
             if (Session["User"] != null)
             {
                 User tmp = Session["User"] as User;
+                return View(tmp);
             }
-            
-                return View();
-        
+            return View();
         }
     }
 }

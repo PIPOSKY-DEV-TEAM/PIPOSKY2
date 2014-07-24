@@ -21,7 +21,7 @@
                     <li>@{
                         if(Session["_UserName"] != null){
                             var temp = (string)Session["_UserName"];
-                            @Html.ActionLink(temp,"Index","Home")
+                            @Html.ActionLink(temp,"info","User")
                         }
                         else{
                             @Html.ActionLink("Login","Login","User")
@@ -30,6 +30,9 @@
                     <li>@{
                         if(Session["_UserName"] != null){
                             @Html.ActionLink("Exit","Exit","User")
+                        }
+                        else{
+                            @Html.ActionLink("Register","Reg","User")
                         }
                      }</li>
                 </ul>

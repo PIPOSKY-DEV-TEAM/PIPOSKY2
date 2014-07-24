@@ -10,11 +10,13 @@
             <p>@Html.LabelFor(m => m.UserName)</p>
             @Html.TextBoxFor(m => m.UserName)
             @Html.ValidationMessageFor(m => m.UserName)
+            <div>@Html.ValidationMessage("MessageForName")</div>
         </div>
         <div>
             <p>@Html.LabelFor(m => m.UserPwd)</p>
             @Html.PasswordFor(m => m.UserPwd)
             @Html.ValidationMessageFor(m => m.UserPwd)
+            <div>@Html.ValidationMessage("MessageForPwd")</div>
         </div>
         <div>
             <p>@Html.LabelFor(m => m.KeepLogin)</p>
