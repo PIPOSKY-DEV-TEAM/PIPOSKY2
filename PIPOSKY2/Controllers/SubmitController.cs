@@ -22,9 +22,7 @@ namespace PIPOSKY2.Controllers
         {
 	        var tmp = db.Submits.Find(id);
 	        if (tmp == null)
-	        {
 		        return HttpNotFound();
-	        }
             return View(tmp);
         }
 
@@ -38,19 +36,18 @@ namespace PIPOSKY2.Controllers
         {
             try
             {
-				var tmp = new Submit();
-	            tmp.Lang = info.Lang;
-	            tmp.Prob = db.Problems.Find(info.PID);
-	            if (tmp.Prob == null)
-	            {
-					ModelState.AddModelError("PID","没有这样的题目");
-	            }
-	            tmp.User = db.Users.Find(Session["_User"]);
-				
-	            tmp.Time = DateTime.Now;
-	            tmp.Source = info.Source;
+				var tmp = new Submit {
+					Lang = info.Lang, 
+					Prob = db.Problems.Find(info.PID),
+					Source = info.Source,
+					Time = DateTime.Now,
+					State = "wait",
+					User = db.Users.Find(Session["_UserID"] as int?)
+				};
 
-				tmp.State = "wait";
+	            if (tmp.Prob == null)
+					ModelState.AddModelError("PID","没有这样的题目");
+	            
 	            if (ModelState.IsValid)
 	            {
 		            db.Submits.Add(tmp);
