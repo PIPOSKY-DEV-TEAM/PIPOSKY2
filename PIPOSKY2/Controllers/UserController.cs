@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.Ajax.Utilities;
 using PIPOSKY2.Models;
-
+using System.Data.Entity.Migrations;
 namespace PIPOSKY2.Controllers
 {
     public class UserController : Controller
@@ -38,10 +38,12 @@ namespace PIPOSKY2.Controllers
 				var tmp = new User {UserName = info.UserName, UserPwd = info.UserPwd, UserEmail = info.UserEmail, UserType = ""};
 				db.Users.Add(tmp);
 				db.SaveChanges();
-				Session.Add("_massage", "注册成功");
-				Session.Add("_UserID", tmp.UserID);
-                Session.Add("_UserName", tmp.UserName);
-                return RedirectToAction("Index", "Home");
+                tmp = db.Users.FirstOrDefault(m => m.UserName == tmp.UserName);
+                Session["User"] = tmp;
+				//Session["_massage"] =  "注册成功";
+				Session["_UserID"] = tmp.UserID;
+                Session["_UserName"] = tmp.UserName;
+                return RedirectToAction("info","User");
 			}
 			return View(info);
         }
@@ -65,7 +67,7 @@ namespace PIPOSKY2.Controllers
                 Session["User"] = tmp;
                 Session["_UserID"] = tmp.UserID;
                 Session["_UserName"] = tmp.UserName;
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("info","User");
             }
             ModelState.AddModelError("MessageForName", "用户名不存在，登陆失败！");
             return View();
@@ -84,13 +86,20 @@ namespace PIPOSKY2.Controllers
         }
 
         [HttpPost]
-        public ActionResult Edit(User tempUser)
+        public ActionResult Edit(User EditUser)
         {
-            var tmp = (int)Session["_UserID"];
-            if (db.Users.Find(tmp) != null)
+            var tmp = Session["User"] as User;
+            if (tmp!= null)
             {
-                (db.Users.Find(tmp)).UserName = tempUser.UserName;
-                (db.Users.Find(tmp)).UserEmail = tempUser.UserEmail;
+                tmp.UserName = EditUser.UserName;
+                tmp.UserEmail = EditUser.UserEmail;
+
+                db.Users.AddOrUpdate(tmp);
+                db.SaveChanges();
+
+                Session["User"] = tmp;
+                Session["_UserID"] = tmp.UserID;
+                Session["_UserName"] = tmp.UserName;
             }
             return RedirectToAction("info", "User");
         }
