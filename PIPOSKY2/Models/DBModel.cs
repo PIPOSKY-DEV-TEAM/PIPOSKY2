@@ -79,7 +79,7 @@ namespace PIPOSKY2.Models
         [Required]
         public bool Downloadable { set; get; }
         [Required]
-        public virtual User Creator { set; get; }
+        public int Creator { set; get; }
     }
 
     public class Contest
