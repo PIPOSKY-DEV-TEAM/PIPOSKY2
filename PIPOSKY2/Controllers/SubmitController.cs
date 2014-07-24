@@ -14,13 +14,16 @@ namespace PIPOSKY2.Controllers
 
         public ActionResult Index()
         {
-			List<Submit> tmp = db.Submits.OrderBy(_ => _.SubmitID).Take(10).ToList();
+			List<Submit> tmp = db.Submits.OrderBy(_ => _.SubmitID).Take(30).ToList();
             return View(tmp);
         }
 
         public ActionResult Details(int id)
         {
-            return View();
+	        var tmp = db.Submits.Find(id);
+	        if (tmp == null)
+		        return HttpNotFound();
+            return View(tmp);
         }
 
         public ActionResult Create()
@@ -33,14 +36,30 @@ namespace PIPOSKY2.Controllers
         {
             try
             {
-                // TODO: Add insert logic here
+				var tmp = new Submit {
+					Lang = info.Lang, 
+					Prob = db.Problems.Find(info.PID),
+					Source = info.Source,
+					Time = DateTime.Now,
+					State = "wait",
+					User = db.Users.Find(Session["_UserID"] as int?)
+				};
 
-                return RedirectToAction("Index");
+	            if (tmp.Prob == null)
+					ModelState.AddModelError("PID","没有这样的题目");
+	            
+	            if (ModelState.IsValid)
+	            {
+		            db.Submits.Add(tmp);
+		            db.SaveChanges();
+		            return RedirectToAction("Index");
+	            }
             }
             catch
             {
-                return View();
+            
             }
+			return View();
         }
     }
 }

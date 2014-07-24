@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Web;
 
@@ -20,7 +21,37 @@ namespace PIPOSKY2.Models
         public DbSet<Problem> Problems { set; get; }
         public DbSet<Contest> Contests { set; get; }
 		public DbSet<Submit> Submits { get; set; }
+        public DbSet<ContestProblem> ContestProblems { set; get; }
     }
+
+	public class DBInitializer : DropCreateDatabaseIfModelChanges<PIPOSKY2DbContext>
+	{
+		protected override void Seed(PIPOSKY2DbContext context)
+		{
+			var user = new User {UserEmail = "test@test.com", UserName = "root", UserPwd = "admin", UserType = "root"};
+			context.Users.AddOrUpdate(user);
+
+			var prob = new Problem {Creator = user, Downloadable = true, ProblemName = "a", Visible = true};
+			context.Problems.AddOrUpdate(prob);
+
+			var submit = new Submit
+			{
+				Lang = "C++",
+				Prob = prob,
+				Result = "",
+				Source = "TEST",
+				State = "wait",
+				Time = DateTime.Now,
+				User = user
+			};
+
+			context.Submits.AddOrUpdate(submit);
+
+			context.SaveChanges();
+
+			base.Seed(context);
+		}
+	}
 
     public class User
     {
@@ -48,7 +79,7 @@ namespace PIPOSKY2.Models
         [Required]
         public bool Downloadable { set; get; }
         [Required]
-        public int Creator { set; get; }
+        public virtual User Creator { set; get; }
     }
 
     public class Contest
@@ -61,8 +92,17 @@ namespace PIPOSKY2.Models
         public DateTime StartTime { set; get; }
         [Required]
         public DateTime EndTime { set; get; }
-        public List<int> ProblemIDs { set; get; }
         public string ScorePath { set; get; }
+    }
+
+    public class ContestProblem
+    {
+        [Key]
+        public int ContestProblemID { set; get; }
+        [Required]
+        public int ContestID { set; get; }
+        [Required]
+        public int ProblemID { set; get; }
     }
 
 	public class Submit

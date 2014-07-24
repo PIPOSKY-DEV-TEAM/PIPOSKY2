@@ -11,12 +11,18 @@
         <th>题目ID</th>
         <th>题目名称</th>
     </tr>
-    @foreach (int i in Model.ProblemIDs)
-    {
-        Problem problem = new PIPOSKY2DbContext().Problems.Find(i);
-        <tr>
-            <td>@problem.ProblemID</td>
-            <td>@problem.ProblemName</td>
-        </tr>
+    @{
+        PIPOSKY2DbContext db = new PIPOSKY2DbContext();
+        PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
+        foreach (var i in db.ContestProblems)
+        {
+            if (i.ContestID == Model.ContestID)
+            {
+                <tr>
+                    <th>@i.ProblemID</th>
+                    <th>@dbtemp.Problems.Find(i.ProblemID).ProblemName</th>
+                </tr>
+            }
+        }
     }
 </table>

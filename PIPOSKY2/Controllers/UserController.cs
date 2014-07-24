@@ -50,6 +50,32 @@ namespace PIPOSKY2.Controllers
             return View();
         }
 
+        [HttpPost]
+        public ActionResult Login(LoginFormModel currentLogin)
+        {
+
+            var tmp = db.Users.FirstOrDefault( m => m.UserName == currentLogin.UserName);
+            if (tmp !=null )
+            {
+                Session["_User"] = tmp;
+				Session["_UserID"] = tmp.UserID;
+                Session["_UserName"] = tmp.UserName;
+                return RedirectToAction("Index", "Home");
+            }
+			ModelState.AddModelError("KeepLogin", "登陆失败！");
+            return View();
+        }
+
+        public ActionResult Login()
+        {
+            return View();
+        }
+
+        public ActionResult Exit() {
+            Session["_UserName"] = null;
+            return RedirectToAction("Index", "Home");
+        }
+
         public ActionResult Edit(int id, FormCollection collection)
         {
             try
@@ -67,6 +93,17 @@ namespace PIPOSKY2.Controllers
         public ActionResult Delete(int id)
         {
             return View();
+        }
+
+        public ActionResult Info()
+        {
+            if (Session["User"] != null)
+            {
+                User tmp = Session["User"] as User;
+            }
+            
+                return View();
+        
         }
     }
 }
