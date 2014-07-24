@@ -20,6 +20,7 @@ namespace PIPOSKY2.Models
         public DbSet<Problem> Problems { set; get; }
         public DbSet<Contest> Contests { set; get; }
 		public DbSet<Submit> Submits { get; set; }
+        public DbSet<ContestProblem> ContestProblems { set; get; }
     }
 
 	public class DBInitializer : DropCreateDatabaseIfModelChanges<PIPOSKY2DbContext>
@@ -69,8 +70,17 @@ namespace PIPOSKY2.Models
         public DateTime StartTime { set; get; }
         [Required]
         public DateTime EndTime { set; get; }
-        public ICollection<int> ProblemIDs { set; get; }
         public string ScorePath { set; get; }
+    }
+
+    public class ContestProblem
+    {
+        [Key]
+        public int ContestProblemID { set; get; }
+        [Required]
+        public int ContestID { set; get; }
+        [Required]
+        public int ProblemID { set; get; }
     }
 
 	public class Submit
