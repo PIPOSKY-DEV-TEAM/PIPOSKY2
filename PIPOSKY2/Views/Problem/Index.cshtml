@@ -6,8 +6,7 @@
 
 <h2>Index</h2>
 @Html.ActionLink("上传题目", "Upload", "Problem")
-@Html.ActionLink("修改题目", "Edit", "Problem")
-@Html.ActionLink("删除题目", "Delete", "Problem")
+<p></p>
 
 <table class="table">
     <tr>
@@ -15,14 +14,18 @@
         <th>题目名称</th>
         <th>存储路径</th>
         <th>上传用户</th>
+        <th></th>
+        <th></th>
     </tr>
     @foreach (Problem i in Model)
     {
         <tr>
             <td>@i.ProblemID</td>
-            <td>@i.ProblemName</td>
+            <td>@Html.ActionLink(@i.ProblemName, "Content", new { id = @i.ProblemID })</td>
             <td>@i.ProblemPath</td>
             <td>@i.Creator</td>
+            <td>@Html.ActionLink("编辑", "Edit", new { id= @i.ProblemID})</td>
+            <td>@Html.ActionLink("删除", "Delete", new { id= @i.ProblemID})</td>
         </tr>
     }
 </table>

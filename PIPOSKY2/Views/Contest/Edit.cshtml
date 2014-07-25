@@ -1,5 +1,54 @@
-﻿@{
+﻿@using PIPOSKY2.Models
+@model PIPOSKY2.Models.ContestFormModel
+
+@{
     ViewBag.Title = "编辑比赛";
 }
-
-<h2>Edit</h2>
+@using (Html.BeginForm("Edit", "Contest", FormMethod.Post, new { role = "form" }))
+{
+    @Html.TextBoxFor(model => model.ContestID, new { type = "hidden" });
+    <div class="form-group">
+        @Html.LabelFor(model => model.ContestName, new { @for = "ContestName" })
+        @Html.TextBoxFor(model => model.ContestName, new { @class = "form-control", id = "ContestName", placeholder = "比赛名称" })
+        @Html.ValidationMessageFor(model => model.ContestName)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.StartTime, new { @for = "StartTime" })
+        @Html.TextBoxFor(model => model.StartTime, new { @class = "form-control", id = "StartTime", placeholder = @DateTime.Now.ToString() })
+        @Html.ValidationMessageFor(model => model.StartTime)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.EndTime, new { @class = "control-label", @for = "EndTime" })
+        @Html.TextBoxFor(model => model.EndTime, new { @class = "form-control", id = "EndTime", placeholder = @DateTime.Now.ToString() })
+        @Html.ValidationMessageFor(model => model.EndTime)
+    </div>
+    <table class="table">
+        <tr>
+            <th>题目ID</th>
+            <th>题目名称</th>
+            <th>添加题目</th>
+        </tr>
+        @{
+    PIPOSKY2DbContext db = new PIPOSKY2DbContext();
+    PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
+    foreach (var i in dbtemp.Problems)
+    {
+            <tr>
+                <td>@i.ProblemID</td>
+                <td>@i.ProblemName</td>
+                @{
+        if (db.ContestProblems.Where(p => p.ContestID == Model.ContestID).Where(p => p.ProblemID == i.ProblemID).Count() > 0)
+        {
+                    <td><input type="checkbox" name="@i.ProblemID" checked="checked"/></td>
+        }
+        else
+        {
+                    <td><input type="checkbox" name="@i.ProblemID" /></td>
+        }
+                }
+            </tr>
+    }
+        }
+    </table>
+    <button type="submit" class="btn btn-default">确定</button>
+}

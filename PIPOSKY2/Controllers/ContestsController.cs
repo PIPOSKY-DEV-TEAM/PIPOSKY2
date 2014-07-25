@@ -22,7 +22,7 @@ namespace PIPOSKY2.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(AddContestFormModel addContest, FormCollection form)
+        public ActionResult Add(ContestFormModel addContest, FormCollection form)
         {
             addContest.ContestName = addContest.ContestName.Trim();
             if (addContest.ContestName == "")
@@ -60,9 +60,7 @@ namespace PIPOSKY2.Controllers
             }
             db.Contests.Add(contest);
             db.SaveChanges();
-            PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
-            foreach (var i in dbtemp.Problems)
-            {
+            foreach (var i in db.Problems)
                 if (form[i.ProblemID.ToString()] == "on")
                 {
                     ContestProblem contestProblem = new ContestProblem();
@@ -70,7 +68,27 @@ namespace PIPOSKY2.Controllers
                     contestProblem.ProblemID = i.ProblemID;
                     db.ContestProblems.Add(contestProblem);
                 }
-            }
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Delete()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Delete(FormCollection form)
+        {
+            PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
+            foreach (var i in dbtemp.Contests)
+                if (form[i.ContestID.ToString()] == "on")
+                {
+                    foreach (var j in db.ContestProblems)
+                        if (j.ContestID == i.ContestID)
+                            db.ContestProblems.Remove(j);
+                    db.Contests.Remove(db.Contests.Find(i.ContestID));
+                }
             db.SaveChanges();
             return RedirectToAction("Index");
         }
