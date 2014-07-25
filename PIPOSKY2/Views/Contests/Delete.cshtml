@@ -1,0 +1,27 @@
+﻿@using PIPOSKY2.Models
+
+@{
+    ViewBag.Title = "删除比赛";
+}
+@using (Html.BeginForm("Delete", "Contests", FormMethod.Post, new { role = "form" }))
+{
+    <table class="table">
+        <tr>
+            <th>比赛ID</th>
+            <th>比赛名称</th>
+            <th>删除比赛</th>
+        </tr>
+        @{
+    PIPOSKY2DbContext db = new PIPOSKY2DbContext();
+    foreach (var i in db.Contests)
+    {
+            <tr>
+                <td>@i.ContestID</td>
+                <td>@i.ContestName</td>
+                <td><input type="checkbox" name="@i.ContestID" /></td>
+            </tr>
+    }
+        }
+    </table>
+    <button type="submit" class="btn btn-default">确定</button>
+}

@@ -22,45 +22,75 @@ namespace PIPOSKY2.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(AddContestFormModel addContest, FormCollection form)
+        public ActionResult Add(ContestFormModel addContest, FormCollection form)
         {
+            addContest.ContestName = addContest.ContestName.Trim();
+            if (addContest.ContestName == "")
+            {
+                ModelState.AddModelError("ContestName", "比赛名不能为空");
+                return View(addContest);
+            }
+            foreach (var i in db.Contests)
+            {
+                if (i.ContestName == addContest.ContestName)
+                {
+                    ModelState.AddModelError("ContestName", "比赛名已存在");
+                    return View(addContest);
+                }
+            }
+            Contest contest = new Contest();
+            contest.ContestName = addContest.ContestName;
             try
             {
-                foreach (var i in db.Contests)
-                {
-                    if (i.ContestName == addContest.ContestName)
-                        return View(addContest);
-                }
-                Contest contest = new Contest();
-                contest.ContestName = addContest.ContestName;
                 contest.StartTime = DateTime.Parse(addContest.StartTime);
-                contest.EndTime = DateTime.Parse(addContest.EndTime);
-                db.Contests.Add(contest);
-                db.SaveChanges();
-                PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
-                foreach (var i in dbtemp.Problems)
-                {
-                    if (form[i.ProblemName] == "on")
-                    {
-                        ContestProblem contestProblem = new ContestProblem();
-                        contestProblem.ContestID = db.Contests.First(c => c.ContestName == addContest.ContestName).ContestID;
-                        contestProblem.ProblemID = db.Problems.First(p => p.ProblemName == i.ProblemName).ProblemID;
-                        db.ContestProblems.Add(contestProblem);
-                    }
-                }
-                db.SaveChanges();
-                return RedirectToAction("Index");
             }
             catch
             {
-                return View();
+                ModelState.AddModelError("StartTime", "开始时间格式不正确");
+                return View(addContest);
             }
+            try
+            {
+                contest.EndTime = DateTime.Parse(addContest.EndTime);
+            }
+            catch
+            {
+                ModelState.AddModelError("EndTime", "结束时间格式不正确");
+                return View(addContest);
+            }
+            db.Contests.Add(contest);
+            db.SaveChanges();
+            foreach (var i in db.Problems)
+                if (form[i.ProblemID.ToString()] == "on")
+                {
+                    ContestProblem contestProblem = new ContestProblem();
+                    contestProblem.ContestID = contest.ContestID;
+                    contestProblem.ProblemID = i.ProblemID;
+                    db.ContestProblems.Add(contestProblem);
+                }
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
 
-        public ActionResult Contest()
+        public ActionResult Delete()
         {
-            
-            return View(db.Contests.Find(int.Parse(RouteData.Values["id"].ToString())));
+            return View();
+        }
+
+        [HttpPost]
+        public ActionResult Delete(FormCollection form)
+        {
+            PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
+            foreach (var i in dbtemp.Contests)
+                if (form[i.ContestID.ToString()] == "on")
+                {
+                    foreach (var j in db.ContestProblems)
+                        if (j.ContestID == i.ContestID)
+                            db.ContestProblems.Remove(j);
+                    db.Contests.Remove(db.Contests.Find(i.ContestID));
+                }
+            db.SaveChanges();
+            return RedirectToAction("Index");
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Microsoft.Ajax.Utilities;
 using PIPOSKY2.Models;
-
+using System.Data.Entity.Migrations;
 namespace PIPOSKY2.Controllers
 {
     public class UserController : Controller
@@ -25,22 +25,21 @@ namespace PIPOSKY2.Controllers
 			{
 				ModelState.AddModelError("UserName", "Email已经存在");
 			}
-			if (info.UserPwd!=null && info.UserPwd.Length < 6)
-			{
-				ModelState.AddModelError("UserPwd","密码至少6位长");
-			}
 			if (info.UserPwd2 != null && info.UserPwd != info.UserPwd2)
 			{
 				ModelState.AddModelError("UserPwd2","两次密码不一致");
 			}
 			if (ModelState.IsValid)
 			{
-				var tmp = new User {UserName = info.UserName, UserPwd = info.UserPwd, UserEmail = info.UserEmail, UserType = ""};
+				var tmp = new User {UserName = info.UserName, UserPwd = info.UserPwd, UserEmail = info.UserEmail, UserType = "admin"};
 				db.Users.Add(tmp);
 				db.SaveChanges();
-				Session.Add("_massage", "注册成功");
-				Session.Add("_UserID", tmp.UserID);
-				return RedirectToAction("Index", "Home");
+                tmp = db.Users.FirstOrDefault(m => m.UserName == tmp.UserName);
+                Session["User"] = tmp;
+				//Session["_massage"] =  "注册成功";
+				Session["_UserID"] = tmp.UserID;
+                Session["_UserName"] = tmp.UserName;
+                return RedirectToAction("info","User");
 			}
 			return View(info);
         }
@@ -53,16 +52,19 @@ namespace PIPOSKY2.Controllers
         [HttpPost]
         public ActionResult Login(LoginFormModel currentLogin)
         {
-
             var tmp = db.Users.FirstOrDefault( m => m.UserName == currentLogin.UserName);
             if (tmp !=null )
             {
-                Session["_User"] = tmp;
-				Session["_UserID"] = tmp.UserID;
+                if (tmp.UserPwd != currentLogin.UserPwd) {
+                    ModelState.AddModelError("UserPwd", "密码错误，登陆失败！");
+                    return View();
+                }
+                Session["User"] = tmp;
+                Session["_UserID"] = tmp.UserID;
                 Session["_UserName"] = tmp.UserName;
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("info","User");
             }
-			ModelState.AddModelError("KeepLogin", "登陆失败！");
+            ModelState.AddModelError("UserName", "用户名不存在，登陆失败！");
             return View();
         }
 
@@ -72,22 +74,66 @@ namespace PIPOSKY2.Controllers
         }
 
         public ActionResult Exit() {
+            Session["User"] = null;
             Session["_UserName"] = null;
-            return RedirectToAction("Index", "Home");
+            Session["_UserID"] = null;
+            return RedirectToAction("Login", "User");
         }
 
-        public ActionResult Edit(int id, FormCollection collection)
+        [HttpPost]
+        public ActionResult EditInfo(User EditUser)
         {
-            try
+            var tmp = Session["User"] as User;
+            if (tmp!= null)
             {
-                // TODO: Add update logic here
+                if (EditUser.UserName != null && EditUser.UserName != "" && EditUser.UserName != " ")
+                    tmp.UserName = EditUser.UserName;
+                if (EditUser.UserEmail != null && EditUser.UserEmail != "" && EditUser.UserEmail != " ")
+                    tmp.UserEmail = EditUser.UserEmail;
 
-                return RedirectToAction("Index");
+                db.Users.AddOrUpdate(tmp);
+                db.SaveChanges();
+
+                Session["User"] = tmp;
+                Session["_UserID"] = tmp.UserID;
+                Session["_UserName"] = tmp.UserName;
             }
-            catch
-            {
+            return RedirectToAction("info", "User");
+        }
+
+        public ActionResult EditInfo()
+        {
+            var tmp = Session["User"] as User;
+            return View(tmp);
+        }
+
+        [HttpPost]
+        public ActionResult EditPwd(ChangePasswordModel EditPwd)
+        {
+            var tmp = Session["User"] as User;
+            if (tmp.UserPwd != EditPwd.OldPassword) {
+                ModelState.AddModelError("OldPassword", "原密码错误！");
                 return View();
             }
+            if (EditPwd.NewPassword != EditPwd.ConfirmPassword)
+                ModelState.AddModelError("ConfirmPassword", "新密码不匹配！");
+            if (ModelState.IsValid)
+            {
+                tmp.UserPwd = EditPwd.NewPassword;
+                db.Users.AddOrUpdate(tmp);
+                db.SaveChanges();
+
+                Session["User"] = tmp;
+                return RedirectToAction("info", "User");
+            }
+
+            
+            return View();
+        }
+
+        public ActionResult EditPwd()
+        {
+            return View();
         }
 
         public ActionResult Delete(int id)
@@ -100,10 +146,9 @@ namespace PIPOSKY2.Controllers
             if (Session["User"] != null)
             {
                 User tmp = Session["User"] as User;
+                return View(tmp);
             }
-            
-                return View();
-        
+            return View();
         }
     }
 }

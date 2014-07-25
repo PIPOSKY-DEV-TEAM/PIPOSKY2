@@ -5,10 +5,11 @@
 @using PIPOSKY2.Models;
 @model IEnumerable<Contest>
 
-@Html.ActionLink("添加比赛", "Add", "Contests")
+@Html.ActionLink("添加比赛", "Add", "Contests", new { @class="btn btn-default" })
+@Html.ActionLink("删除比赛", "Delete", "Contests", new { @class="btn btn-default" })
 <table class="table">
     <tr>
-        <th>比赛序号</th>
+        <th>比赛ID</th>
         <th>比赛名称</th>
         <th>开始时间</th>
         <th>结束时间</th>
@@ -17,7 +18,7 @@
     {
         <tr>
             <td>@i.ContestID</td>
-            <td>@Html.ActionLink(@i.ContestName, "Contest", new { id = @i.ContestID })</td>
+            <td>@Html.ActionLink(@i.ContestName, "Index", "Contest", new { id = @i.ContestID }, null)</td>
             <td>@i.StartTime</td>
             <td>@i.EndTime</td>
         </tr>

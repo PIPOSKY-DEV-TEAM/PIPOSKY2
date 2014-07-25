@@ -2,10 +2,11 @@
 @model PIPOSKY2.Models.ContestFormModel
 
 @{
-    ViewBag.Title = "添加比赛";
+    ViewBag.Title = "编辑比赛";
 }
-@using (Html.BeginForm("Add", "Contests", FormMethod.Post, new { role = "form" }))
+@using (Html.BeginForm("Edit", "Contest", FormMethod.Post, new { role = "form" }))
 {
+    @Html.TextBoxFor(model => model.ContestID, new { type = "hidden" });
     <div class="form-group">
         @Html.LabelFor(model => model.ContestName, new { @for = "ContestName" })
         @Html.TextBoxFor(model => model.ContestName, new { @class = "form-control", id = "ContestName", placeholder = "比赛名称" })
@@ -29,12 +30,22 @@
         </tr>
         @{
     PIPOSKY2DbContext db = new PIPOSKY2DbContext();
-    foreach (var i in db.Problems)
+    PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
+    foreach (var i in dbtemp.Problems)
     {
             <tr>
                 <td>@i.ProblemID</td>
                 <td>@i.ProblemName</td>
-                <td><input type="checkbox" name="@i.ProblemID" /></td>
+                @{
+        if (db.ContestProblems.Where(p => p.ContestID == Model.ContestID).Where(p => p.ProblemID == i.ProblemID).Count() > 0)
+        {
+                    <td><input type="checkbox" name="@i.ProblemID" checked="checked"/></td>
+        }
+        else
+        {
+                    <td><input type="checkbox" name="@i.ProblemID" /></td>
+        }
+                }
             </tr>
     }
         }
