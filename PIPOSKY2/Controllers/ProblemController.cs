@@ -1,10 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Text;
+using System.Collections;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.IO;
 using System.IO.Compression;
+using SharpCompress;
 using PIPOSKY2.Models;
 
 namespace PIPOSKY2.Controllers
@@ -31,42 +33,115 @@ namespace PIPOSKY2.Controllers
             problem.ProblemName = form.Name;
             //获取文件
             HttpPostedFileBase file = form.File;
-            if (file != null && file.ContentLength > 0)
+            if (!DealWithFile(file, problem))
             {
-                //文件路径
-                string filePath = Path.Combine(HttpContext.Server.MapPath("~/Problems"), Path.GetFileName(file.FileName));
-                file.SaveAs(filePath);
-                problem.ProblemPath = filePath;
-                //解压缩
-                OpenZip(filePath);
-                //获取题目内容
+                return View();
             }
-            else return View();
             db.Problems.Add(problem);
             db.SaveChanges();
             return RedirectToAction("Index", "Problem");
         }
+        public bool CheckFormat(HttpPostedFileBase file)
+        {
+            string name = file.FileName;
+            if (!(name.EndsWith(".zip")||name.EndsWith(".rar")))
+            {
+                return false;
+            }
+            return true;
+        }
+        public string OpenZip(HttpPostedFileBase file)
+        {
+            string content = "";
+            Encoding encoding = System.Text.Encoding.GetEncoding("GB2312");
+            using (ZipArchive archive = new ZipArchive(file.InputStream, ZipArchiveMode.Read, false, encoding))
+            {
+                ZipArchiveEntry entry = archive.GetEntry("9_27/Content.txt");
+                using (StreamReader reader = new StreamReader(entry.Open(), encoding))
+                {
+                    content = reader.ReadToEnd();
+                    reader.Close();
+                }
+            }
+            return content;
+        }
+        public string OpenRar(HttpPostedFileBase file)
+        {
+            string content = "";           
+            Encoding encoding = System.Text.Encoding.GetEncoding("GB2312");
+            /*using (Stream stream = file.InputStream)
+            {
+                var reader = ReaderFactory.Open(stream);
+                while (reader.MoveToNextEntry())
+                {
+                    if (!reader.Entry.IsDirectory)
+                    {
+                        Console.WriteLine(reader.Entry.FilePath);
+                        reader.WriteEntryToDirectory(@"C:\temp", ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
+                    }
+                }
+            }*/
+            return content;
+        }
         public ActionResult Edit()
         {
-            return View();
+            Problem problem = db.Problems.Find(int.Parse(RouteData.Values["id"].ToString()));
+            return View(problem); ;
+        }
+        [HttpPost]
+        public ActionResult Edit(UploadProblemFormModel form)
+        {
+            Problem problem = db.Problems.Find(int.Parse(RouteData.Values["id"].ToString()));
+            problem.ProblemName = form.Name;
+            //获取文件
+            HttpPostedFileBase file = form.File;
+            if (file != null)
+                if (!DealWithFile(file, problem))
+                {
+                    return View();
+                }
+            db.SaveChanges();
+            return RedirectToAction("Index", "Problem");
         }
         public ActionResult Delete()
         {
-            return View();
+            Problem problem = db.Problems.Find(int.Parse(RouteData.Values["id"].ToString()));
+            db.Problems.Remove(problem);
+            db.SaveChanges();
+            return RedirectToAction("Index", "Problem");
         }
-        public ActionResult ShowContent()
+        public ActionResult Content()
         {
-            return View();
+            return View(db.Problems.Find(int.Parse(RouteData.Values["id"].ToString())));
         }
-        public bool OpenZip(string zipFile)
+        public bool DealWithFile(HttpPostedFileBase file, Problem problem)
         {
-            using (ZipArchive archive = ZipFile.Open(zipFile, ZipArchiveMode.Update))
+            if (CheckFormat(file))
             {
-                //archive.CreateEntryFromFile(newFile, "NewEntry.txt");
-                //archive.ExtractToDirectory(extractPath);
+                //文件路径
+                string filePath = Path.Combine(HttpContext.Server.MapPath("~/Problems"), Path.GetFileName(file.FileName));
+                problem.ProblemPath = filePath;
+                //文件类型
+                file.GetType();
+                if (filePath.EndsWith(".zip"))
+                {
+                    string content = OpenZip(file);
+                    problem.Content = content;
+                }
+                else if (filePath.EndsWith(".rar"))
+                {
+                    string content = OpenRar(file);
+                    problem.Content = content;
+                }
+                //保存文件
+                file.SaveAs(filePath);
                 return true;
-            } 
-            return false;
+            }
+            else
+            {
+                ViewBag.text = "文件格式错误";
+                return false;
+            }
         }
     }
 }

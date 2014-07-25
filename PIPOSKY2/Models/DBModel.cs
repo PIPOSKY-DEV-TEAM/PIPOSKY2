@@ -80,6 +80,8 @@ namespace PIPOSKY2.Models
         public bool Downloadable { set; get; }
         [Required]
         public int Creator { set; get; }
+        [Required]
+        public string Content { set; get; }
     }
 
     public class Contest

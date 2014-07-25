@@ -1,0 +1,17 @@
+﻿@using PIPOSKY2.Models
+@model Problem
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+@using (Html.BeginForm("Edit","Problem",FormMethod.Post,new {enctype="multipart/form-data"}))
+{
+    <p>题目名称</p>
+    <input type="text" name="Name" value=@Model.ProblemName required/>
+    <p></p>
+    <input type="file" name="File" value="上传文件"/>
+    <p>@ViewBag.text</p>;
+    <br />
+    <input type="submit" value="提交" />
+}
