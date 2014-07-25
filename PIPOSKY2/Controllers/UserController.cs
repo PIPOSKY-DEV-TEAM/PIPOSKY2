@@ -81,9 +81,10 @@ namespace PIPOSKY2.Controllers
         }
 
         [HttpPost]
-        public ActionResult EditInfo(User EditUser)
+        public ActionResult EditInfo(RegFormModel EditUser)
         {
             var tmp = Session["User"] as User;
+            
             if (tmp!= null)
             {
                 if (EditUser.UserName != null && EditUser.UserName != "" && EditUser.UserName != " ")
@@ -98,13 +99,17 @@ namespace PIPOSKY2.Controllers
                 Session["_UserID"] = tmp.UserID;
                 Session["_UserName"] = tmp.UserName;
             }
+            
             return RedirectToAction("info", "User");
         }
 
         public ActionResult EditInfo()
         {
             var tmp = Session["User"] as User;
-            return View(tmp);
+            RegFormModel Edit = new RegFormModel();
+            Edit.UserName = tmp.UserName;
+            Edit.UserEmail = tmp.UserEmail;
+            return View(Edit);
         }
 
         [HttpPost]
