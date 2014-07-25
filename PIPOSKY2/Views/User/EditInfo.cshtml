@@ -13,6 +13,9 @@
             <div>
                 @Html.EditorFor(m => m.UserName)
             </div>
+            <div>
+                @Html.ValidationMessageFor(m => m.UserName)
+            </div>
         </div>
         <div>
             <div>
@@ -20,6 +23,9 @@
             </div>
             <div>
                 @Html.EditorFor(m => m.UserEmail)
+            </div>
+            <div>
+                @Html.ValidationMessageFor(m => m.UserEmail)
             </div>
         </div>
     </div>

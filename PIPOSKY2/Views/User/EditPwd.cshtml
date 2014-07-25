@@ -11,10 +11,10 @@
                 @Html.LabelFor(m => m.OldPassword)
             </div>
             <div>
-                @Html.EditorFor(m => m.OldPassword)
+                @Html.PasswordFor(m => m.OldPassword)
             </div>
             <div>
-                @Html.ValidationMessage("MessageForWrongPwd")
+                @Html.ValidationMessageFor(m => m.OldPassword)
             </div>
         </div>
         <div>
@@ -22,7 +22,10 @@
                  @Html.LabelFor(m => m.NewPassword)
             </div>
             <div>
-                @Html.EditorFor(m => m.NewPassword)
+                @Html.PasswordFor(m => m.NewPassword)
+            </div>
+            <div>
+                @Html.ValidationMessageFor(m => m.NewPassword)
             </div>
         </div>
         <div>
@@ -30,14 +33,14 @@
                  @Html.LabelFor(m => m.ConfirmPassword)
             </div>
             <div>
-                @Html.EditorFor(m => m.ConfirmPassword)
+                @Html.PasswordFor(m => m.ConfirmPassword)
             </div>
             <div>
-                @Html.ValidationMessage("MessageForWrongConfirmPwd")
+                @Html.ValidationMessageFor(m => m.ConfirmPassword)
             </div>
         </div>
         <div>
-            <input type="submit" value="保存" />
+            <input type="submit" value="save" />
         </div>
     </div>
 }

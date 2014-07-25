@@ -10,9 +10,16 @@ namespace PIPOSKY2.Models
     {
         [Required]
         [Display(Name = "用户名")]
+        [StringLength(100, MinimumLength = 4, ErrorMessage = "用户名长度不能大于{2} 且要小于{1}")]
+        [RegularExpression(@"^[^\s]*$",
+            ErrorMessage = "用户名格式有误，不能有空格")]
         public string UserName { get; set; }
         [Required]
         [Display(Name = "密码")]
+        [DataType(DataType.Password)]
+        [StringLength(20, MinimumLength = 6, ErrorMessage = "密码不能大于{2} 且要小于{1}")]
+        [RegularExpression(@"^[^\s]*$",
+            ErrorMessage = "密码格式有误，不能有空格")]
         public string UserPwd { get; set; }
         [Required]
         [Display(Name = "保持登录")]
@@ -23,11 +30,17 @@ namespace PIPOSKY2.Models
     {
         [Required]
         [Display(Name = "用户名")]
+        [StringLength(100, MinimumLength = 4, ErrorMessage = "用户名长度不能大于{2} 且要小于{1}")]
+        [RegularExpression(@"^[^\s]*$",
+            ErrorMessage = "用户名格式有误，不能有空格")]
         public string UserName { get; set; }
 
         [Required]
         [Display(Name = "密码")]
 		[DataType(DataType.Password)]
+        [StringLength(20, MinimumLength = 6, ErrorMessage = "密码不能大于{2} 且要小于{1}")]
+        [RegularExpression(@"^[^\s]*$",
+            ErrorMessage = "密码格式有误，不能有空格")]
         public string UserPwd { get; set; }
 
         [Required]
@@ -43,20 +56,21 @@ namespace PIPOSKY2.Models
 
     public class ChangePasswordModel {
         [Required]
-        [DataType(DataType.Password)]
         [Display(Name = "原密码")]
+        [DataType(DataType.Password)]
         public string OldPassword { get; set; }
 
         [Required]
-        [DataType(DataType.Password)]
         [Display(Name = "新密码")]
+        [DataType(DataType.Password)]
+        [StringLength(20, MinimumLength = 6, ErrorMessage = "密码不能大于{2} 且要小于{1}")]
+        [RegularExpression(@"^[^\s]*$",
+            ErrorMessage = "密码格式有误，不能有空格")]
         public string NewPassword { get; set; }
 
         [Required]
-        //[ValidatePasswordLength]
-        [DataType(DataType.Password)]
         [Display(Name = "确认密码")]
-        [Compare("新密码", ErrorMessage = "新密码不匹配")]
+        [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
     }
 

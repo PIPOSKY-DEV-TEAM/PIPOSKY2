@@ -25,17 +25,13 @@ namespace PIPOSKY2.Controllers
 			{
 				ModelState.AddModelError("UserName", "Email已经存在");
 			}
-			if (info.UserPwd!=null && info.UserPwd.Length < 6)
-			{
-				ModelState.AddModelError("UserPwd","密码至少6位长");
-			}
 			if (info.UserPwd2 != null && info.UserPwd != info.UserPwd2)
 			{
 				ModelState.AddModelError("UserPwd2","两次密码不一致");
 			}
 			if (ModelState.IsValid)
 			{
-				var tmp = new User {UserName = info.UserName, UserPwd = info.UserPwd, UserEmail = info.UserEmail, UserType = ""};
+				var tmp = new User {UserName = info.UserName, UserPwd = info.UserPwd, UserEmail = info.UserEmail, UserType = "admin"};
 				db.Users.Add(tmp);
 				db.SaveChanges();
                 tmp = db.Users.FirstOrDefault(m => m.UserName == tmp.UserName);
@@ -59,9 +55,8 @@ namespace PIPOSKY2.Controllers
             var tmp = db.Users.FirstOrDefault( m => m.UserName == currentLogin.UserName);
             if (tmp !=null )
             {
-
                 if (tmp.UserPwd != currentLogin.UserPwd) {
-                    ModelState.AddModelError("MessageForPwd", "密码错误，登陆失败！");
+                    ModelState.AddModelError("UserPwd", "密码错误，登陆失败！");
                     return View();
                 }
                 Session["User"] = tmp;
@@ -69,7 +64,7 @@ namespace PIPOSKY2.Controllers
                 Session["_UserName"] = tmp.UserName;
                 return RedirectToAction("info","User");
             }
-            ModelState.AddModelError("MessageForName", "用户名不存在，登陆失败！");
+            ModelState.AddModelError("UserName", "用户名不存在，登陆失败！");
             return View();
         }
 
@@ -117,19 +112,23 @@ namespace PIPOSKY2.Controllers
         {
             var tmp = Session["User"] as User;
             if (tmp.UserPwd != EditPwd.OldPassword) {
-                ModelState.AddModelError("MessageForWrongPwd", "原密码错误！");
+                ModelState.AddModelError("OldPassword", "原密码错误！");
                 return View();
             }
-            if (EditPwd.NewPassword != EditPwd.ConfirmPassword) {
-                ModelState.AddModelError("MessageForWrongConfirmPwd", "新密码不匹配！");
-                return View();
-            }
-            tmp.UserPwd = EditPwd.NewPassword;
-            db.Users.AddOrUpdate(tmp);
-            db.SaveChanges();
+            if (EditPwd.NewPassword != EditPwd.ConfirmPassword)
+                ModelState.AddModelError("ConfirmPassword", "新密码不匹配！");
+            if (ModelState.IsValid)
+            {
+                tmp.UserPwd = EditPwd.NewPassword;
+                db.Users.AddOrUpdate(tmp);
+                db.SaveChanges();
 
-            Session["User"] = tmp;
-            return RedirectToAction("info", "User");
+                Session["User"] = tmp;
+                return RedirectToAction("info", "User");
+            }
+
+            
+            return View();
         }
 
         public ActionResult EditPwd()
