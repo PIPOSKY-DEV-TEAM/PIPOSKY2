@@ -9,14 +9,17 @@
     <div class="form-group">
         @Html.LabelFor(model => model.ContestName, new { @for = "ContestName" })
         @Html.TextBoxFor(model => model.ContestName, new { @class = "form-control", id = "ContestName", placeholder = "比赛名称" })
+        @Html.ValidationMessageFor(model => model.ContestName)
     </div>
     <div class="form-group">
         @Html.LabelFor(model => model.StartTime, new { @for = "StartTime" })
         @Html.TextBoxFor(model => model.StartTime, new { @class = "form-control", id = "StartTime", placeholder = @DateTime.Now.ToString() })
+        @Html.ValidationMessageFor(model => model.StartTime)
     </div>
     <div class="form-group">
         @Html.LabelFor(model => model.EndTime, new { @class = "control-label", @for = "EndTime" })
         @Html.TextBoxFor(model => model.EndTime, new { @class = "form-control", id = "EndTime", placeholder = @DateTime.Now.ToString() })
+        @Html.ValidationMessageFor(model => model.EndTime)
     </div>
     <table class="table">
         <tr>
