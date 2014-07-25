@@ -17,7 +17,7 @@
     {
         <tr>
             <td>@i.ContestID</td>
-            <td>@Html.ActionLink(@i.ContestName, "Contest", new { id = @i.ContestID })</td>
+            <td>@Html.ActionLink(@i.ContestName, "Index", "Contest", new { id = @i.ContestID }, null)</td>
             <td>@i.StartTime</td>
             <td>@i.EndTime</td>
         </tr>

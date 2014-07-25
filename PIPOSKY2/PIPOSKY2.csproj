@@ -127,6 +127,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Controllers\ContestController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ContestsController.cs" />
     <Compile Include="Controllers\JudgeController.cs" />
@@ -227,9 +228,6 @@
     <Content Include="Views\Contests\Add.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Contests\Contest.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Problem\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -256,9 +254,14 @@
   <ItemGroup>
     <Content Include="Views\User\EditInfo.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Views\Contest\Index.cshtml" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="Views\User\EditPwd.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Contest\Edit.cshtml" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

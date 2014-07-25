@@ -24,6 +24,12 @@ namespace PIPOSKY2.Controllers
         [HttpPost]
         public ActionResult Add(AddContestFormModel addContest, FormCollection form)
         {
+            addContest.ContestName = addContest.ContestName.Trim();
+            if (addContest.ContestName == "")
+            {
+                ModelState.AddModelError("ContestName", "比赛名不能为空");
+                return View(addContest);
+            }
             foreach (var i in db.Contests)
             {
                 if (i.ContestName == addContest.ContestName)
@@ -57,22 +63,16 @@ namespace PIPOSKY2.Controllers
             PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
             foreach (var i in dbtemp.Problems)
             {
-                if (form[i.ProblemName] == "on")
+                if (form[i.ProblemID.ToString()] == "on")
                 {
                     ContestProblem contestProblem = new ContestProblem();
-                    contestProblem.ContestID = db.Contests.First(c => c.ContestName == addContest.ContestName).ContestID;
-                    contestProblem.ProblemID = db.Problems.First(p => p.ProblemName == i.ProblemName).ProblemID;
+                    contestProblem.ContestID = contest.ContestID;
+                    contestProblem.ProblemID = i.ProblemID;
                     db.ContestProblems.Add(contestProblem);
                 }
             }
             db.SaveChanges();
             return RedirectToAction("Index");
-        }
-
-        public ActionResult Contest()
-        {
-            
-            return View(db.Contests.Find(int.Parse(RouteData.Values["id"].ToString())));
         }
     }
 }

@@ -1,11 +1,12 @@
 ﻿@{
-    ViewBag.Title = "Contest";
+    ViewBag.Title = "比赛";
 }
 
 @using PIPOSKY2.Models;
 @model Contest
 
 <h2>@Model.ContestName</h2>
+@Html.ActionLink("修改比赛", "Edit", new { id = @Model.ContestID }, new {  @class="btn btn-default" })
 <table class="table">
     <tr>
         <th>题目ID</th>
