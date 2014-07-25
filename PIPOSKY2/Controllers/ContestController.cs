@@ -81,7 +81,7 @@ namespace PIPOSKY2.Controllers
                     db.ContestProblems.Add(contestProblem);
                 }
             db.SaveChanges();
-            return RedirectToAction("Index", new { id= contest.ContestID });
+            return RedirectToAction("Index", "Contests");
         }
     }
 }
