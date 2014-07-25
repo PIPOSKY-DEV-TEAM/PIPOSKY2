@@ -22,7 +22,7 @@ namespace PIPOSKY2.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(AddContestFormModel addContest, FormCollection form)
+        public ActionResult Add(ContestFormModel addContest, FormCollection form)
         {
             addContest.ContestName = addContest.ContestName.Trim();
             if (addContest.ContestName == "")
@@ -60,8 +60,7 @@ namespace PIPOSKY2.Controllers
             }
             db.Contests.Add(contest);
             db.SaveChanges();
-            PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
-            foreach (var i in dbtemp.Problems)
+            foreach (var i in db.Problems)
             {
                 if (form[i.ProblemID.ToString()] == "on")
                 {

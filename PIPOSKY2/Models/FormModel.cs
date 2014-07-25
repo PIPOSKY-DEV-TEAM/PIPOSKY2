@@ -74,7 +74,7 @@ namespace PIPOSKY2.Models
         public string ConfirmPassword { get; set; }
     }
 
-    public class AddContestFormModel
+    public class ContestFormModel
     {
         [Required]
         [Display(Name = "比赛名称")]
@@ -85,6 +85,8 @@ namespace PIPOSKY2.Models
         [Required]
         [Display(Name = "结束时间")]
         public string EndTime { get; set; }
+        [Required]
+        public int ContestID { get; set; }
     }
 	
     public class UploadProblemFormModel
