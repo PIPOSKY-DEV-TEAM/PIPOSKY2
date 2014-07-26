@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.Title = "比赛组";
+}
+
+@using PIPOSKY2.Models;
+@model IEnumerable<ContestGroup>
+
+<h2>比赛组</h2>
+@{
+    User tmp = Session["User"] as User;
+    if (tmp != null)
+    {
+        if ((tmp.UserType == "admin") || (tmp.UserType == "editor"))
+        {
+<p>
+    @Html.ActionLink("添加比赛组", "Add", "ContestGroups", new { @class="btn btn-default" })
+</p>
+        }
+    }
+}
+<table class="table">
+    <tr>
+        <th>比赛组ID</th>
+        <th>比赛组名称</th>
+    </tr>
+    @foreach (ContestGroup i in Model)
+    {
+        <tr>
+            <td>@i.ContestGroupID</td>
+            <td>@Html.ActionLink(@i.ContestGroupName, "Index", "Contests", new { id = @i.ContestGroupID }, null)</td>
+        </tr>
+    }
+</table>

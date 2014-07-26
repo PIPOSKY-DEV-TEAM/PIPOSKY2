@@ -131,6 +131,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ContestController.cs" />
+    <Compile Include="Controllers\ContestGroupsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ContestsController.cs" />
     <Compile Include="Controllers\JudgeController.cs" />
@@ -270,6 +271,8 @@
     <None Include="Properties\PublishProfiles\PIPOSKY2.pubxml" />
     <Content Include="Views\Contests\Delete.cshtml" />
     <Content Include="Views\User\AdministrateUsers.cshtml" />
+    <Content Include="Views\ContestGroups\Index.cshtml" />
+    <Content Include="Views\ContestGroups\Add.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Problem\Content.cshtml" />

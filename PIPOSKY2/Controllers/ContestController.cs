@@ -57,6 +57,7 @@ namespace PIPOSKY2.Controllers
             Contest contest = new Contest();
             contest.ContestID = editContest.ContestID;
             contest.ContestName = editContest.ContestName;
+            contest.ContestGroupID = db.Contests.Find(contest.ContestID).ContestGroupID;
             try
             {
                 contest.StartTime = DateTime.Parse(editContest.StartTime);
@@ -91,7 +92,7 @@ namespace PIPOSKY2.Controllers
                     db.ContestProblems.Add(contestProblem);
                 }
             db.SaveChanges();
-            return RedirectToAction("Index", "Contests");
+            return RedirectToAction("Index", "Contests", new { id = contest.ContestGroupID });
         }
     }
 }

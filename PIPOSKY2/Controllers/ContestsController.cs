@@ -13,7 +13,7 @@ namespace PIPOSKY2.Controllers
 
         public ActionResult Index()
         {
-            return View(db.Contests);
+            return View(db.ContestGroups.Find(int.Parse(RouteData.Values["id"].ToString())));
         }
 
         public ActionResult Add()
@@ -22,8 +22,10 @@ namespace PIPOSKY2.Controllers
             if (tmp == null)
                 return RedirectToAction("Index");
             if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
-                return RedirectToAction("Index");        
-            return View();
+                return RedirectToAction("Index");
+            ContestFormModel addContest = new ContestFormModel();
+            addContest.ContestGroupID = int.Parse(RouteData.Values["id"].ToString());
+            return View(addContest);
         }
 
         [HttpPost]
@@ -49,6 +51,7 @@ namespace PIPOSKY2.Controllers
                 }
             }
             Contest contest = new Contest();
+            contest.ContestGroupID = addContest.ContestGroupID;
             contest.ContestName = addContest.ContestName;
             try
             {
@@ -79,7 +82,7 @@ namespace PIPOSKY2.Controllers
                     db.ContestProblems.Add(contestProblem);
                 }
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { id = contest.ContestGroupID });
         }
 
         public ActionResult Delete()
@@ -89,11 +92,11 @@ namespace PIPOSKY2.Controllers
                 return RedirectToAction("Index");
             if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
                 return RedirectToAction("Index");
-            return View();
+            return View(db.ContestGroups.Find(int.Parse(RouteData.Values["id"].ToString())));
         }
 
         [HttpPost]
-        public ActionResult Delete(FormCollection form)
+        public ActionResult Delete(ContestGroup contestGroup, FormCollection form)
         {
             User tmp = Session["User"] as User;
             if (tmp == null)
@@ -110,7 +113,7 @@ namespace PIPOSKY2.Controllers
                     db.Contests.Remove(db.Contests.Find(i.ContestID));
                 }
             db.SaveChanges();
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new { id = contestGroup.ContestGroupID });
         }
     }
 }

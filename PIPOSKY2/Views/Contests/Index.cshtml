@@ -3,19 +3,19 @@
 }
 
 @using PIPOSKY2.Models;
-@model IEnumerable<Contest>
+@model ContestGroup
 
-<h2>比赛</h2>
+<h2>@Model.ContestGroupName</h2>
 @{
     User tmp = Session["User"] as User;
     if (tmp != null)
     {
         if ((tmp.UserType == "admin") || (tmp.UserType == "editor"))
         {
-<p>
-    @Html.ActionLink("添加比赛", "Add", "Contests", new { @class="btn btn-default" })
-    @Html.ActionLink("删除比赛", "Delete", "Contests", new { @class="btn btn-default" })
-</p>
+    <p>
+        @Html.ActionLink("添加比赛", "Add", new { id = @Model.ContestGroupID }, new { @class = "btn btn-default" })
+        @Html.ActionLink("删除比赛", "Delete", new { id = @Model.ContestGroupID }, new { @class = "btn btn-default" })
+    </p>
         }
     }
 }
@@ -26,13 +26,20 @@
         <th>开始时间</th>
         <th>结束时间</th>
     </tr>
-    @foreach (Contest i in Model)
-    {
+    @{
+        PIPOSKY2DbContext db = new PIPOSKY2DbContext();
+        PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
+        foreach (var i in db.Contests)
+        {
+            if (i.ContestGroupID == Model.ContestGroupID)
+            {
         <tr>
             <td>@i.ContestID</td>
-            <td>@Html.ActionLink(@i.ContestName, "Index", "Contest", new { id = @i.ContestID }, null)</td>
-            <td>@i.StartTime</td>
-            <td>@i.EndTime</td>
+            <td>@Html.ActionLink(@dbtemp.Contests.Find(i.ContestID).ContestName, "Index", "Contest", new { id = @i.ContestID }, null)</td>
+            <td>@dbtemp.Contests.Find(i.ContestID).StartTime</td>
+            <td>@dbtemp.Contests.Find(i.ContestID).EndTime</td>
         </tr>
+            }
+        }
     }
 </table>
