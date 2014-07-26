@@ -1,10 +1,14 @@
 ﻿@using PIPOSKY2.Models
+@model ContestGroup
 
 @{
     ViewBag.Title = "删除比赛";
 }
+
+<h2>删除比赛</h2>
 @using (Html.BeginForm("Delete", "Contests", FormMethod.Post, new { role = "form" }))
 {
+    @Html.TextBoxFor(model => model.ContestGroupID, new { type = "hidden" });
     <table class="table">
         <tr>
             <th>比赛ID</th>
@@ -13,12 +17,13 @@
         </tr>
         @{
     PIPOSKY2DbContext db = new PIPOSKY2DbContext();
-    foreach (var i in db.Contests)
+    foreach (var i in db.Contests.Where(c => c.ContestGroupID == Model.ContestGroupID))
     {
             <tr>
                 <td>@i.ContestID</td>
                 <td>@i.ContestName</td>
-                <td><input type="checkbox" name="@i.ContestID" /></td>
+                <td>
+                    <input type="checkbox" name="@i.ContestID" /></td>
             </tr>
     }
         }

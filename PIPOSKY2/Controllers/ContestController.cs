@@ -19,6 +19,11 @@ namespace PIPOSKY2.Controllers
 
         public ActionResult Edit()
         {
+            User tmp = Session["User"] as User;
+            if (tmp == null)
+                return RedirectToAction("Index", "Contest", RouteData.Values);
+            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
+                return RedirectToAction("Index", "Contest", RouteData.Values);
             ContestFormModel editContest = new ContestFormModel();
             editContest.ContestID = int.Parse(RouteData.Values["id"].ToString());
             editContest.ContestName = db.Contests.Find(editContest.ContestID).ContestName;
@@ -30,23 +35,33 @@ namespace PIPOSKY2.Controllers
         [HttpPost]
         public ActionResult Edit(ContestFormModel editContest, FormCollection form)
         {
-            editContest.ContestName = editContest.ContestName.Trim();
+            User tmp = Session["User"] as User;
+            if (tmp == null)
+                return RedirectToAction("Index", "Contest", RouteData.Values);
+            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
+                return RedirectToAction("Index", "Contest", RouteData.Values);
+            try
+            {
+                editContest.ContestName = editContest.ContestName.Trim();
+            }
+            catch
+            {
+                return View(editContest);
+            }
             if (editContest.ContestName == "")
             {
                 ModelState.AddModelError("ContestName", "比赛名不能为空");
                 return View(editContest);
             }
-            foreach (var i in db.Contests)
+            foreach (var i in db.Contests.Where(c => c.ContestName == editContest.ContestName).Where(c => c.ContestID != editContest.ContestID))
             {
-                if ((i.ContestName == editContest.ContestName) && (i.ContestID != editContest.ContestID))
-                {
-                    ModelState.AddModelError("ContestName", "比赛名已存在");
-                    return View(editContest);
-                }
+                ModelState.AddModelError("ContestName", "比赛名已存在");
+                return View(editContest);
             }
             Contest contest = new Contest();
             contest.ContestID = editContest.ContestID;
             contest.ContestName = editContest.ContestName;
+            contest.ContestGroupID = db.Contests.Find(contest.ContestID).ContestGroupID;
             try
             {
                 contest.StartTime = DateTime.Parse(editContest.StartTime);
@@ -67,11 +82,10 @@ namespace PIPOSKY2.Controllers
             }
             db.Contests.AddOrUpdate(contest);
             db.SaveChanges();
-            foreach (var i in db.ContestProblems)
-                if (i.ContestID == editContest.ContestID)
-                {
-                    db.ContestProblems.Remove(i);
-                }
+            foreach (var i in db.ContestProblems.Where(p => p.ContestID == editContest.ContestID))
+            {
+                db.ContestProblems.Remove(i);
+            }
             foreach (var i in db.Problems)
                 if (form[i.ProblemID.ToString()] == "on")
                 {
@@ -81,7 +95,7 @@ namespace PIPOSKY2.Controllers
                     db.ContestProblems.Add(contestProblem);
                 }
             db.SaveChanges();
-            return RedirectToAction("Index", "Contests");
+            return RedirectToAction("Index", "Contests", new { id = contest.ContestGroupID });
         }
     }
 }

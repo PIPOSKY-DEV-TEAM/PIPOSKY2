@@ -30,6 +30,13 @@
         <div>
             @Html.DisplayFor(m => m.UserType)
         </div>
+        @{
+            if (Model.UserType == "admin") { 
+                <div>
+                   @Html.ActionLink("用户管理","AdministrateUsers","User")
+                </div>    
+            }
+          }
         <div></div>
     </div>
 }

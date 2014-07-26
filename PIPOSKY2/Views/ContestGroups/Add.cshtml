@@ -1,0 +1,17 @@
+﻿@using PIPOSKY2.Models
+@model PIPOSKY2.Models.ContestGroup
+
+@{
+    ViewBag.Title = "添加课程";
+}
+
+<h2>添加课程</h2>
+@using (Html.BeginForm("Add", "ContestGroups", FormMethod.Post, new { role = "form" }))
+{
+    <div class="form-group">
+        <label for="ContestGroupName">课程名称</label>
+        @Html.TextBoxFor(model => model.ContestGroupName, new { @class = "form-control", id = "ContestGroupName", placeholder = "课程名称" })
+        @Html.ValidationMessageFor(model => model.ContestGroupName)
+    </div>
+    <button type="submit" class="btn btn-default">确定</button>
+}

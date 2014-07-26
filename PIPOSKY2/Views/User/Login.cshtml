@@ -1,30 +1,35 @@
 ﻿@model PIPOSKY2.Models.LoginFormModel
 @{
-    ViewBag.Title = "登陆";
+    ViewBag.Title = "登录";
 }
 
-<h2>Login</h2>
-@using (Html.BeginForm()) { 
+<h2>登录</h2>
+@using (Html.BeginForm())
+{ 
     <div>
-        <div>
+        <div class="form-group">
             <p>@Html.LabelFor(m => m.UserName)</p>
-            @Html.TextBoxFor(m => m.UserName)
+            @Html.TextBoxFor(m => m.UserName, new { @class = "form-control" })
             <div>@Html.ValidationMessageFor(m => m.UserName)</div>
         </div>
-        <div>
+        <div class="form-group">
             <p>@Html.LabelFor(m => m.UserPwd)</p>
-            @Html.PasswordFor(m => m.UserPwd)
+            @Html.PasswordFor(m => m.UserPwd, new { @class = "form-control" })
             <div>@Html.ValidationMessageFor(m => m.UserPwd)</div>
         </div>
-        <div>
-            <p>@Html.LabelFor(m => m.KeepLogin)</p>
-            @Html.CheckBoxFor(m => m.KeepLogin)
-            <div>
-            @Html.ValidationMessageFor(m => m.KeepLogin)
+        <div class="form-group">
+            <div class="checkbox">
+                <label>
+                    @Html.CheckBoxFor(m => m.KeepLogin)
+                    保持登录
+                    <div>
+                        @Html.ValidationMessageFor(m => m.KeepLogin)
+                    </div>
+                </label>
             </div>
         </div>
-        <div>
-            <input type="submit" value="Login" />
+        <div class="form-group">
+            <input type="submit" value="Login" class="btn btn-default" />
         </div>
     </div>
 }
