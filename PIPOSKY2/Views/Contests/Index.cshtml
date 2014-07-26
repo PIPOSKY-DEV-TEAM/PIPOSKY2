@@ -5,8 +5,11 @@
 @using PIPOSKY2.Models;
 @model IEnumerable<Contest>
 
-@Html.ActionLink("添加比赛", "Add", "Contests", new { @class="btn btn-default" })
-@Html.ActionLink("删除比赛", "Delete", "Contests", new { @class="btn btn-default" })
+<h2>比赛</h2>
+<p>
+    @Html.ActionLink("添加比赛", "Add", "Contests", new { @class="btn btn-default" })
+    @Html.ActionLink("删除比赛", "Delete", "Contests", new { @class="btn btn-default" })
+</p>
 <table class="table">
     <tr>
         <th>比赛ID</th>

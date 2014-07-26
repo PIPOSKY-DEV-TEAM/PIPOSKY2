@@ -6,7 +6,9 @@
 @model Contest
 
 <h2>@Model.ContestName</h2>
-@Html.ActionLink("修改比赛", "Edit", new { id = @Model.ContestID }, new {  @class="btn btn-default" })
+<p>
+    @Html.ActionLink("修改比赛", "Edit", new { id = @Model.ContestID }, new {  @class="btn btn-default" })
+</p>
 <table class="table">
     <tr>
         <th>题目ID</th>
