@@ -18,7 +18,13 @@ namespace PIPOSKY2.Controllers
 
         public ActionResult Add()
         {
-            return View();
+            User tmp = Session["User"] as User;
+            if (tmp != null)
+            {
+                if ((tmp.UserType == "admin") || (tmp.UserType == "editor"))
+                    return View();
+            }
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
@@ -74,7 +80,13 @@ namespace PIPOSKY2.Controllers
 
         public ActionResult Delete()
         {
-            return View();
+            User tmp = Session["User"] as User;
+            if (tmp != null)
+            {
+                if ((tmp.UserType == "admin") || (tmp.UserType == "editor"))
+                    return View();
+            }
+            return RedirectToAction("Index");
         }
 
         [HttpPost]

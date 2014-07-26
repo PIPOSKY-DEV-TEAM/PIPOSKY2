@@ -19,12 +19,20 @@ namespace PIPOSKY2.Controllers
 
         public ActionResult Edit()
         {
-            ContestFormModel editContest = new ContestFormModel();
-            editContest.ContestID = int.Parse(RouteData.Values["id"].ToString());
-            editContest.ContestName = db.Contests.Find(editContest.ContestID).ContestName;
-            editContest.StartTime = db.Contests.Find(editContest.ContestID).StartTime.ToString();
-            editContest.EndTime = db.Contests.Find(editContest.ContestID).EndTime.ToString();
-            return View(editContest);
+            User tmp = Session["User"] as User;
+            if (tmp != null)
+            {
+                if ((tmp.UserType == "admin") || (tmp.UserType == "editor"))
+                {
+                    ContestFormModel editContest = new ContestFormModel();
+                    editContest.ContestID = int.Parse(RouteData.Values["id"].ToString());
+                    editContest.ContestName = db.Contests.Find(editContest.ContestID).ContestName;
+                    editContest.StartTime = db.Contests.Find(editContest.ContestID).StartTime.ToString();
+                    editContest.EndTime = db.Contests.Find(editContest.ContestID).EndTime.ToString();
+                    return View(editContest);
+                }
+            }
+            return RedirectToAction("Index", "Contest", RouteData.Values);
         }
 
         [HttpPost]

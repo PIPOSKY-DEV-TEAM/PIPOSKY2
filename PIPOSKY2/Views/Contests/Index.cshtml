@@ -6,10 +6,19 @@
 @model IEnumerable<Contest>
 
 <h2>比赛</h2>
+@{
+    User tmp = Session["User"] as User;
+    if (tmp != null)
+    {
+        if ((tmp.UserType == "admin") || (tmp.UserType == "editor"))
+        {
 <p>
     @Html.ActionLink("添加比赛", "Add", "Contests", new { @class="btn btn-default" })
     @Html.ActionLink("删除比赛", "Delete", "Contests", new { @class="btn btn-default" })
 </p>
+        }
+    }
+}
 <table class="table">
     <tr>
         <th>比赛ID</th>
