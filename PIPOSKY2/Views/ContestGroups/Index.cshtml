@@ -1,11 +1,11 @@
 ﻿@{
-    ViewBag.Title = "比赛组";
+    ViewBag.Title = "课程";
 }
 
 @using PIPOSKY2.Models;
 @model IEnumerable<ContestGroup>
 
-<h2>比赛组</h2>
+<h2>课程</h2>
 @{
     User tmp = Session["User"] as User;
     if (tmp != null)
@@ -13,15 +13,15 @@
         if ((tmp.UserType == "admin") || (tmp.UserType == "editor"))
         {
 <p>
-    @Html.ActionLink("添加比赛组", "Add", "ContestGroups", new { @class="btn btn-default" })
+    @Html.ActionLink("添加课程", "Add", "ContestGroups", new { @class="btn btn-default" })
 </p>
         }
     }
 }
 <table class="table">
     <tr>
-        <th>比赛组ID</th>
-        <th>比赛组名称</th>
+        <th>课程ID</th>
+        <th>课程名称</th>
     </tr>
     @foreach (ContestGroup i in Model)
     {

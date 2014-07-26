@@ -46,13 +46,10 @@ namespace PIPOSKY2.Controllers
                 ModelState.AddModelError("ContestName", "比赛名不能为空");
                 return View(editContest);
             }
-            foreach (var i in db.Contests)
+            foreach (var i in db.Contests.Where(c => c.ContestName == editContest.ContestName).Where(c => c.ContestID != editContest.ContestID))
             {
-                if ((i.ContestName == editContest.ContestName) && (i.ContestID != editContest.ContestID))
-                {
-                    ModelState.AddModelError("ContestName", "比赛名已存在");
-                    return View(editContest);
-                }
+                ModelState.AddModelError("ContestName", "比赛名已存在");
+                return View(editContest);
             }
             Contest contest = new Contest();
             contest.ContestID = editContest.ContestID;
@@ -78,11 +75,10 @@ namespace PIPOSKY2.Controllers
             }
             db.Contests.AddOrUpdate(contest);
             db.SaveChanges();
-            foreach (var i in db.ContestProblems)
-                if (i.ContestID == editContest.ContestID)
-                {
-                    db.ContestProblems.Remove(i);
-                }
+            foreach (var i in db.ContestProblems.Where(p => p.ContestID == editContest.ContestID))
+            {
+                db.ContestProblems.Remove(i);
+            }
             foreach (var i in db.Problems)
                 if (form[i.ProblemID.ToString()] == "on")
                 {

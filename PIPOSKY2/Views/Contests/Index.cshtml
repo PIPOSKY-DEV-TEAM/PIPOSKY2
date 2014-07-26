@@ -29,17 +29,14 @@
     @{
         PIPOSKY2DbContext db = new PIPOSKY2DbContext();
         PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
-        foreach (var i in db.Contests)
+        foreach (var i in db.Contests.Where(c => c.ContestGroupID == Model.ContestGroupID))
         {
-            if (i.ContestGroupID == Model.ContestGroupID)
-            {
         <tr>
             <td>@i.ContestID</td>
             <td>@Html.ActionLink(@dbtemp.Contests.Find(i.ContestID).ContestName, "Index", "Contest", new { id = @i.ContestID }, null)</td>
             <td>@dbtemp.Contests.Find(i.ContestID).StartTime</td>
             <td>@dbtemp.Contests.Find(i.ContestID).EndTime</td>
         </tr>
-            }
         }
     }
 </table>

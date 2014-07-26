@@ -42,13 +42,10 @@ namespace PIPOSKY2.Controllers
                 ModelState.AddModelError("ContestName", "比赛名不能为空");
                 return View(addContest);
             }
-            foreach (var i in db.Contests)
+            foreach (var i in db.Contests.Where(c => c.ContestName == addContest.ContestName))
             {
-                if (i.ContestName == addContest.ContestName)
-                {
-                    ModelState.AddModelError("ContestName", "比赛名已存在");
-                    return View(addContest);
-                }
+                ModelState.AddModelError("ContestName", "比赛名已存在");
+                return View(addContest);
             }
             Contest contest = new Contest();
             contest.ContestGroupID = addContest.ContestGroupID;
@@ -104,7 +101,7 @@ namespace PIPOSKY2.Controllers
             if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
                 return RedirectToAction("Index");
             PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
-            foreach (var i in dbtemp.Contests)
+            foreach (var i in dbtemp.Contests.Where(c => c.ContestGroupID == contestGroup.ContestGroupID))
                 if (form[i.ContestID.ToString()] == "on")
                 {
                     foreach (var j in db.ContestProblems)

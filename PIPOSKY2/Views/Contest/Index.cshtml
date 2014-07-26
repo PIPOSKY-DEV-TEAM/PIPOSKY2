@@ -24,15 +24,12 @@
         @{
             PIPOSKY2DbContext db = new PIPOSKY2DbContext();
             PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
-            foreach (var i in db.ContestProblems)
+            foreach (var i in db.ContestProblems.Where(p => p.ContestID == Model.ContestID))
             {
-                if (i.ContestID == Model.ContestID)
-                {
             <tr>
                 <td>@i.ProblemID</td>
                 <td>@dbtemp.Problems.Find(i.ProblemID).ProblemName</td>
             </tr>
-                }
             }
         }
     </table>
@@ -49,18 +46,15 @@
             <th>题目名称</th>
         </tr>
         @{
-            PIPOSKY2DbContext db = new PIPOSKY2DbContext();
-            PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
-            foreach (var i in db.ContestProblems)
-            {
-                if (i.ContestID == Model.ContestID)
-                {
+        PIPOSKY2DbContext db = new PIPOSKY2DbContext();
+        PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
+        foreach (var i in db.ContestProblems.Where(p => p.ContestID == Model.ContestID))
+        {
             <tr>
                 <td>@i.ProblemID</td>
                 <td>@dbtemp.Problems.Find(i.ProblemID).ProblemName</td>
             </tr>
-                }
-            }
+        }
         }
     </table>
     }

@@ -17,17 +17,14 @@
         </tr>
         @{
     PIPOSKY2DbContext db = new PIPOSKY2DbContext();
-    foreach (var i in db.Contests)
+    foreach (var i in db.Contests.Where(c => c.ContestGroupID == Model.ContestGroupID))
     {
-        if (i.ContestGroupID == Model.ContestGroupID)
-        {
             <tr>
                 <td>@i.ContestID</td>
                 <td>@i.ContestName</td>
                 <td>
                     <input type="checkbox" name="@i.ContestID" /></td>
             </tr>
-        }
     }
         }
     </table>
