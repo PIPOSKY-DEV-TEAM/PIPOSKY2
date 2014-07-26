@@ -18,23 +18,17 @@
                     <li>@Html.ActionLink("Problem", "Index", "Problem")</li>
                     <li>@Html.ActionLink("Status", "Index", "Submit")</li>
                     <li>@Html.ActionLink("Course", "Index", "ContestGroups")</li>
-                    <li>@{
+                    @{
                         if(Session["_UserName"] != null){
-                            var temp = (string)Session["_UserName"];
-                            @Html.ActionLink(temp,"info","User")
+                            <li>@Html.ActionLink((string)Session["_UserName"],"info","User")</li>
+                            <li>@Html.ActionLink("Exit","Exit","User")</li>
                         }
                         else{
-                            @Html.ActionLink("Login","Login","User")
+                            <li>@Html.ActionLink("Login","Login","User")</li>
+                            <li>@Html.ActionLink("Register","Reg","User")</li>
                         }
-                     }</li>
-                    <li>@{
-                        if(Session["_UserName"] != null){
-                            @Html.ActionLink("Exit","Exit","User")
-                        }
-                        else{
-                            @Html.ActionLink("Register","Reg","User")
-                        }
-                     }</li>
+                     }
+                    @RenderSection("Navbar",required: false)
                 </ul>
             </div><!--/.nav-collapse -->
         </div>

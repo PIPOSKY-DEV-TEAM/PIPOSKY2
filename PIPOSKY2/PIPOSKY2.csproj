@@ -147,8 +147,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\PIPOSKY2.mdf" />
-    <Content Include="App_Data\PIPOSKY2_log.ldf" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -244,9 +242,6 @@
     <Content Include="Views\Submit\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Problem\Upload.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Submit\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -281,7 +276,9 @@
   <ItemGroup>
     <Content Include="Views\Problem\Edit.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
