@@ -36,7 +36,14 @@ namespace PIPOSKY2.Controllers
                 return RedirectToAction("Index");
             if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
                 return RedirectToAction("Index");
-            addContest.ContestName = addContest.ContestName.Trim();
+            try
+            {
+                addContest.ContestName = addContest.ContestName.Trim();
+            }
+            catch
+            {
+                return View(addContest);
+            }
             if (addContest.ContestName == "")
             {
                 ModelState.AddModelError("ContestName", "比赛名不能为空");
@@ -104,9 +111,8 @@ namespace PIPOSKY2.Controllers
             foreach (var i in dbtemp.Contests.Where(c => c.ContestGroupID == contestGroup.ContestGroupID))
                 if (form[i.ContestID.ToString()] == "on")
                 {
-                    foreach (var j in db.ContestProblems)
-                        if (j.ContestID == i.ContestID)
-                            db.ContestProblems.Remove(j);
+                    foreach (var j in db.ContestProblems.Where(p => p.ContestID == i.ContestID))
+                        db.ContestProblems.Remove(j);
                     db.Contests.Remove(db.Contests.Find(i.ContestID));
                 }
             db.SaveChanges();
