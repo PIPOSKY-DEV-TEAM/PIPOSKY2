@@ -6,7 +6,8 @@ using System.Web;
 using System.Web.Mvc;
 using System.IO;
 using System.IO.Compression;
-using SharpCompress;
+using SharpCompress.Common;
+using SharpCompress.Reader;
 using PIPOSKY2.Models;
 
 namespace PIPOSKY2.Controllers
@@ -56,31 +57,41 @@ namespace PIPOSKY2.Controllers
             Encoding encoding = System.Text.Encoding.GetEncoding("GB2312");
             using (ZipArchive archive = new ZipArchive(file.InputStream, ZipArchiveMode.Read, false, encoding))
             {
-                ZipArchiveEntry entry = archive.GetEntry("9_27/Content.txt");
-                using (StreamReader reader = new StreamReader(entry.Open(), encoding))
+                foreach (ZipArchiveEntry entry in archive.Entries)
                 {
-                    content = reader.ReadToEnd();
-                    reader.Close();
+                    if (entry.FullName.EndsWith("Content.txt"))
+                    {
+                        using (StreamReader reader = new StreamReader(entry.Open(), encoding))
+                        {
+                            content = reader.ReadToEnd();
+                            reader.Close();
+                        }
+                    }
                 }
             }
             return content;
         }
         public string OpenRar(HttpPostedFileBase file)
         {
-            string content = "";           
+            string content = "";
             Encoding encoding = System.Text.Encoding.GetEncoding("GB2312");
-            /*using (Stream stream = file.InputStream)
+            using (Stream stream = file.InputStream)
             {
                 var reader = ReaderFactory.Open(stream);
                 while (reader.MoveToNextEntry())
                 {
                     if (!reader.Entry.IsDirectory)
                     {
-                        Console.WriteLine(reader.Entry.FilePath);
-                        reader.WriteEntryToDirectory(@"C:\temp", ExtractOptions.ExtractFullPath | ExtractOptions.Overwrite);
+                        if (reader.Entry.FilePath.EndsWith("Content.txt"))
+                        {
+                            Console.WriteLine(reader.Entry.FilePath);
+                            EntryStream entry = reader.OpenEntryStream();
+                            StreamReader temp = new StreamReader(entry, encoding);
+                            content = temp.ReadToEnd();
+                        }
                     }
                 }
-            }*/
+            }
             return content;
         }
         public ActionResult Edit()

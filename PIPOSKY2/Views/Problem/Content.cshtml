@@ -7,8 +7,15 @@
 <h2>@Model.ProblemName</h2>
 
 <p>
-    @Model.Content
+    <pre><code>@Model.Content;</code></pre>
 </p>
-<textarea rows="15" cols="150"></textarea>
+<div class="panel panel-default" style="position:fixed;bottom:5px;right:5px;margin:0px">
+    <div class="panel-heading" style="background:black;color:white">编辑代码</div>
+    <div class="panel-body">
+        <textarea style="width:500px;height:400px"></textarea>
+        <p><button>提交</button></p>
+    </div>
+</div>
+
 <p></p>
-<button>提交</button>
+
