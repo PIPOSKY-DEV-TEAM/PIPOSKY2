@@ -20,24 +20,26 @@ namespace PIPOSKY2.Controllers
         public ActionResult Edit()
         {
             User tmp = Session["User"] as User;
-            if (tmp != null)
-            {
-                if ((tmp.UserType == "admin") || (tmp.UserType == "editor"))
-                {
-                    ContestFormModel editContest = new ContestFormModel();
-                    editContest.ContestID = int.Parse(RouteData.Values["id"].ToString());
-                    editContest.ContestName = db.Contests.Find(editContest.ContestID).ContestName;
-                    editContest.StartTime = db.Contests.Find(editContest.ContestID).StartTime.ToString();
-                    editContest.EndTime = db.Contests.Find(editContest.ContestID).EndTime.ToString();
-                    return View(editContest);
-                }
-            }
-            return RedirectToAction("Index", "Contest", RouteData.Values);
+            if (tmp == null)
+                return RedirectToAction("Index", "Contest", RouteData.Values);
+            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
+                return RedirectToAction("Index", "Contest", RouteData.Values);
+            ContestFormModel editContest = new ContestFormModel();
+            editContest.ContestID = int.Parse(RouteData.Values["id"].ToString());
+            editContest.ContestName = db.Contests.Find(editContest.ContestID).ContestName;
+            editContest.StartTime = db.Contests.Find(editContest.ContestID).StartTime.ToString();
+            editContest.EndTime = db.Contests.Find(editContest.ContestID).EndTime.ToString();
+            return View(editContest);
         }
 
         [HttpPost]
         public ActionResult Edit(ContestFormModel editContest, FormCollection form)
         {
+            User tmp = Session["User"] as User;
+            if (tmp == null)
+                return RedirectToAction("Index", "Contest", RouteData.Values);
+            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
+                return RedirectToAction("Index", "Contest", RouteData.Values);
             editContest.ContestName = editContest.ContestName.Trim();
             if (editContest.ContestName == "")
             {

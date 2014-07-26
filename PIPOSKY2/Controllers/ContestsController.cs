@@ -19,17 +19,21 @@ namespace PIPOSKY2.Controllers
         public ActionResult Add()
         {
             User tmp = Session["User"] as User;
-            if (tmp != null)
-            {
-                if ((tmp.UserType == "admin") || (tmp.UserType == "editor"))
-                    return View();
-            }
-            return RedirectToAction("Index");
+            if (tmp == null)
+                return RedirectToAction("Index");
+            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
+                return RedirectToAction("Index");        
+            return View();
         }
 
         [HttpPost]
         public ActionResult Add(ContestFormModel addContest, FormCollection form)
         {
+            User tmp = Session["User"] as User;
+            if (tmp == null)
+                return RedirectToAction("Index");
+            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
+                return RedirectToAction("Index");
             addContest.ContestName = addContest.ContestName.Trim();
             if (addContest.ContestName == "")
             {
@@ -81,17 +85,21 @@ namespace PIPOSKY2.Controllers
         public ActionResult Delete()
         {
             User tmp = Session["User"] as User;
-            if (tmp != null)
-            {
-                if ((tmp.UserType == "admin") || (tmp.UserType == "editor"))
-                    return View();
-            }
-            return RedirectToAction("Index");
+            if (tmp == null)
+                return RedirectToAction("Index");
+            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
+                return RedirectToAction("Index");
+            return View();
         }
 
         [HttpPost]
         public ActionResult Delete(FormCollection form)
         {
+            User tmp = Session["User"] as User;
+            if (tmp == null)
+                return RedirectToAction("Index");
+            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
+                return RedirectToAction("Index");
             PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
             foreach (var i in dbtemp.Contests)
                 if (form[i.ContestID.ToString()] == "on")
