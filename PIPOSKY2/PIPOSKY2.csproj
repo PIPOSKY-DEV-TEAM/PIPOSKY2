@@ -48,7 +48,7 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="SharpCompress">
-      <HintPath>..\..\..\Downloads\SharpCompress0.10.3\Full\SharpCompress.dll</HintPath>
+      <HintPath>..\packages\p3-sharpcompress.0.10.5.2\lib\net40\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -269,6 +269,7 @@
   <ItemGroup>
     <None Include="Properties\PublishProfiles\PIPOSKY2.pubxml" />
     <Content Include="Views\Contests\Delete.cshtml" />
+    <Content Include="Views\User\AdministrateUsers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Problem\Content.cshtml" />

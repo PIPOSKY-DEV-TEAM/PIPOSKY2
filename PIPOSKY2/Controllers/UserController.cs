@@ -141,9 +141,19 @@ namespace PIPOSKY2.Controllers
             return View();
         }
 
-        public ActionResult Delete(int id)
-        {
+        public ActionResult AdministrateUsers() {
             return View();
+        }
+
+        [NonAction]
+        private bool BatchAddUsers() {
+            return false;
+        }
+
+        [NonAction]
+        private bool Delete(int id)
+        {
+            return false;
         }
 
         public ActionResult Info()
