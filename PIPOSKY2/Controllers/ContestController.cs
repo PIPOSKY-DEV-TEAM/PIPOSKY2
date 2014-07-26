@@ -40,7 +40,14 @@ namespace PIPOSKY2.Controllers
                 return RedirectToAction("Index", "Contest", RouteData.Values);
             if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
                 return RedirectToAction("Index", "Contest", RouteData.Values);
-            editContest.ContestName = editContest.ContestName.Trim();
+            try
+            {
+                editContest.ContestName = editContest.ContestName.Trim();
+            }
+            catch
+            {
+                return View(editContest);
+            }
             if (editContest.ContestName == "")
             {
                 ModelState.AddModelError("ContestName", "比赛名不能为空");
