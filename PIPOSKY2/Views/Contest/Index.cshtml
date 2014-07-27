@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "比赛";
+    ViewBag.Title = "作业";
 }
 
 @using PIPOSKY2.Models;
@@ -12,7 +12,7 @@
     {
         if (DateTime.Compare(DateTime.Now, Model.StartTime) < 0)
         {
-    <p>比赛尚未开始</p>
+    <p>作业尚未开始</p>
         }
         else
         {
@@ -38,7 +38,7 @@
     else
     {
     <p>
-        @Html.ActionLink("修改比赛", "Edit", new { id = @Model.ContestID }, new { @class = "btn btn-default" })
+        @Html.ActionLink("修改作业", "Edit", new { id = @Model.ContestID }, new { @class = "btn btn-default" })
     </p>
     <table class="table table-striped">
         <tr>

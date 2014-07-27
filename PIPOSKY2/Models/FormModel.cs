@@ -77,7 +77,7 @@ namespace PIPOSKY2.Models
     public class ContestFormModel
     {
         [Required]
-        [Display(Name = "比赛名称")]
+        [Display(Name = "作业名称")]
         public string ContestName { get; set; }
         [Required]
         [Display(Name = "开始时间")]
