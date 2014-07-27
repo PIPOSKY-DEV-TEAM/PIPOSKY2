@@ -7,13 +7,13 @@ using PIPOSKY2.Models;
 
 namespace PIPOSKY2.Controllers
 {
-    public class ContestGroupsController : Controller
+    public class CoursesController : Controller
     {
         PIPOSKY2DbContext db = new PIPOSKY2DbContext();
 
         public ActionResult Index()
         {
-            return View(db.ContestGroups);
+            return View(db.Courses);
         }
 
         public ActionResult Add()
@@ -27,7 +27,7 @@ namespace PIPOSKY2.Controllers
         }
 
         [HttpPost]
-        public ActionResult Add(ContestGroup addContestGroup)
+        public ActionResult Add(Course addCourse)
         {
             User tmp = Session["User"] as User;
             if (tmp == null)
@@ -36,25 +36,25 @@ namespace PIPOSKY2.Controllers
                 return RedirectToAction("Index");
             try
             {
-                addContestGroup.ContestGroupName = addContestGroup.ContestGroupName.Trim();
+                addCourse.CourseName = addCourse.CourseName.Trim();
             }
             catch
             {
-                return View(addContestGroup);
+                return View(addCourse);
             }
-            if (addContestGroup.ContestGroupName == "")
+            if (addCourse.CourseName == "")
             {
-                ModelState.AddModelError("ContestGroupName", "课程名不能为空");
-                return View(addContestGroup);
+                ModelState.AddModelError("CourseName", "课程名不能为空");
+                return View(addCourse);
             }
-            foreach (var i in db.ContestGroups.Where(g => g.ContestGroupName == addContestGroup.ContestGroupName))
+            foreach (var i in db.Courses.Where(g => g.CourseName == addCourse.CourseName))
             {
-                ModelState.AddModelError("ContestGroupName", "课程名已存在");
-                return View(addContestGroup);
+                ModelState.AddModelError("CourseName", "课程名已存在");
+                return View(addCourse);
             }
-            ContestGroup contestGroup = new ContestGroup();
-            contestGroup.ContestGroupName = addContestGroup.ContestGroupName;
-            db.ContestGroups.Add(contestGroup);
+            Course Course = new Course();
+            Course.CourseName = addCourse.CourseName;
+            db.Courses.Add(Course);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
@@ -70,7 +70,7 @@ namespace PIPOSKY2.Controllers
         }
 
         [HttpPost]
-        public ActionResult Delete(ContestGroup contestGroup, FormCollection form)
+        public ActionResult Delete(Course Course, FormCollection form)
         {
             User tmp = Session["User"] as User;
             if (tmp == null)
@@ -79,16 +79,16 @@ namespace PIPOSKY2.Controllers
                 return RedirectToAction("Index");
             PIPOSKY2DbContext dbtemp1 = new PIPOSKY2DbContext();
             PIPOSKY2DbContext dbtemp2 = new PIPOSKY2DbContext();
-            foreach (var i in dbtemp1.ContestGroups)
-                if (form[i.ContestGroupID.ToString()] == "on")
+            foreach (var i in dbtemp1.Courses)
+                if (form[i.CourseID.ToString()] == "on")
                 {
-                    foreach (var j in dbtemp2.Contests.Where(c => c.ContestGroupID == i.ContestGroupID))
+                    foreach (var j in dbtemp2.Course.Where(c => c.CourseID == i.CourseID))
                     {
-                        foreach (var k in db.ContestProblems.Where(p => p.ContestID == j.ContestID))
-                            db.ContestProblems.Remove(k);
-                        db.Contests.Remove(db.Contests.Find(j.ContestID));
+                        foreach (var k in db.HomeworkProblems.Where(p => p.HomeworkID == j.HomeworkID))
+                            db.HomeworkProblems.Remove(k);
+                        db.Course.Remove(db.Course.Find(j.HomeworkID));
                     }
-                    db.ContestGroups.Remove(db.ContestGroups.Find(i.ContestGroupID));
+                    db.Courses.Remove(db.Courses.Find(i.CourseID));
                 }
             db.SaveChanges();
             return RedirectToAction("Index");

@@ -74,11 +74,11 @@ namespace PIPOSKY2.Models
         public string ConfirmPassword { get; set; }
     }
 
-    public class ContestFormModel
+    public class HomeworkFormModel
     {
         [Required]
         [Display(Name = "作业名称")]
-        public string ContestName { get; set; }
+        public string HomeworkName { get; set; }
         [Required]
         [Display(Name = "开始时间")]
         public string StartTime { get; set; }
@@ -86,9 +86,9 @@ namespace PIPOSKY2.Models
         [Display(Name = "结束时间")]
         public string EndTime { get; set; }
         [Required]
-        public int ContestID { get; set; }
+        public int HomeworkID { get; set; }
         [Required]
-        public int ContestGroupID { get; set; }
+        public int CourseID { get; set; }
     }
 
     public class UploadProblemFormModel
