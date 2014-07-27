@@ -29,7 +29,7 @@ namespace PIPOSKY2.Models
 	{
 		protected override void Seed(PIPOSKY2DbContext context)
 		{
-			var user = new User {UserEmail = "test@test.com", UserName = "root", UserPwd = "admin", UserType = "root"};
+			var user = new User {UserEmail = "test@test.com", UserName = "root", UserPwd = "admin", UserType = "admin"};
 			context.Users.AddOrUpdate(user);
 
             var prob = new Problem { Creator = user, Downloadable = true, ProblemName = "a", Visible = true, ProblemPath = "a.zip" ,Content="TEST"};
