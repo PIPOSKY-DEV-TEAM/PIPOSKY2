@@ -6,13 +6,19 @@
 }
 
 <h2>Upload</h2>
-@using (Html.BeginForm("Upload","Problem",FormMethod.Post,new {enctype="multipart/form-data"}))
+@using (Html.BeginForm("Upload", "Problem", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     <p>题目名称</p>
     <input type="text" name="Name" required/>
-    <p></p>
+    <br /><br />
+    <p>上传文件</p>
     <input type="file" name="File" accept="" required/>
-    <p>@ViewBag.text</p>;
+    <p style="color:red">@ViewBag.mention</p>
+    <br />
+    <p>
+        对所有用户可见
+        <input type="checkbox" name="visible" />
+    </p>
     <br />
     <input type="submit" value="提交" />
 }

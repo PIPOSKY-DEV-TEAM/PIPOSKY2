@@ -26,73 +26,25 @@ namespace PIPOSKY2.Controllers
             return View();
         }
         [HttpPost]
-        public ActionResult Upload(UploadProblemFormModel form)
+        public ActionResult Upload(HttpRequestBase Request)
         {
             //创建题目数据
             Problem problem = new Problem();
             //题目名称
-            problem.ProblemName = form.Name;
+            problem.ProblemName = Request["Name"];
             //获取文件
-            HttpPostedFileBase file = form.File;
+            HttpPostedFileBase file = Request.Files["File"];
             if (!DealWithFile(file, problem))
             {
+                ViewBag.mention = "文件格式错误！";
                 return View();
             }
+            if (Request["visible"] == "on")
+                problem.Visible = true;
+            else problem.Visible = false;
             db.Problems.Add(problem);
             db.SaveChanges();
             return RedirectToAction("Index", "Problem");
-        }
-        public bool CheckFormat(HttpPostedFileBase file)
-        {
-            string name = file.FileName;
-            if (!(name.EndsWith(".zip")||name.EndsWith(".rar")))
-            {
-                return false;
-            }
-            return true;
-        }
-        public string OpenZip(HttpPostedFileBase file)
-        {
-            string content = "";
-            Encoding encoding = System.Text.Encoding.GetEncoding("GB2312");
-            using (ZipArchive archive = new ZipArchive(file.InputStream, ZipArchiveMode.Read, false, encoding))
-            {
-                foreach (ZipArchiveEntry entry in archive.Entries)
-                {
-                    if (entry.FullName.EndsWith("Content.txt"))
-                    {
-                        using (StreamReader reader = new StreamReader(entry.Open(), encoding))
-                        {
-                            content = reader.ReadToEnd();
-                            reader.Close();
-                        }
-                    }
-                }
-            }
-            return content;
-        }
-        public string OpenRar(HttpPostedFileBase file)
-        {
-            string content = "";
-            Encoding encoding = System.Text.Encoding.GetEncoding("GB2312");
-            using (Stream stream = file.InputStream)
-            {
-                var reader = ReaderFactory.Open(stream);
-                while (reader.MoveToNextEntry())
-                {
-                    if (!reader.Entry.IsDirectory)
-                    {
-                        if (reader.Entry.FilePath.EndsWith("Content.txt"))
-                        {
-                            Console.WriteLine(reader.Entry.FilePath);
-                            EntryStream entry = reader.OpenEntryStream();
-                            StreamReader temp = new StreamReader(entry, encoding);
-                            content = temp.ReadToEnd();
-                        }
-                    }
-                }
-            }
-            return content;
         }
         public ActionResult Edit()
         {
@@ -116,10 +68,28 @@ namespace PIPOSKY2.Controllers
         }
         public ActionResult Delete()
         {
-            Problem problem = db.Problems.Find(int.Parse(RouteData.Values["id"].ToString()));
-            db.Problems.Remove(problem);
+            User tmp = Session["User"] as User;
+            if (tmp == null)
+                return RedirectToAction("Index");
+            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
+                return RedirectToAction("Index");
+            return View(db.Problems);
+        }
+        [HttpPost]
+        public ActionResult Delete(UploadProblemFormModel problem, FormCollection form)
+        {
+            User tmp = Session["User"] as User;
+            if (tmp == null)
+                return RedirectToAction("Index");
+            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
+                return RedirectToAction("Index");
+            foreach (var i in db.Problems)
+                if (form[i.ProblemID.ToString()] == "on")
+                {
+                    db.Problems.Remove(i);
+                }
             db.SaveChanges();
-            return RedirectToAction("Index", "Problem");
+            return RedirectToAction("Index");
         }
         public ActionResult Content()
         {
@@ -132,16 +102,18 @@ namespace PIPOSKY2.Controllers
                 //文件路径
                 string filePath = Path.Combine(HttpContext.Server.MapPath("~/Problems"), Path.GetFileName(file.FileName));
                 problem.ProblemPath = filePath;
-                //文件类型
-                file.GetType();
+                //文件类型zip/rar
+                string content = "";
                 if (filePath.EndsWith(".zip"))
                 {
-                    string content = OpenZip(file);
+                    if (!OpenZip(file, content))
+                        return false;
                     problem.Content = content;
                 }
                 else if (filePath.EndsWith(".rar"))
                 {
-                    string content = OpenRar(file);
+                    if (!OpenRar(file, content))
+                        return false;
                     problem.Content = content;
                 }
                 //保存文件
@@ -153,6 +125,59 @@ namespace PIPOSKY2.Controllers
                 ViewBag.text = "文件格式错误";
                 return false;
             }
+        }
+        public bool CheckFormat(HttpPostedFileBase file)
+        {
+            string name = file.FileName;
+            if (!(name.EndsWith(".zip") || name.EndsWith(".rar")))
+            {
+                return false;
+            }
+            return true;
+        }
+        public bool OpenZip(HttpPostedFileBase file, string content)
+        {
+            Encoding encoding = System.Text.Encoding.GetEncoding("GB2312");
+            using (ZipArchive archive = new ZipArchive(file.InputStream, ZipArchiveMode.Read, false, encoding))
+            {
+                foreach (ZipArchiveEntry entry in archive.Entries)
+                {
+                    if (entry.FullName.EndsWith("Content.txt"))
+                    {
+                        using (StreamReader reader = new StreamReader(entry.Open(), encoding))
+                        {
+                            content = reader.ReadToEnd();
+                            reader.Close();
+                        }
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        public bool OpenRar(HttpPostedFileBase file,string content)
+        {
+            Encoding encoding = System.Text.Encoding.GetEncoding("GB2312");
+            using (Stream stream = file.InputStream)
+            {
+                var reader = ReaderFactory.Open(stream);
+                while (reader.MoveToNextEntry())
+                {
+                    if (!reader.Entry.IsDirectory)
+                    {
+                        if (reader.Entry.FilePath.EndsWith("Content.txt"))
+                        {
+                            Console.WriteLine(reader.Entry.FilePath);
+                            EntryStream entry = reader.OpenEntryStream();
+                            StreamReader temp = new StreamReader(entry, encoding);
+                            content = temp.ReadToEnd();
+                            return true;
+                        }
+
+                    }
+                }
+            }
+            return false;
         }
     }
 }
