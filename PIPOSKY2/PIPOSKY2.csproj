@@ -48,7 +48,7 @@
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="SharpCompress">
-      <HintPath>..\packages\p3-sharpcompress.0.10.5.2\lib\net40\SharpCompress.dll</HintPath>
+      <HintPath>..\packages\sharpcompress.0.10.3\lib\net40\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -131,6 +131,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ContestController.cs" />
+    <Compile Include="Controllers\ContestGroupsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ContestsController.cs" />
     <Compile Include="Controllers\JudgeController.cs" />
@@ -146,8 +147,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\PIPOSKY2.mdf" />
-    <Content Include="App_Data\PIPOSKY2_log.ldf" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
     <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
@@ -243,9 +242,6 @@
     <Content Include="Views\Submit\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Problem\Upload.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Submit\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -271,12 +267,18 @@
     <Content Include="Views\Contests\Delete.cshtml" />
     <Content Include="Views\User\AdministrateUsers.cshtml" />
     <Content Include="Views\User\BatchAddUsers.cshtml" />
+    <Content Include="Views\ContestGroups\Index.cshtml" />
+    <Content Include="Views\ContestGroups\Add.cshtml" />
+    <Content Include="Views\ContestGroups\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Problem\Content.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Problem\Edit.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

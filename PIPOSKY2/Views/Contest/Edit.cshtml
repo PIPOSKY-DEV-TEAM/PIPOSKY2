@@ -2,8 +2,10 @@
 @model PIPOSKY2.Models.ContestFormModel
 
 @{
-    ViewBag.Title = "编辑比赛";
+    ViewBag.Title = "修改比赛";
 }
+
+<h2>修改比赛</h2>
 @using (Html.BeginForm("Edit", "Contest", FormMethod.Post, new { role = "form" }))
 {
     @Html.TextBoxFor(model => model.ContestID, new { type = "hidden" });
@@ -22,7 +24,7 @@
         @Html.TextBoxFor(model => model.EndTime, new { @class = "form-control", id = "EndTime", placeholder = @DateTime.Now.ToString() })
         @Html.ValidationMessageFor(model => model.EndTime)
     </div>
-    <table class="table">
+    <table class="table table-striped">
         <tr>
             <th>题目ID</th>
             <th>题目名称</th>

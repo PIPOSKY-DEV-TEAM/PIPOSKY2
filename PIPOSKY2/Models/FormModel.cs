@@ -93,6 +93,8 @@ namespace PIPOSKY2.Models
         public string EndTime { get; set; }
         [Required]
         public int ContestID { get; set; }
+        [Required]
+        public int ContestGroupID { get; set; }
     }
 
     public class UploadProblemFormModel

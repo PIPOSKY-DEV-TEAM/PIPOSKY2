@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
@@ -21,9 +22,7 @@ namespace PIPOSKY2.Controllers
             var ret = new SubmitApiModels();
             var tmp = db.Submits.FirstOrDefault(_ => _.State == "wait");
             if (tmp == null)
-            {
                 ret.SubmitID = 0;
-            }
             else
             {
                 ret.SubmitID = tmp.SubmitID;
@@ -31,7 +30,7 @@ namespace PIPOSKY2.Controllers
                 ret.Source = tmp.Source;
                 ret.Lang = tmp.Lang;
 	            tmp.State = "run";
-				db.Entry(tmp).State = EntityState.Modified;
+				db.Submits.AddOrUpdate(tmp);
 	            db.SaveChanges();
             }
             return ret;
@@ -45,7 +44,7 @@ namespace PIPOSKY2.Controllers
 		    {
 			    tmp.Result = value.Result;
 			    tmp.State = value.State;
-			    db.Entry(tmp).State = EntityState.Modified;
+			    db.Submits.AddOrUpdate(tmp);
 			    db.SaveChanges();
 		    }
 	    }

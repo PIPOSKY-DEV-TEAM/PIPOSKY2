@@ -9,6 +9,19 @@
 <p>
     @Html.ActionLink("Create", "Create","Submit",new {@class="btn btn-default"})
 </p>
+<form>
+    <label for="p">题目</label> 
+    <input type="text" name="p" id="p"/>
+    <label for="s">状态</label>
+    <select name="s" id="s">
+        <option value="">(未指定)</option>
+        <option value="wait">等待</option>
+        <option value="run">运行</option>
+    </select>
+    <input type="checkbox" name="rejudge" id="rejudge"/>
+    <label for="rejudge">重新评测</label>
+    <input type="submit" />
+</form>
 <table class="table table-striped">
     <tr>
         <th>#</th>
@@ -37,12 +50,7 @@
                 @Html.DisplayFor(modelItem => item.Lang)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.State)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.SubmitID }) |
-                @Html.ActionLink("Details", "Details", new { id=item.SubmitID }) |
-                @Html.ActionLink("Delete", "Delete", new { id=item.SubmitID })
+                @Html.ActionLink(item.State, "Details", new { id=item.SubmitID })
             </td>
         </tr>
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using Microsoft.Ajax.Utilities;
 using PIPOSKY2.Models;
 using System.Data.Entity.Migrations;
 using System.IO;
@@ -25,6 +24,7 @@ namespace PIPOSKY2.Controllers
 			}
 			if (info.UserEmail != null && db.Users.Any(_ => _.UserEmail == info.UserEmail))
 			{
+				ModelState.AddModelError("UserName", "Email已经存在");
                 ModelState.AddModelError("UserEmail", "Email已经存在");
 			}
 			if (info.UserPwd2 != null && info.UserPwd != info.UserPwd2)
@@ -42,7 +42,7 @@ namespace PIPOSKY2.Controllers
 				//Session["_massage"] =  "注册成功";
 				Session["_UserID"] = tmp.UserID;
                 Session["_UserName"] = tmp.UserName;
-                return RedirectToAction("info","User");
+                return RedirectToAction("Index","ContestGroups");
 			}
 			return View(info);
         }
@@ -65,7 +65,7 @@ namespace PIPOSKY2.Controllers
                 Session["User"] = tmp;
                 Session["_UserID"] = tmp.UserID;
                 Session["_UserName"] = tmp.UserName;
-                return RedirectToAction("info","User");
+                return RedirectToAction("Index","ContestGroups");
             }
             ModelState.AddModelError("UserName", "用户名不存在，登陆失败！");
             return View();

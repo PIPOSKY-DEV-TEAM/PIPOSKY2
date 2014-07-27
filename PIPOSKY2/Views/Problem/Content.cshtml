@@ -4,11 +4,15 @@
     ViewBag.Title = "Content";
 }
 
+@section Navbar
+{
+    <li>@Html.ActionLink("Submit","Create","Submit",new {@id=Model.ProblemID},new {})</li>
+}
 <h2>@Model.ProblemName</h2>
 
-<p>
-    @Model.Content
-</p>
-<textarea rows="15" cols="150"></textarea>
+<div>
+    @Html.Raw(Model.Content)
+</div>
+
 <p></p>
-<button>提交</button>
+

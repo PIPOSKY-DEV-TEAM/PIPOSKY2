@@ -6,24 +6,56 @@
 @model Contest
 
 <h2>@Model.ContestName</h2>
-@Html.ActionLink("修改比赛", "Edit", new { id = @Model.ContestID }, new {  @class="btn btn-default" })
-<table class="table">
-    <tr>
-        <th>题目ID</th>
-        <th>题目名称</th>
-    </tr>
-    @{
-        PIPOSKY2DbContext db = new PIPOSKY2DbContext();
-        PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
-        foreach (var i in db.ContestProblems)
+@{
+    User tmp = Session["User"] as User;
+    if ((tmp == null) || ((tmp.UserType != "admin") && (tmp.UserType != "editor")))
+    {
+        if (DateTime.Compare(DateTime.Now, Model.StartTime) < 0)
         {
-            if (i.ContestID == Model.ContestID)
+    <p>比赛尚未开始</p>
+        }
+        else
+        {
+    <table class="table table-striped">
+        <tr>
+            <th>题目ID</th>
+            <th>题目名称</th>
+        </tr>
+        @{
+            PIPOSKY2DbContext db = new PIPOSKY2DbContext();
+            PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
+            foreach (var i in db.ContestProblems.Where(p => p.ContestID == Model.ContestID))
             {
-                <tr>
-                    <th>@i.ProblemID</th>
-                    <th>@dbtemp.Problems.Find(i.ProblemID).ProblemName</th>
-                </tr>
+            <tr>
+                <td>@i.ProblemID</td>
+                <td>@dbtemp.Problems.Find(i.ProblemID).ProblemName</td>
+            </tr>
             }
         }
+    </table>
+        }
     }
-</table>
+    else
+    {
+    <p>
+        @Html.ActionLink("修改比赛", "Edit", new { id = @Model.ContestID }, new { @class = "btn btn-default" })
+    </p>
+    <table class="table table-striped">
+        <tr>
+            <th>题目ID</th>
+            <th>题目名称</th>
+        </tr>
+        @{
+        PIPOSKY2DbContext db = new PIPOSKY2DbContext();
+        PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
+        foreach (var i in db.ContestProblems.Where(p => p.ContestID == Model.ContestID))
+        {
+            <tr>
+                <td>@i.ProblemID</td>
+                <td>@dbtemp.Problems.Find(i.ProblemID).ProblemName</td>
+            </tr>
+        }
+        }
+    </table>
+    }
+}
