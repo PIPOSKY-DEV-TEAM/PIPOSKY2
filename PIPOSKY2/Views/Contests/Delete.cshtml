@@ -9,7 +9,7 @@
 @using (Html.BeginForm("Delete", "Contests", FormMethod.Post, new { role = "form" }))
 {
     @Html.TextBoxFor(model => model.ContestGroupID, new { type = "hidden" });
-    <table class="table">
+    <table class="table table-striped">
         <tr>
             <th>比赛ID</th>
             <th>比赛名称</th>
