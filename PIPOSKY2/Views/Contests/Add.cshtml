@@ -2,16 +2,16 @@
 @model PIPOSKY2.Models.ContestFormModel
 
 @{
-    ViewBag.Title = "添加比赛";
+    ViewBag.Title = "添加作业";
 }
 
-<h2>添加比赛</h2>
+<h2>添加作业</h2>
 @using (Html.BeginForm("Add", "Contests", FormMethod.Post, new { role = "form" }))
 {
     @Html.TextBoxFor(model => model.ContestGroupID, new { type = "hidden" });
     <div class="form-group">
         @Html.LabelFor(model => model.ContestName, new { @for = "ContestName" })
-        @Html.TextBoxFor(model => model.ContestName, new { @class = "form-control", id = "ContestName", placeholder = "比赛名称" })
+        @Html.TextBoxFor(model => model.ContestName, new { @class = "form-control", id = "ContestName", placeholder = "作业名称" })
         @Html.ValidationMessageFor(model => model.ContestName)
     </div>
     <div class="form-group">
@@ -24,7 +24,7 @@
         @Html.TextBoxFor(model => model.EndTime, new { @class = "form-control", id = "EndTime", placeholder = @DateTime.Now.ToString() })
         @Html.ValidationMessageFor(model => model.EndTime)
     </div>
-    <table class="table">
+    <table class="table table-striped">
         <tr>
             <th>题目ID</th>
             <th>题目名称</th>

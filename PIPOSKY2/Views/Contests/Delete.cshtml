@@ -2,18 +2,18 @@
 @model ContestGroup
 
 @{
-    ViewBag.Title = "删除比赛";
+    ViewBag.Title = "删除作业";
 }
 
-<h2>删除比赛</h2>
+<h2>删除作业</h2>
 @using (Html.BeginForm("Delete", "Contests", FormMethod.Post, new { role = "form" }))
 {
     @Html.TextBoxFor(model => model.ContestGroupID, new { type = "hidden" });
-    <table class="table">
+    <table class="table table-striped">
         <tr>
-            <th>比赛ID</th>
-            <th>比赛名称</th>
-            <th>删除比赛</th>
+            <th>作业ID</th>
+            <th>作业名称</th>
+            <th>删除作业</th>
         </tr>
         @{
     PIPOSKY2DbContext db = new PIPOSKY2DbContext();

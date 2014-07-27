@@ -10,6 +10,16 @@ header, footer, nav, section {
     display: block;
 }
 
+h2.title {
+    display:inline-block;
+}
+
+.titlebtn {
+    margin:0 10px;
+    position:relative;
+    top:-6px;
+}
+
 
 .text-box {
     width: 200px;
