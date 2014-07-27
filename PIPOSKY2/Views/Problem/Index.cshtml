@@ -1,30 +1,33 @@
 ﻿@using PIPOSKY2.Models 
 @model IEnumerable<Problem>
 @{
-    ViewBag.Title = "题目列表";
+    ViewBag.Title = "Index";
 }
-<h2 class="title">题目列表</h2> @Html.ActionLink("上传题目", "Edit", "Problem", null, new { @class = "titlebtn btn btn-success" })
 
-<table class="table table-striped">
+<h2>Index</h2>
+@Html.ActionLink("上传题目", "Upload", "Problem", new { @class = "btn btn-default" })
+@Html.ActionLink("删除题目", "Delete", "Problem", new { @class = "btn btn-default" })
+<p></p>
+
+<table class="table">
     <tr>
         <th>题目ID</th>
         <th>题目名称</th>
+        <th>存储路径</th>
         <th>上传用户</th>
-        <th>操作</th>
+        <th></th>
     </tr>
     @foreach (Problem i in Model)
     {
-        <tr>
-            <td>@i.ProblemID</td>
-            <td>@Html.ActionLink(@i.ProblemName, "Content", new { id = @i.ProblemID })</td>
-            <td>@i.Creator.UserName</td>
-            <td>
-                @Html.ActionLink("编辑", "Edit", new { id= @i.ProblemID})
-                |
-                @Html.ActionLink("删除", "Delete", new { id= @i.ProblemID})
-                |
-                @Html.ActionLink("下载数据", "Downland", new { id= @i.ProblemID})
-            </td>
-        </tr>
+        if (i.Visible)
+        {
+            <tr>
+                <td>@i.ProblemID</td>
+                <td>@Html.ActionLink(@i.ProblemName, "Content", new { id = @i.ProblemID })</td>
+                <td>@i.ProblemPath</td>
+                <td>@i.Creator</td>
+                <td>@Html.ActionLink("编辑", "Edit", new { id= @i.ProblemID})</td>
+            </tr>
+        }
     }
 </table>

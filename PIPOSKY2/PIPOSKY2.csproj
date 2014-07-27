@@ -47,7 +47,11 @@
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="SharpCompress">
+    <Reference Include="NUnrar">
+      <HintPath>..\packages\nunrar.1.0.1\lib\net40\NUnrar.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpCompress, Version=0.10.3.0, Culture=neutral, PublicKeyToken=beaf6f427e128133, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\sharpcompress.0.10.3\lib\net40\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -242,6 +246,9 @@
     <Content Include="Views\Submit\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\Problem\Upload.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Views\Submit\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -270,6 +277,7 @@
     <Content Include="Views\ContestGroups\Index.cshtml" />
     <Content Include="Views\ContestGroups\Add.cshtml" />
     <Content Include="Views\ContestGroups\Delete.cshtml" />
+    <Content Include="Views\Problem\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Problem\Content.cshtml" />

@@ -46,12 +46,12 @@ namespace PIPOSKY2.Controllers
             }
             if (addContest.ContestName == "")
             {
-                ModelState.AddModelError("ContestName", "比赛名不能为空");
+                ModelState.AddModelError("ContestName", "作业名不能为空");
                 return View(addContest);
             }
             foreach (var i in db.Contests.Where(c => c.ContestGroupID == addContest.ContestGroupID).Where(c => c.ContestName == addContest.ContestName))
             {
-                ModelState.AddModelError("ContestName", "比赛名已存在");
+                ModelState.AddModelError("ContestName", "作业名已存在");
                 return View(addContest);
             }
             Contest contest = new Contest();
