@@ -135,6 +135,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\ContestController.cs" />
+    <Compile Include="Controllers\ContestGroupsController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ContestsController.cs" />
     <Compile Include="Controllers\JudgeController.cs" />
