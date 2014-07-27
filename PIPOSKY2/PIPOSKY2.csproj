@@ -270,6 +270,7 @@
     <None Include="Properties\PublishProfiles\PIPOSKY2.pubxml" />
     <Content Include="Views\Contests\Delete.cshtml" />
     <Content Include="Views\User\AdministrateUsers.cshtml" />
+    <Content Include="Views\User\BatchAddUsers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Problem\Content.cshtml" />

@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "BatchAddUsers";
+}
+@model System.Web.HttpContextBase
+<h2>Batch Add Users</h2>
+<br />
+<br />
+<div>
+    <p>请上传csv文件，文件内每行数据格式需为“用户名,密码,邮箱”。</p>
+    <p>用户名长度要在4到100个字符之间，不能包含空格</p>
+    <p>密码长度要在6到20个字符之间，不能包含空格</p>
+    <p>邮箱格式“XXX@XXX”</p>
+    <p>批量添加的用户类型默认为普通用户。</p>
+</div>
+ @using (Html.BeginForm("BatchAddUsers","User",FormMethod.Post,new{ enctype = "multipart/form-data" }))
+{
+    <text>选择上传文件：</text><input name="file" type="file" id="file" />
+    <br />
+     @Html.ValidationMessage("ErrorMessage");
+    <br />
+    <input type="submit" name="Upload" value="Upload" />
+}
