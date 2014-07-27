@@ -39,7 +39,7 @@ namespace PIPOSKY2.Controllers
 				//Session["_massage"] =  "注册成功";
 				Session["_UserID"] = tmp.UserID;
                 Session["_UserName"] = tmp.UserName;
-                return RedirectToAction("info","User");
+                return RedirectToAction("Index","ContestGroups");
 			}
 			return View(info);
         }
@@ -62,7 +62,7 @@ namespace PIPOSKY2.Controllers
                 Session["User"] = tmp;
                 Session["_UserID"] = tmp.UserID;
                 Session["_UserName"] = tmp.UserName;
-                return RedirectToAction("info","User");
+                return RedirectToAction("Index","ContestGroups");
             }
             ModelState.AddModelError("UserName", "用户名不存在，登陆失败！");
             return View();

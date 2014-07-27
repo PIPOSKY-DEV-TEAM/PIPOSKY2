@@ -11,7 +11,10 @@ namespace PIPOSKY2.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            if (Session["User"] == null)
+                return RedirectToAction("Login", "User");
+            else
+                return View();
         }
     }
 }
