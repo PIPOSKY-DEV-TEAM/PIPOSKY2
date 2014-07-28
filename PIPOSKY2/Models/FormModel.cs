@@ -99,6 +99,8 @@ namespace PIPOSKY2.Models
         [Required]
         [Display(Name = "文件路径")]
         public HttpPostedFileBase File{ get; set; }
+        [Display(Name = "是否公开")]
+        public string visible { get; set; }
     }
 	
 	public class SubmitFormModel

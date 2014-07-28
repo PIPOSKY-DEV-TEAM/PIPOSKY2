@@ -77,8 +77,9 @@ namespace PIPOSKY2.Models
         public bool Visible { set; get; }
         [Required]
         public bool Downloadable { set; get; }
-
+        [Required]
         public virtual User Creator { set; get; }
+        [Required]
         public string Content { set; get; }
     }
 
