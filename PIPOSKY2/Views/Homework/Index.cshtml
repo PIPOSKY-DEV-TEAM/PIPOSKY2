@@ -40,6 +40,7 @@
             <th>题目ID</th>
             <th>题目名称</th>
             <th>上传用户</th>
+            <th>操作</th>
         </tr>
         @{
         PIPOSKY2DbContext db = new PIPOSKY2DbContext();
@@ -50,6 +51,11 @@
                 <td>@i.ProblemID</td>
                 <td>@Html.ActionLink(@dbtemp.Problems.Find(i.ProblemID).ProblemName, "Content", "Problem", new { id = @i.ProblemID }, null)</td>
                 <td>@dbtemp.Problems.Find(i.ProblemID).Creator.UserName</td>
+                <td>
+                    @Html.ActionLink("编辑题目", "Edit", "Problem", new { id = @i.ProblemID }, null)
+                    |
+                    @Html.ActionLink("下载数据", "Downland", "Problem", new { id = @i.ProblemID }, null)
+                </td>
             </tr>
         }
         }
