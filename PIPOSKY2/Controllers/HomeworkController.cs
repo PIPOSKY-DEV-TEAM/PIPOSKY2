@@ -12,20 +12,20 @@ namespace PIPOSKY2.Controllers
     {
         PIPOSKY2DbContext db = new PIPOSKY2DbContext();
 
-        public ActionResult Index()
+        public ActionResult Index(int? id)
         {
-            return View(db.Course.Find(int.Parse(RouteData.Values["id"].ToString())));
+            return View(db.Course.Find(id));
         }
 
-        public ActionResult Edit()
+        public ActionResult Edit(int? id)
         {
             User tmp = Session["User"] as User;
             if (tmp == null)
-                return RedirectToAction("Index", "Homework", RouteData.Values);
+                return RedirectToAction("Index", RouteData.Values);
             if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
-                return RedirectToAction("Index", "Homework", RouteData.Values);
+                return RedirectToAction("Index", RouteData.Values);
             HomeworkFormModel editHomework = new HomeworkFormModel();
-            editHomework.HomeworkID = int.Parse(RouteData.Values["id"].ToString());
+            editHomework.HomeworkID = (int)id;
             editHomework.HomeworkName = db.Course.Find(editHomework.HomeworkID).HomeworkName;
             editHomework.StartTime = db.Course.Find(editHomework.HomeworkID).StartTime.ToString();
             editHomework.EndTime = db.Course.Find(editHomework.HomeworkID).EndTime.ToString();
@@ -37,9 +37,9 @@ namespace PIPOSKY2.Controllers
         {
             User tmp = Session["User"] as User;
             if (tmp == null)
-                return RedirectToAction("Index", "Homework", RouteData.Values);
+                return RedirectToAction("Index", RouteData.Values);
             if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
-                return RedirectToAction("Index", "Homework", RouteData.Values);
+                return RedirectToAction("Index", RouteData.Values);
             try
             {
                 editHomework.HomeworkName = editHomework.HomeworkName.Trim();
