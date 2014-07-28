@@ -14,6 +14,7 @@ namespace PIPOSKY2.Controllers
     {
 
 		PIPOSKY2DbContext db = new PIPOSKY2DbContext();
+
         public ActionResult Details(int id)
         {
 	        var tmp = db.Submits.Find(id);
@@ -30,31 +31,27 @@ namespace PIPOSKY2.Controllers
         [HttpPost]
 		public ActionResult Create(SubmitFormModel info)
         {
-            try
-            {
-				var tmp = new Submit {
-					Lang = info.Lang, 
-					Prob = db.Problems.Find(info.PID),
-					Source = info.Source,
-					Time = DateTime.Now,
-					State = "wait",
-					User = db.Users.Find(Session["_UserID"] as int?)
-				};
+			var tmp = new Submit {
+				Lang = info.Lang, 
+				Prob = db.Problems.Find(info.PID),
+				Source = info.Source,
+				Time = DateTime.Now,
+				State = "wait",
+				User = db.Users.Find(Session["_UserID"] as int?)
+			};
 
-	            if (tmp.Prob == null)
-					ModelState.AddModelError("PID","没有这样的题目");
-	            
-	            if (ModelState.IsValid)
-	            {
-		            db.Submits.Add(tmp);
-		            db.SaveChanges();
-		            return RedirectToAction("Index");
-	            }
-            }
-            catch
-            {
-            
-            }
+	        if (tmp.Prob == null)
+				ModelState.AddModelError("PID","没有这样的题目");
+            if (tmp.Source == null || tmp.Source.Length == 0)
+                ModelState.AddModelError("Source", "不能提交空的代码");
+
+	        if (ModelState.IsValid)
+	        {
+		        db.Submits.Add(tmp);
+		        db.SaveChanges();
+		        return RedirectToAction("Index");
+	        }
+
 			return View();
         }
 
@@ -76,8 +73,7 @@ namespace PIPOSKY2.Controllers
                 string x = Request.QueryString["s"];
                 tmp = tmp.Where(_ => _.State == x);
             }
-            
-            if (Request.HttpMethod == "POST" && Request.Form ["rejudge"] != null)
+            if (Request.QueryString["rejudge"] == "on")
             {
                 foreach (var i in tmp.ToArray())
                 {
