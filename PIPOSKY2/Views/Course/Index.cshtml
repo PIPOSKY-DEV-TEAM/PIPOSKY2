@@ -8,15 +8,12 @@
 <h2>@Model.CourseName</h2>
 @{
     User tmp = Session["User"] as User;
-    if (tmp != null)
+    if ((tmp != null) && ((tmp.UserType == "admin") || (tmp.UserType == "editor")))
     {
-        if ((tmp.UserType == "admin") || (tmp.UserType == "editor"))
-        {
     <p>
         @Html.ActionLink("添加作业", "Add", new { id = @Model.CourseID }, new { @class = "btn btn-default" })
         @Html.ActionLink("删除作业", "Delete", new { id = @Model.CourseID }, new { @class = "btn btn-default" })
     </p>
-        }
     }
 }
 <table class="table table-striped">

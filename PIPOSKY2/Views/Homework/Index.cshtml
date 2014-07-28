@@ -10,11 +10,16 @@
     User tmp = Session["User"] as User;
     if ((tmp == null) || ((tmp.UserType != "admin") && (tmp.UserType != "editor")))
     {
+        if (DateTime.Compare(DateTime.Now, Model.EndTime) >= 0)
+        {
+    <p>作业已截止。之后您可以前往题目页面查看本次作业的题目，但作业成绩不会修改。</p>
+        }
     <table class="table table-striped">
         <tr>
             <th>题目ID</th>
             <th>题目名称</th>
             <th>上传用户</th>
+            <th>题目得分</th>
         </tr>
         @{
         PIPOSKY2DbContext db = new PIPOSKY2DbContext();
@@ -23,8 +28,40 @@
         {
             <tr>
                 <td>@i.ProblemID</td>
-                <td>@Html.ActionLink(@dbtemp.Problems.Find(i.ProblemID).ProblemName, "Content", "Problem", new { id = @i.ProblemID }, null)</td>
+                @{
+            if (DateTime.Compare(DateTime.Now, Model.EndTime) < 0)
+            {
+                    <td>@Html.ActionLink(@dbtemp.Problems.Find(i.ProblemID).ProblemName, "Content", "Problem", new { id = @i.ProblemID, type = "Homework" }, null)</td>
+            }
+            else
+            {
+                    <td>@dbtemp.Problems.Find(i.ProblemID).ProblemName</td>
+            }
+                }
                 <td>@dbtemp.Problems.Find(i.ProblemID).Creator.UserName</td>
+                @{
+            if (tmp == null)
+            {
+                    <td>无记录</td>
+            }
+            else
+            {
+                IQueryable<Submit> t = dbtemp.Submits.Where(s => s.Prob.ProblemID == i.ProblemID && s.User.UserID == tmp.UserID && s.Time.CompareTo(Model.EndTime) < 0);
+                if (t.Count() == 0)
+                {
+                    <td>无记录</td>
+                }
+                else
+                    if (DateTime.Compare(DateTime.Now, Model.EndTime) < 0)
+                    {
+                    <td>未测</td>
+                    }
+                    else
+                    {
+                    <td>@t.ToList().Last().State</td>
+                    }
+            }
+                }
             </tr>
         }
         }
