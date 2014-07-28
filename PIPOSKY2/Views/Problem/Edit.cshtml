@@ -2,21 +2,21 @@
 @model Problem
 
 @{
-    ViewBag.Title = "上传";
-    if (Model.ProblemID == null)
-    {
-        ViewBag.Title = "编辑";
-    }
+    ViewBag.Title = "编辑题目";
 }
 
 <h2>@ViewBag.Title</h2>
-@using (Html.BeginForm("Edit","Problem",FormMethod.Post,new {enctype="multipart/form-data"}))
+@using (Html.BeginForm("Edit","Problem",FormMethod.Post,new { enctype ="multipart/form-data"}))
 {
-    <p>题目名称</p>
-    <input type="text" name="Name" required="required" class="form-control" value="@Model.ProblemName"/>
+    <label>题目名称</label>
+    <input type="text" name="Name" required="required" value="@Model.ProblemName" class ="form-control"/>
     <p></p>
-    <input type="file" name="File" accept="" required="required" class="form-control"/>
-    <p>@ViewBag.text</p>;
-    <br />
+    <label>上传文件</label>
+    <input type="file" name="File" accept="" required="required"/>
+    <p style="color:red">@ViewBag.mention</p>;
+    <p></p>
+    <label>对所有用户可见</label>
+    <input type="checkbox" name="visible" checked="@Model.Visible"/>
+    <p></p>
     <input type="submit" value="提交" class="btn btn-default" />
 }

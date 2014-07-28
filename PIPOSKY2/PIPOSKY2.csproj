@@ -269,6 +269,8 @@
     <Content Include="Views\ContestGroups\Index.cshtml" />
     <Content Include="Views\ContestGroups\Add.cshtml" />
     <Content Include="Views\ContestGroups\Delete.cshtml" />
+    <Content Include="Views\Problem\Delete.cshtml" />
+    <Content Include="Views\Problem\Upload.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Problem\Content.cshtml" />

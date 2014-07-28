@@ -17,17 +17,50 @@ namespace PIPOSKY2.Controllers
     public class ProblemController : Controller
     {
         //
-        // GET: /Problem/
         PIPOSKY2DbContext db = new PIPOSKY2DbContext();
         public ActionResult Index()
         {
             return View(db.Problems.ToList());
         }
+        public ActionResult Upload()
+        {
+            Problem problem = new Problem();
+            return View(problem);
+        }
+        [HttpPost]
+        public ActionResult Upload(UploadProblemFormModel form)
+        {
+            Problem problem = new Problem();
+            if (DealWithForm(form, problem))
+            {
+                db.Problems.Add(problem);
+                db.SaveChanges();
+                return RedirectToAction("Index", "Problem");                
+            };
+            return View(problem);
+        }
+
+        public ActionResult Edit(int ?id)
+        {
+            Problem problem = db.Problems.Find(id);
+            return View(problem);
+        }
+        [HttpPost]
+        public ActionResult Edit(int ?id, UploadProblemFormModel form)
+        {
+            Problem problem = db.Problems.Find(id);
+            if (DealWithForm(form, problem))
+            {
+                db.SaveChanges();
+                return RedirectToAction("Index", "Problem");                
+            }
+            return View(problem);
+        }
 
         public string OpenRar(HttpPostedFileBase file)
         {
             string content = "";
-            Encoding encoding = System.Text.Encoding.GetEncoding("utf-8");
+            Encoding encoding = System.Text.Encoding.GetEncoding("GB2312");
             using (Stream stream = file.InputStream)
             {
                 var reader = ReaderFactory.Open(stream);
@@ -37,59 +70,28 @@ namespace PIPOSKY2.Controllers
                     {
                         Console.WriteLine(reader.Entry.FilePath);
                         EntryStream entry = reader.OpenEntryStream();
-                        StreamReader temp = new StreamReader(entry, encoding);
+                        StreamReader temp = new StreamReader(entry,enconding);
                         content = temp.ReadToEnd();
                     }
                 }
             }
             return content;
         }
-
-        public ActionResult Edit(int? id)
+        public bool DealWithForm(UploadProblemFormModel form, Problem problem)
         {
-            Problem problem;
-            if (id == null)
-                problem = new Problem();
-            else 
-                problem = db.Problems.Find(id);
-            return View(problem); ;
-        }
-
-        [HttpPost]
-        public ActionResult Edit(int?id, UploadProblemFormModel form)
-        {
-            Problem problem;
-            if (id == null)
-                problem = new Problem();
-            else 
-                problem = db.Problems.Find(id);
+            //题目名称
             problem.ProblemName = form.Name;
             //获取文件
             HttpPostedFileBase file = form.File;
-            if (file == null || !SaveFile(file, problem))
-                return View(problem);
-            db.Problems.AddOrUpdate(problem);
-            db.SaveChanges();
-            return RedirectToAction("Index", "Problem");
-        }
-
-        public ActionResult Delete(int? id)
-        {
-            Problem problem = db.Problems.Find(id);
-            db.Problems.Remove(problem);
-            db.SaveChanges();
-            return RedirectToAction("Index", "Problem");
-        }
-
-        public ActionResult Content(int? id)
-        {
-            return View(db.Problems.Find(id));
-        }
-
-        public bool SaveFile(HttpPostedFileBase file, Problem problem)
-        {
+            //题目是否公开
+            if (form.visible == "on")
+                problem.Visible = true;
+            else problem.Visible = false;
+            //上传用户
+            problem.Creator = Session["User"] as User;
+            //处理文件
             string ext = Path.GetExtension(file.FileName);
-            if (ext == ".rar" || ext ==".zip")
+            if (ext == ".rar" || ext == ".zip")
             {
                 //文件路径
                 string filePath = Path.Combine(HttpContext.Server.MapPath("~/Problems"), problem.ProblemName + ext);
@@ -102,10 +104,36 @@ namespace PIPOSKY2.Controllers
                     return true;
                 }
             }
-
-            ViewBag.text = "文件格式错误";
+            ViewBag.mention = "文件格式错误！";
             return false;
-
         }
+
+        public ActionResult Delete()
+        {
+            User tmp = Session["User"] as User;
+            if ((tmp == null) || (tmp.UserType != "admin" && tmp.UserType != "editor"))
+                return RedirectToAction("Index");
+            return View(db.Problems.ToList());
+        }
+        [HttpPost]
+        public ActionResult Delete(FormCollection form)
+        {
+            User tmp = Session["User"] as User;
+            if ((tmp == null) || (tmp.UserType != "admin" && tmp.UserType != "editor"))
+                return RedirectToAction("Index"); ;
+            foreach (var i in db.Problems)
+                if (form[i.ProblemID.ToString()] == "on")
+                {
+                    db.Problems.Remove(i);
+                }
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Content(int? id)
+        {
+            return View(db.Problems.Find(id));
+        }
+
     }
 }

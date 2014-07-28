@@ -1,0 +1,32 @@
+﻿@using PIPOSKY2.Models
+@model IEnumerable<Problem>
+
+@{
+    ViewBag.Title = "删除题目";
+}
+
+<h2>删除题目</h2>
+@using (Html.BeginForm("Delete", "Problem", FormMethod.Post, new { role = "form" }))
+{
+    //@Html.TextBoxFor(model=>model.ProblemID, new { type = "hidden" });
+    <table class="table">
+        <tr>
+            <th>题目ID</th>
+            <th>题目名称</th>
+            <th>存储路径</th>
+            <th>上传用户</th>
+            <th>删除题目</th>
+        </tr>
+        @foreach (Problem i in Model)
+        {
+            <tr>
+                <td>@i.ProblemID</td>
+                <td>@Html.ActionLink(@i.ProblemName, "Content", new { id = @i.ProblemID })</td>
+                <td>@i.ProblemPath</td>
+                <td>@i.Creator.UserName</td>
+                <td><input type="checkbox" name="@i.ProblemID" /></td>
+            </tr>
+        }
+    </table>
+    <button type="submit" class="btn btn-default">确定</button>
+}
