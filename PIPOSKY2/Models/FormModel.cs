@@ -74,12 +74,6 @@ namespace PIPOSKY2.Models
         public string ConfirmPassword { get; set; }
     }
 
-    public class adminUsersModel {
-        public IEnumerable<RegFormModel> allNormalUsers;
-        public IEnumerable<RegFormModel> allEditor;
-        public IEnumerable<RegFormModel> allAdmin;
-    }
-
     public class ContestFormModel
     {
         [Required]

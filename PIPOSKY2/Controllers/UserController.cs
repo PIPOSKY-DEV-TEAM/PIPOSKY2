@@ -146,10 +146,31 @@ namespace PIPOSKY2.Controllers
             return View();
         }
 
-        public ActionResult AdministrateUsers() {
-            
+        //public ActionResult AdministrateUsers() {
+        //    return View(db.Users.ToList());
+        //}
 
-            return View();
+        //[HttpPost]
+        public ActionResult AdministrateUsers()
+        {
+            int userid = (int)Session["_EditUserTypeID"];
+            if (userid == -1) {
+                return View(db.Users.ToList());
+            }
+            try
+            {
+                User tmp = db.Users.FirstOrDefault(_ => _.UserID == userid);
+                tmp.UserType = Request.QueryString["editusertype"];
+                db.Users.AddOrUpdate(tmp);
+                db.SaveChanges();
+            }
+            catch
+            {
+                ModelState.AddModelError("ErrorMessage", "保存失败，请再次修改。");
+                return View(db.Users.ToList());
+            }
+            Session["_EditUserTypeID"] = -1;
+            return View(db.Users.ToList());
         }
 
         [HttpPost]
@@ -237,10 +258,42 @@ namespace PIPOSKY2.Controllers
             return View();
         }
 
-        [NonAction]
-        private bool Delete(int id)
+        public ActionResult EditUserType(int id) {
+            Session["_EditUserTypeID"] = id;
+            return RedirectToAction("AdministrateUsers", "User");
+        }
+
+        //public ActionResult SaveUserType(string newUserType)
+        //{
+        //    int userid = (int)Session["_EditUserTypeID"];
+        //    try
+        //    {
+        //        User tmp = db.Users.FirstOrDefault(_ => _.UserID == userid);
+        //        tmp.UserType = newUserType;
+        //        db.Users.AddOrUpdate(tmp);
+        //        db.SaveChanges();
+        //    }
+        //    catch
+        //    {
+        //        ModelState.AddModelError("ErrorMessage", "保存失败，请再次修改。");
+        //        return RedirectToAction("AdministrateUsers", "User");
+        //    }
+        //    return RedirectToAction("AdministrateUsers", "User");
+        //}
+
+        public ActionResult Delete(int id)
         {
-            return false;
+            try
+            {
+                User tmp = db.Users.FirstOrDefault(_ => _.UserID == id);
+                db.Users.Remove(tmp);
+                db.SaveChanges();
+            }
+            catch {
+                ModelState.AddModelError("ErrorMessage", "删除失败，请再次删除。");
+                return RedirectToAction("AdministrateUsers","User");
+            }
+            return RedirectToAction("AdministrateUsers", "User");
         }
 
         public ActionResult Info()

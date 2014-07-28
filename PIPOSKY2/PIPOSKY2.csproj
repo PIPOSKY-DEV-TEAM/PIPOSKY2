@@ -210,6 +210,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
+    <Content Include="Scripts\userManagefunction.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -272,12 +273,12 @@
   <ItemGroup>
     <None Include="Properties\PublishProfiles\PIPOSKY2.pubxml" />
     <Content Include="Views\Contests\Delete.cshtml" />
-    <Content Include="Views\User\AdministrateUsers.cshtml" />
     <Content Include="Views\User\BatchAddUsers.cshtml" />
     <Content Include="Views\ContestGroups\Index.cshtml" />
     <Content Include="Views\ContestGroups\Add.cshtml" />
     <Content Include="Views\ContestGroups\Delete.cshtml" />
     <Content Include="Views\Problem\Delete.cshtml" />
+    <Content Include="Views\User\AdministrateUsers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Problem\Content.cshtml" />
