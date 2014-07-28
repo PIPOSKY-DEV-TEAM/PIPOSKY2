@@ -18,10 +18,10 @@ namespace PIPOSKY2.Models
         { }
         public DbSet<User> Users { set; get; }
         public DbSet<Problem> Problems { set; get; }
-        public DbSet<Contest> Contests { set; get; }
+        public DbSet<Homework> Course { set; get; }
 		public DbSet<Submit> Submits { get; set; }
-        public DbSet<ContestProblem> ContestProblems { set; get; }
-        public DbSet<ContestGroup> ContestGroups { set; get; }
+        public DbSet<HomeworkProblem> HomeworkProblems { set; get; }
+        public DbSet<Course> Courses { set; get; }
 
     }
 
@@ -77,19 +77,20 @@ namespace PIPOSKY2.Models
         public bool Visible { set; get; }
         [Required]
         public bool Downloadable { set; get; }
-
+        [Required]
         public virtual User Creator { set; get; }
+        [Required]
         public string Content { set; get; }
     }
 
-    public class Contest
+    public class Homework
     {
         [Key]
-        public int ContestID { set; get; }
+        public int HomeworkID { set; get; }
         [Required]
-        public int ContestGroupID { set; get; }
+        public int CourseID { set; get; }
         [Required]
-        public string ContestName { set; get; }
+        public string HomeworkName { set; get; }
         [Required]
         public DateTime StartTime { set; get; }
         [Required]
@@ -97,20 +98,20 @@ namespace PIPOSKY2.Models
         public string ScorePath { set; get; }
     }
 
-    public class ContestGroup
+    public class Course
     {
         [Key]
-        public int ContestGroupID { set; get; }
+        public int CourseID { set; get; }
         [Required]
-        public string ContestGroupName { set; get; }
+        public string CourseName { set; get; }
     }
 
-    public class ContestProblem
+    public class HomeworkProblem
     {
         [Key]
-        public int ContestProblemID { set; get; }
+        public int HomeworkProblemID { set; get; }
         [Required]
-        public int ContestID { set; get; }
+        public int HomeworkID { set; get; }
         [Required]
         public int ProblemID { set; get; }
     }

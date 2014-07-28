@@ -1,24 +1,26 @@
 ﻿@using PIPOSKY2.Models 
-@model IEnumerable<Problem>
+@model Problem
 
 @{
-    ViewBag.Title = "Upload";
+    ViewBag.Title = "上传题目";
 }
 
-<h2>Upload</h2>
-@using (Html.BeginForm("Upload", "Problem", FormMethod.Post, new { enctype = "multipart/form-data" }))
+<h2>@ViewBag.Title</h2>
+@using (Html.BeginForm("Upload","Problem",FormMethod.Post,new { enctype ="multipart/form-data"}))
 {
-    <p>题目名称</p>
-    <input type="text" name="Name" required/>
-    <br /><br />
-    <p>上传文件</p>
-    <input type="file" name="File" accept="" required/>
-    <p style="color:red">@ViewBag.mention</p>
-    <br />
+    <p>
+        题目名称
+        <input type="text" name="Name" required="required" value =" @Model.ProblemName"/>
+    </p>
+    <p>
+        上传文件
+        <input type="file" name="File" accept="" required="required" />
+    </p>
+    <p style="color:red">@ViewBag.mention</p>;
     <p>
         对所有用户可见
-        <input type="checkbox" name="visible" />
+        <input type="checkbox" name="visible" checked =" @Model.Visible"/>
     </p>
     <br />
-    <input type="submit" value="提交" />
+    <input type="submit" value="提交" class="btn btn-default" />
 }

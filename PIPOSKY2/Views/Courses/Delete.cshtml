@@ -5,7 +5,7 @@
 }
 
 <h2>删除课程</h2>
-@using (Html.BeginForm("Delete", "ContestGroups", FormMethod.Post, new { role = "form" }))
+@using (Html.BeginForm("Delete", "Courses", FormMethod.Post, new { role = "form" }))
 {
     <table class="table table-striped">
         <tr>
@@ -15,13 +15,13 @@
         </tr>
         @{
     PIPOSKY2DbContext db = new PIPOSKY2DbContext();
-    foreach (var i in db.ContestGroups)
+    foreach (var i in db.Courses)
     {
             <tr>
-                <td>@i.ContestGroupID</td>
-                <td>@i.ContestGroupName</td>
+                <td>@i.CourseID</td>
+                <td>@i.CourseName</td>
                 <td>
-                    <input type="checkbox" name="@i.ContestGroupID" /></td>
+                    <input type="checkbox" name="@i.CourseID" /></td>
             </tr>
     }
         }

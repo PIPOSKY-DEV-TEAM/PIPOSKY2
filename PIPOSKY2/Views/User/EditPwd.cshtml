@@ -4,43 +4,22 @@
 }
 
 <h2>EditPwd</h2>
-@using (Html.BeginForm()) { 
-    <div>
-        <div>
-            <div>
-                @Html.LabelFor(m => m.OldPassword)
-            </div>
-            <div>
-                @Html.PasswordFor(m => m.OldPassword)
-            </div>
-            <div>
-                @Html.ValidationMessageFor(m => m.OldPassword)
-            </div>
-        </div>
-        <div>
-            <div>
-                 @Html.LabelFor(m => m.NewPassword)
-            </div>
-            <div>
-                @Html.PasswordFor(m => m.NewPassword)
-            </div>
-            <div>
-                @Html.ValidationMessageFor(m => m.NewPassword)
-            </div>
-        </div>
-        <div>
-            <div>
-                 @Html.LabelFor(m => m.ConfirmPassword)
-            </div>
-            <div>
-                @Html.PasswordFor(m => m.ConfirmPassword)
-            </div>
-            <div>
-                @Html.ValidationMessageFor(m => m.ConfirmPassword)
-            </div>
-        </div>
-        <div>
-            <input type="submit" value="save" />
-        </div>
+@using (Html.BeginForm())
+{ 
+    <div class="form-group">
+        @Html.LabelFor(m => m.OldPassword)
+        @Html.PasswordFor(m => m.OldPassword, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.OldPassword)
     </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.NewPassword)
+        @Html.PasswordFor(m => m.NewPassword, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.NewPassword)
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.ConfirmPassword)
+        @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+        @Html.ValidationMessageFor(m => m.ConfirmPassword)
+    </div>
+    <input type="submit"  class="btn btn-default" value="save" />
 }

@@ -23,7 +23,7 @@
                 <td>@i.ProblemID</td>
                 <td>@Html.ActionLink(@i.ProblemName, "Content", new { id = @i.ProblemID })</td>
                 <td>@i.ProblemPath</td>
-                <td>@i.Creator</td>
+                <td>@i.Creator.UserName</td>
                 <td><input type="checkbox" name="@i.ProblemID" /></td>
             </tr>
         }

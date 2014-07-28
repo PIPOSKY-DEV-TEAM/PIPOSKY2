@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "作业";
+}
+
+@using PIPOSKY2.Models;
+@model Course
+
+<h2>@Model.CourseName</h2>
+@{
+    User tmp = Session["User"] as User;
+    if ((tmp != null) && ((tmp.UserType == "admin") || (tmp.UserType == "editor")))
+    {
+    <p>
+        @Html.ActionLink("添加作业", "Add", new { id = @Model.CourseID }, new { @class = "btn btn-default" })
+        @Html.ActionLink("删除作业", "Delete", new { id = @Model.CourseID }, new { @class = "btn btn-default" })
+    </p>
+    }
+}
+<table class="table table-striped">
+    <tr>
+        <th>作业ID</th>
+        <th>作业名称</th>
+        <th>开始时间</th>
+        <th>结束时间</th>
+    </tr>
+    @{
+        PIPOSKY2DbContext db = new PIPOSKY2DbContext();
+        PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
+        foreach (var i in db.Course.Where(c => c.CourseID == Model.CourseID))
+        {
+        <tr>
+            <td>@i.HomeworkID</td>
+            <td>@Html.ActionLink(@dbtemp.Course.Find(i.HomeworkID).HomeworkName, "Index", "Homework", new { id = @i.HomeworkID }, null)</td>
+            <td>@dbtemp.Course.Find(i.HomeworkID).StartTime</td>
+            <td>@dbtemp.Course.Find(i.HomeworkID).EndTime</td>
+        </tr>
+        }
+    }
+</table>

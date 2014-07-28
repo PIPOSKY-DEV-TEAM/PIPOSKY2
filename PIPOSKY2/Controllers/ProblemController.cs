@@ -6,178 +6,137 @@ using System.Web;
 using System.Web.Mvc;
 using System.IO;
 using System.IO.Compression;
+using System.Data.Entity;
 using SharpCompress.Common;
 using SharpCompress.Reader;
 using PIPOSKY2.Models;
+using System.Data.Entity.Migrations;
 
 namespace PIPOSKY2.Controllers
 {
     public class ProblemController : Controller
     {
         //
-        // GET: /Problem/
         PIPOSKY2DbContext db = new PIPOSKY2DbContext();
         public ActionResult Index()
         {
-            return View(db.Problems);
+            return View(db.Problems.ToList());
         }
         public ActionResult Upload()
         {
-            return View();
-        }
-        [HttpPost]
-        public ActionResult Upload(HttpRequestBase Request)
-        {
-            //创建题目数据
             Problem problem = new Problem();
-            //题目名称
-            problem.ProblemName = Request["Name"];
-            //获取文件
-            HttpPostedFileBase file = Request.Files["File"];
-            if (!DealWithFile(file, problem))
-            {
-                ViewBag.mention = "文件格式错误！";
-                return View();
-            }
-            if (Request["visible"] == "on")
-                problem.Visible = true;
-            else problem.Visible = false;
-            db.Problems.Add(problem);
-            db.SaveChanges();
-            return RedirectToAction("Index", "Problem");
-        }
-        public ActionResult Edit()
-        {
-            Problem problem = db.Problems.Find(int.Parse(RouteData.Values["id"].ToString()));
-            return View(problem); ;
+            return View(problem);
         }
         [HttpPost]
-        public ActionResult Edit(UploadProblemFormModel form)
+        public ActionResult Upload(UploadProblemFormModel form)
         {
-            Problem problem = db.Problems.Find(int.Parse(RouteData.Values["id"].ToString()));
-            problem.ProblemName = form.Name;
-            //获取文件
-            HttpPostedFileBase file = form.File;
-            if (file != null)
-                if (!DealWithFile(file, problem))
-                {
-                    return View();
-                }
-            db.SaveChanges();
-            return RedirectToAction("Index", "Problem");
+            Problem problem = new Problem();
+            if (DealWithForm(form, problem))
+            {
+                db.Problems.Add(problem);
+                db.SaveChanges();
+                return RedirectToAction("Index", "Problem");                
+            };
+            return View(problem);
         }
-        public ActionResult Delete()
+
+        public ActionResult Edit(int ?id)
         {
-            User tmp = Session["User"] as User;
-            if (tmp == null)
-                return RedirectToAction("Index");
-            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
-                return RedirectToAction("Index");
-            return View(db.Problems);
+            Problem problem = db.Problems.Find(id);
+            return View(problem);
         }
         [HttpPost]
-        public ActionResult Delete(UploadProblemFormModel problem, FormCollection form)
+        public ActionResult Edit(int ?id, UploadProblemFormModel form)
         {
-            User tmp = Session["User"] as User;
-            if (tmp == null)
-                return RedirectToAction("Index");
-            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
-                return RedirectToAction("Index");
-            foreach (var i in db.Problems)
-                if (form[i.ProblemID.ToString()] == "on")
-                {
-                    db.Problems.Remove(i);
-                }
-            db.SaveChanges();
-            return RedirectToAction("Index");
-        }
-        public ActionResult Content()
-        {
-            return View(db.Problems.Find(int.Parse(RouteData.Values["id"].ToString())));
-        }
-        public bool DealWithFile(HttpPostedFileBase file, Problem problem)
-        {
-            if (CheckFormat(file))
+            Problem problem = db.Problems.Find(id);
+            if (DealWithForm(form, problem))
             {
-                //文件路径
-                string filePath = Path.Combine(HttpContext.Server.MapPath("~/Problems"), Path.GetFileName(file.FileName));
-                problem.ProblemPath = filePath;
-                //文件类型zip/rar
-                string content = "";
-                if (filePath.EndsWith(".zip"))
-                {
-                    if (!OpenZip(file, content))
-                        return false;
-                    problem.Content = content;
-                }
-                else if (filePath.EndsWith(".rar"))
-                {
-                    if (!OpenRar(file, content))
-                        return false;
-                    problem.Content = content;
-                }
-                //保存文件
-                file.SaveAs(filePath);
-                return true;
+                db.SaveChanges();
+                return RedirectToAction("Index", "Problem");                
             }
-            else
-            {
-                ViewBag.text = "文件格式错误";
-                return false;
-            }
+            return View(problem);
         }
-        public bool CheckFormat(HttpPostedFileBase file)
+
+        public string OpenRar(HttpPostedFileBase file)
         {
-            string name = file.FileName;
-            if (!(name.EndsWith(".zip") || name.EndsWith(".rar")))
-            {
-                return false;
-            }
-            return true;
-        }
-        public bool OpenZip(HttpPostedFileBase file, string content)
-        {
-            Encoding encoding = System.Text.Encoding.GetEncoding("GB2312");
-            using (ZipArchive archive = new ZipArchive(file.InputStream, ZipArchiveMode.Read, false, encoding))
-            {
-                foreach (ZipArchiveEntry entry in archive.Entries)
-                {
-                    if (entry.FullName.EndsWith("Content.txt"))
-                    {
-                        using (StreamReader reader = new StreamReader(entry.Open(), encoding))
-                        {
-                            content = reader.ReadToEnd();
-                            reader.Close();
-                        }
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-        public bool OpenRar(HttpPostedFileBase file,string content)
-        {
+            string content = "";
             Encoding encoding = System.Text.Encoding.GetEncoding("GB2312");
             using (Stream stream = file.InputStream)
             {
                 var reader = ReaderFactory.Open(stream);
                 while (reader.MoveToNextEntry())
                 {
-                    if (!reader.Entry.IsDirectory)
+                    if (!reader.Entry.IsDirectory && reader.Entry.FilePath.EndsWith("Content.txt"))
                     {
-                        if (reader.Entry.FilePath.EndsWith("Content.txt"))
-                        {
-                            Console.WriteLine(reader.Entry.FilePath);
-                            EntryStream entry = reader.OpenEntryStream();
-                            StreamReader temp = new StreamReader(entry, encoding);
-                            content = temp.ReadToEnd();
-                            return true;
-                        }
-
+                        Console.WriteLine(reader.Entry.FilePath);
+                        EntryStream entry = reader.OpenEntryStream();
+                        StreamReader temp = new StreamReader(entry,encoding);
+                        content = temp.ReadToEnd();
                     }
                 }
             }
+            return content;
+        }
+        public bool DealWithForm(UploadProblemFormModel form, Problem problem)
+        {
+            //题目名称
+            problem.ProblemName = form.Name;
+            //获取文件
+            HttpPostedFileBase file = form.File;
+            //题目是否公开
+            if (form.visible == "on")
+                problem.Visible = true;
+            else problem.Visible = false;
+            //上传用户
+            problem.Creator = Session["User"] as User;
+            //处理文件
+            string ext = Path.GetExtension(file.FileName);
+            if (ext == ".rar" || ext == ".zip")
+            {
+                //文件路径
+                string filePath = Path.Combine(HttpContext.Server.MapPath("~/Problems"), problem.ProblemName + ext);
+                problem.ProblemPath = filePath;
+                problem.Content = OpenRar(file);
+                if (problem.Content.Length > 0)
+                {
+                    //保存文件
+                    file.SaveAs(filePath);
+                    return true;
+                }
+            }
+            ViewBag.mention = "文件格式错误！";
             return false;
         }
+
+        public ActionResult Delete()
+        {
+            User tmp = Session["User"] as User;
+            if ((tmp == null) || (tmp.UserType != "admin" && tmp.UserType != "editor"))
+                return RedirectToAction("Index");
+            return View(db.Problems.ToList());
+        }
+        [HttpPost]
+        public ActionResult Delete(FormCollection form)
+        {
+            User tmp = Session["User"] as User;
+            if ((tmp == null) || (tmp.UserType != "admin" && tmp.UserType != "editor"))
+                return RedirectToAction("Index"); ;
+            PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
+            foreach (var i in dbtemp.Problems)
+                if (form[i.ProblemID.ToString()] == "on")
+                {
+                    foreach (var j in db.HomeworkProblems.Where(p => p.ProblemID == i.ProblemID))
+                        db.HomeworkProblems.Remove(j);
+                    db.Problems.Remove(db.Problems.Find(i.ProblemID));
+                }
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
+
+        public ActionResult Content(int? id)
+        {
+            return View(db.Problems.Find(id));
+        }
+
     }
 }
