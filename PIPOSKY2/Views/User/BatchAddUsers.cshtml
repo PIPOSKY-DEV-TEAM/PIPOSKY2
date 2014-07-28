@@ -4,9 +4,10 @@
 @model System.Web.HttpContextBase
 <h2>Batch Add Users</h2>
 <br />
+<div>@Html.ActionLink("返回用户管理页面","AdministrateUsers","User")</div>
 <br />
 <div>
-    <p>请上传csv文件，文件内每行数据格式需为“用户名,密码,邮箱”。</p>
+    <p>请上传csv或txt格式文件，文件内每行数据格式需为“用户名,密码,邮箱”。</p>
     <p>用户名长度要在4到100个字符之间，不能包含空格</p>
     <p>密码长度要在6到20个字符之间，不能包含空格</p>
     <p>邮箱格式“XXX@XXX”</p>

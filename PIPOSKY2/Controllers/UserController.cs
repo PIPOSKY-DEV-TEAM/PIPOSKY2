@@ -272,24 +272,6 @@ namespace PIPOSKY2.Controllers
             return RedirectToAction("AdministrateUsers", "User");
         }
 
-        //public ActionResult SaveUserType(string newUserType)
-        //{
-        //    int userid = (int)Session["_EditUserTypeID"];
-        //    try
-        //    {
-        //        User tmp = db.Users.FirstOrDefault(_ => _.UserID == userid);
-        //        tmp.UserType = newUserType;
-        //        db.Users.AddOrUpdate(tmp);
-        //        db.SaveChanges();
-        //    }
-        //    catch
-        //    {
-        //        ModelState.AddModelError("ErrorMessage", "保存失败，请再次修改。");
-        //        return RedirectToAction("AdministrateUsers", "User");
-        //    }
-        //    return RedirectToAction("AdministrateUsers", "User");
-        //}
-
         public ActionResult Delete(int id)
         {
             try
