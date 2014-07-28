@@ -1,18 +1,18 @@
 ﻿@using PIPOSKY2.Models
-@model PIPOSKY2.Models.ContestFormModel
+@model PIPOSKY2.Models.HomeworkFormModel
 
 @{
     ViewBag.Title = "修改作业";
 }
 
 <h2>修改作业</h2>
-@using (Html.BeginForm("Edit", "Contest", FormMethod.Post, new { role = "form" }))
+@using (Html.BeginForm("Edit", "Homework", FormMethod.Post, new { role = "form" }))
 {
-    @Html.TextBoxFor(model => model.ContestID, new { type = "hidden" });
+    @Html.TextBoxFor(model => model.HomeworkID, new { type = "hidden" });
     <div class="form-group">
-        @Html.LabelFor(model => model.ContestName, new { @for = "ContestName" })
-        @Html.TextBoxFor(model => model.ContestName, new { @class = "form-control", id = "ContestName", placeholder = "作业名称" })
-        @Html.ValidationMessageFor(model => model.ContestName)
+        @Html.LabelFor(model => model.HomeworkName, new { @for = "HomeworkName" })
+        @Html.TextBoxFor(model => model.HomeworkName, new { @class = "form-control", id = "HomeworkName", placeholder = "作业名称" })
+        @Html.ValidationMessageFor(model => model.HomeworkName)
     </div>
     <div class="form-group">
         @Html.LabelFor(model => model.StartTime, new { @for = "StartTime" })
@@ -39,7 +39,7 @@
                 <td>@i.ProblemID</td>
                 <td>@i.ProblemName</td>
                 @{
-        if (db.ContestProblems.Where(p => p.ContestID == Model.ContestID).Where(p => p.ProblemID == i.ProblemID).Count() > 0)
+        if (db.HomeworkProblems.Where(p => p.HomeworkID == Model.HomeworkID).Where(p => p.ProblemID == i.ProblemID).Count() > 0)
         {
                     <td><input type="checkbox" name="@i.ProblemID" checked="checked"/></td>
         }

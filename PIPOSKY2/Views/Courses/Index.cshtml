@@ -1,0 +1,34 @@
+﻿@{
+    ViewBag.Title = "课程";
+}
+
+@using PIPOSKY2.Models;
+@model IEnumerable<Course>
+
+<h2>课程</h2>
+@{
+    User tmp = Session["User"] as User;
+    if (tmp != null)
+    {
+        if ((tmp.UserType == "admin") || (tmp.UserType == "editor"))
+        {
+<p>
+    @Html.ActionLink("添加课程", "Add", "Courses", new { @class="btn btn-default" })
+    @Html.ActionLink("删除课程", "Delete", "Courses", new { @class="btn btn-default" })
+</p>
+        }
+    }
+}
+<table class="table table-striped">
+    <tr>
+        <th>课程ID</th>
+        <th>课程名称</th>
+    </tr>
+    @foreach (Course i in Model)
+    {
+        <tr>
+            <td>@i.CourseID</td>
+            <td>@Html.ActionLink(@i.CourseName, "Index", "Course", new { id = @i.CourseID }, null)</td>
+        </tr>
+    }
+</table>

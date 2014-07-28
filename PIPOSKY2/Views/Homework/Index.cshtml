@@ -3,9 +3,9 @@
 }
 
 @using PIPOSKY2.Models;
-@model Contest
+@model Homework
 
-<h2>@Model.ContestName</h2>
+<h2>@Model.HomeworkName</h2>
 @{
     User tmp = Session["User"] as User;
     if ((tmp == null) || ((tmp.UserType != "admin") && (tmp.UserType != "editor")))
@@ -24,7 +24,7 @@
         @{
             PIPOSKY2DbContext db = new PIPOSKY2DbContext();
             PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
-            foreach (var i in db.ContestProblems.Where(p => p.ContestID == Model.ContestID))
+            foreach (var i in db.HomeworkProblems.Where(p => p.HomeworkID == Model.HomeworkID))
             {
             <tr>
                 <td>@i.ProblemID</td>
@@ -38,7 +38,7 @@
     else
     {
     <p>
-        @Html.ActionLink("修改作业", "Edit", new { id = @Model.ContestID }, new { @class = "btn btn-default" })
+        @Html.ActionLink("修改作业", "Edit", new { id = @Model.HomeworkID }, new { @class = "btn btn-default" })
     </p>
     <table class="table table-striped">
         <tr>
@@ -48,7 +48,7 @@
         @{
         PIPOSKY2DbContext db = new PIPOSKY2DbContext();
         PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
-        foreach (var i in db.ContestProblems.Where(p => p.ContestID == Model.ContestID))
+        foreach (var i in db.HomeworkProblems.Where(p => p.HomeworkID == Model.HomeworkID))
         {
             <tr>
                 <td>@i.ProblemID</td>
