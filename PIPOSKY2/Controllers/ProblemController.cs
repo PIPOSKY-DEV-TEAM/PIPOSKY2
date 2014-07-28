@@ -23,6 +23,7 @@ namespace PIPOSKY2.Controllers
         {
             return View(db.Problems.ToList());
         }
+
         public ActionResult Upload()
         {
             User tmp = Session["User"] as User;
@@ -110,8 +111,6 @@ namespace PIPOSKY2.Controllers
                             x3 = false;
                             ViewBag.mention = "Config文件格式错误！";
                         }
-                        StreamReader temp = new StreamReader(entry,encoding);
-                        content = temp.ReadToEnd();
                     }
                 }
             }
