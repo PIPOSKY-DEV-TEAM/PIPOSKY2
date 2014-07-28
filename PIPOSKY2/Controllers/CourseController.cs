@@ -126,7 +126,7 @@ namespace PIPOSKY2.Controllers
         {
             string path = Server.MapPath("~/Score") + "\\" + db.Courses.Find(id).CourseName + ".csv";
             FileStream fs = new FileStream(path, FileMode.Create);
-            StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.GetEncoding("gb2312"));
+            StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.GetEncoding("GB2312"));
             string s = "用户ID,用户名";
             int sum;
             IQueryable<Submit> t;
