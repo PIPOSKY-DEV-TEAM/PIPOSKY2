@@ -2,14 +2,16 @@
 
 @{
     ViewBag.Title = "Details";
+    var Res = ViewBag.Res;
 }
+<h2>评测详情</h2>
 
 <table class="table">
     <tr>
         <td>@Model.User.UserName</td>
         <td>@Model.Prob.ProblemName</td>
         <td>@Model.SubmitID</td>
-         <td colspan="2" title="@Model.CompilerRes">@Model.State</td>
+        <td colspan="2" title="@Model.CompilerRes">@Model.State</td>
     </tr>
     <tr>
         <th width="20%">得分</th>
@@ -17,16 +19,36 @@
         <th width="15%">时间</th>
         <th width="15%">内存</th>
     </tr>
-        <tr>
-            <th colspan=2>{{detail.3.0}}</th>
-            <th>总分</th>
-            <th>{{submit.Data}}</th>
-            <th>BySQOJ</th>
-        </tr>
-
+    @if (Res.Count >0)
+    {
+        foreach (var x in Res)
+        {
+            <tr>
+                @foreach (var y in x)
+                {
+                    <td>@y</td>
+                }
+            </tr>   
+            
+        }
+    <tr>
+        <th>总分</th>
+        <th>@Model.Score</th>
+        <th>@Model.Time</th>
+        <th></th>
+    </tr>
+    }
+    else
+    {
         <tr><th colspan="4">空</th></tr>
+    }
 
 </table>
 
-<pre class="brush: {{ submit.Lang }}">@Model.Source</pre>
+<pre class="brush: @Model.Lang">@Model.Source</pre>
 
+@if (Model.CompilerRes != null && Model.CompilerRes.Length > 0)
+{
+    <p>编译器输出</p>
+    <pre>@Model.CompilerRes</pre>
+}

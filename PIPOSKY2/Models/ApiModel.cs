@@ -21,5 +21,4 @@ namespace PIPOSKY2.Models
 		public string Result { get; set; }
         public string CompilerRes { get; set; }
     }
-    
 }

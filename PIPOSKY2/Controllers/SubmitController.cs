@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Mvc;
+using Newtonsoft.Json;
 
 namespace PIPOSKY2.Controllers
 {
@@ -20,6 +21,7 @@ namespace PIPOSKY2.Controllers
 	        var tmp = db.Submits.Find(id);
 	        if (tmp == null)
 		        return HttpNotFound();
+            ViewBag.Res = JsonConvert.DeserializeObject<List< List<string> > >(tmp.Result);
             return View(tmp);
         }
 

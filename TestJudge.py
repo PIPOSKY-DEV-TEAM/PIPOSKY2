@@ -20,7 +20,7 @@ def TEST_RES(x):
                 "SubmitID":x,  # 提交记录ID
                 "State": "Accepted",  #评测结果
     			"Score":"15",
-                "CompileResult":"编译器返回结果",
+                "CompilerRes":"编译器返回结果",
                 "result":json.dumps([
                     [10,"正确",0.4,18],
 					[5,"部分正确",0.4,18],
@@ -36,7 +36,7 @@ def TEST_RES(x):
                 "SubmitID":x,  # 提交记录ID
                 "State": "CompileError",  #评测结果
 				"Score":"0",
-                "CompileResult":"编译器返回结果",
+                "CompilerRes":"编译器返回结果",
                 "result":"[]",  # 结果详情
             }
 			
