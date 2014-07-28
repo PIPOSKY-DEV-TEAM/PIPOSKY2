@@ -5,9 +5,24 @@
     <meta name="viewport" content="width=device-width" />
     <title>@ViewBag.Title</title>
     @Styles.Render("~/Content/Site.css")
+
+    @Scripts.Render("~/Scripts/shCore.js")
+
+    @Scripts.Render("~/Scripts/shBrushCpp.js")
+    @Scripts.Render("~/Scripts/shBrushCSharp.js")
+    @Scripts.Render("~/Scripts/shBrushJava.js")
+    @Scripts.Render("~/Scripts/shBrushPlain.js")
+    @Scripts.Render("~/Scripts/shBrushPython.js")
+
     @Styles.Render("~/Content/bootstrap.css")
+    @Styles.Render("~/Content/shThemeDefault.css")
 </head>
 <body>
+    @Scripts.Render("~/Scripts/jquery-1.7.1.js")
+    @Scripts.Render("~/Scripts/bootstrap.js")
+
+    
+    @RenderSection("scripts", required: false)
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
@@ -18,6 +33,7 @@
                     <li>@Html.ActionLink("Course", "Index", "Courses")</li>
                     <li>@Html.ActionLink("Problem", "Index", "Problem")</li>
                     <li>@Html.ActionLink("Status", "Index", "Submit")</li>
+                    @RenderSection("Navbar", required: false)
                 </ul>
                 <div style="float: right;">
                     <ul class="nav navbar-nav">
@@ -40,12 +56,8 @@
     </div>
 
     <div class="container">
-
         @RenderBody()
-
     </div>
-    @Scripts.Render("~/Scripts/jquery-1.7.1.js")
-    @Scripts.Render("~/Scripts/bootstrap.js")
-    @RenderSection("scripts", required: false)
+    <script type="text/javascript">SyntaxHighlighter.all();</script>
 </body>
 </html>

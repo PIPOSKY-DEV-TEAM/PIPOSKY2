@@ -37,10 +37,10 @@ namespace PIPOSKY2.Models
 
 			var submit = new Submit
 			{
-				Lang = "C++",
+				Lang = "cpp",
 				Prob = prob,
 				Result = "",
-				Source = "TEST",
+				Source = "int main() { return 0;}",
 				State = "wait",
 				Time = DateTime.Now,
 				User = user
@@ -126,7 +126,7 @@ namespace PIPOSKY2.Models
 		public int SubmitID { get; set; }
 		[Required]
 		public string Lang { get; set; }
-		[Required]
+
 		public virtual Problem Prob { get; set; }
 
 		public virtual User User { get; set; }
@@ -136,6 +136,8 @@ namespace PIPOSKY2.Models
 		[Required]
 		public string Source { get; set; }
 		public string State { get; set; }
+        public int Score { get; set; }
 		public string Result { get; set; }
+        public string CompilerRes { get; set; }
 	}
 }

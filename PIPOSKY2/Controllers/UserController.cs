@@ -5,7 +5,8 @@ using System.Web;
 using System.Web.Mvc;
 using PIPOSKY2.Models;
 using System.Data.Entity.Migrations;
-
+using System.IO;
+using System.Text.RegularExpressions;
 namespace PIPOSKY2.Controllers
 {
     public class UserController : Controller
@@ -24,6 +25,7 @@ namespace PIPOSKY2.Controllers
 			if (info.UserEmail != null && db.Users.Any(_ => _.UserEmail == info.UserEmail))
 			{
 				ModelState.AddModelError("UserName", "Email已经存在");
+                ModelState.AddModelError("UserEmail", "Email已经存在");
 			}
 			if (info.UserPwd2 != null && info.UserPwd != info.UserPwd2)
 			{
@@ -31,7 +33,8 @@ namespace PIPOSKY2.Controllers
 			}
 			if (ModelState.IsValid)
 			{
-				var tmp = new User {UserName = info.UserName, UserPwd = info.UserPwd, UserEmail = info.UserEmail, UserType = "admin"};
+				//var tmp = new User {UserName = info.UserName, UserPwd = info.UserPwd, UserEmail = info.UserEmail, UserType = "admin"};
+                var tmp = new User { UserName = info.UserName, UserPwd = info.UserPwd, UserEmail = info.UserEmail, UserType = "normal" };
 				db.Users.Add(tmp);
 				db.SaveChanges();
                 tmp = db.Users.FirstOrDefault(m => m.UserName == tmp.UserName);
@@ -84,14 +87,16 @@ namespace PIPOSKY2.Controllers
         public ActionResult EditInfo(RegFormModel EditUser)
         {
             var tmp = Session["User"] as User;
-            
+            if (EditUser.UserName != null && db.Users.Any(_ => _.UserName == EditUser.UserName))
+            {
+                ModelState.AddModelError("UserName", "用户名已经存在");
+            }
+            if (EditUser.UserEmail != null && db.Users.Any(_ => _.UserEmail == EditUser.UserEmail))
+            {
+                ModelState.AddModelError("UserEmail", "Email已经存在");
+            }
             if (tmp!= null)
             {
-                if (EditUser.UserName != null && EditUser.UserName != "" && EditUser.UserName != " ")
-                    tmp.UserName = EditUser.UserName;
-                if (EditUser.UserEmail != null && EditUser.UserEmail != "" && EditUser.UserEmail != " ")
-                    tmp.UserEmail = EditUser.UserEmail;
-
                 db.Users.AddOrUpdate(tmp);
                 db.SaveChanges();
 
@@ -141,19 +146,163 @@ namespace PIPOSKY2.Controllers
             return View();
         }
 
-        public ActionResult AdministrateUsers() {
+        public ActionResult AdministrateUsers()
+        {
+            return View(db.Users.ToList());
+        }
+
+        [HttpPost]
+        public ActionResult AdministrateUsers(FormCollection info)
+        {
+            int userid;
+            try
+            {
+                userid = (int)Session["_EditUserTypeID"];
+            }
+            catch {
+                return View(db.Users.ToList());
+            }
+            if (userid == -1) {
+                return View(db.Users.ToList());
+            }
+            try
+            {
+                User tmp = db.Users.FirstOrDefault(_ => _.UserID == userid);
+                tmp.UserType = info["edittype"];
+                
+                db.Users.AddOrUpdate(tmp);
+                db.SaveChanges();
+                Session["_EditUserTypeID"] = -1;
+            }
+            catch
+            {
+                ModelState.AddModelError("ErrorMessage", "保存失败，请再次修改。");
+                return View(db.Users.ToList());
+            }
+            
+            return View(db.Users.ToList());
+        }
+        [HttpPost]
+        public ActionResult BatchAddUsers(FormCollection form)
+        {
+            //导入csv用户信息文件
+            if (Request.Files.Count == 0)
+            {
+　　　　　　//Request.Files.Count 文件数为0上传不成功
+　　　　　　  return View();　
+　　　　　   }
+
+            HttpPostedFileBase file = Request.Files[0];
+            if (file.ContentLength == 0)
+            {
+                //文件大小大（以字节为单位）为0时，做一些操作
+　　　　　　  return View();
+　　　　    }
+　　　　    else
+　　　　    {
+　　　　　　  //文件大小不为0
+              //上传文件名不变，保存在服务器上的BatchAddUser文件夹下　　
+              file.SaveAs(Server.MapPath(@"~\") + System.IO.Path.GetFileName(file.FileName));
+　　　　    }
+            ViewBag.FileName = System.IO.Path.GetFileName(file.FileName);
+
+            //读取文件内容，并添加用户
+            string UserInfoStr = ReadFile(Server.MapPath(@"~\") + ViewBag.FileName);
+            UserInfoStr = Regex.Replace(UserInfoStr, @"[\n\r]", ",");  
+            UserInfoStr = UserInfoStr.TrimEnd((char[])"\n\r".ToCharArray());
+            userInfo strUserName;
+            userInfo strUserPwd;
+            userInfo strUserEmail;
+            int length = UserInfoStr.Length;
+            int numofNewUser = 0;
+            for (int beginIndex = 0; beginIndex < length; )
+            {
+                strUserName = getUserInfo(UserInfoStr, beginIndex);
+                beginIndex += strUserName.lengthAdded;
+                strUserPwd = getUserInfo(UserInfoStr, beginIndex);
+                beginIndex += strUserPwd.lengthAdded;
+                strUserEmail = getUserInfo(UserInfoStr, beginIndex);
+                beginIndex += strUserEmail.lengthAdded;
+
+                //验证输入
+                if (strUserName.strU != null && db.Users.Any(_ => _.UserName == strUserName.strU))
+                {
+                    ModelState.AddModelError("ErrorMessage", "用户名" + strUserName.strU+"已经存在");
+                    return View();
+                }
+                if (strUserEmail.strU != null && db.Users.Any(_ => _.UserEmail == strUserEmail.strU))
+                {
+                    ModelState.AddModelError("ErrorMessage", "Email" + strUserEmail.strU+"已经存在");
+                    return View();
+                }
+                if (strUserPwd.strU == null || strUserPwd.strU.Length < 6 || strUserPwd.strU.Length > 20)
+                {
+                    ModelState.AddModelError("ErrorMessage", "密码"+ strUserPwd.strU+"的格式错误" );
+                    return View();
+                }
+                if (strUserName.strU == null || strUserName.strU.Length < 4 || strUserName.strU.Length > 100)
+                {
+                    ModelState.AddModelError("ErrorMessage", "用户名" + strUserName.strU+"的格式错误");
+                    return View();
+                }
+                string emailPatern = @"^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*$";
+                //
+                if (!Regex.IsMatch(strUserEmail.strU,emailPatern)) {
+                    ModelState.AddModelError("ErrorMessage", "邮箱" + strUserEmail.strU + "的格式错误");
+                    return View();
+                }
+                if (ModelState.IsValid)
+                {
+                    var tmp = new User { UserName = strUserName.strU, UserPwd = strUserPwd.strU, UserEmail = strUserEmail.strU, UserType = "normal" };
+                    db.Users.Add(tmp);
+                    db.SaveChanges();
+                    numofNewUser++;
+                }
+            }
+            ModelState.AddModelError("ErrorMessage", "成功添加"+numofNewUser+"名新用户！");
+            return View();
+        }
+        
+        public ActionResult BatchAddUsers() {
             return View();
         }
 
-        [NonAction]
-        private bool BatchAddUsers() {
-            return false;
+        public ActionResult EditUserType(int id) {
+            Session["_EditUserTypeID"] = id;
+            return RedirectToAction("AdministrateUsers", "User");
         }
 
-        [NonAction]
-        private bool Delete(int id)
+        //public ActionResult SaveUserType(string newUserType)
+        //{
+        //    int userid = (int)Session["_EditUserTypeID"];
+        //    try
+        //    {
+        //        User tmp = db.Users.FirstOrDefault(_ => _.UserID == userid);
+        //        tmp.UserType = newUserType;
+        //        db.Users.AddOrUpdate(tmp);
+        //        db.SaveChanges();
+        //    }
+        //    catch
+        //    {
+        //        ModelState.AddModelError("ErrorMessage", "保存失败，请再次修改。");
+        //        return RedirectToAction("AdministrateUsers", "User");
+        //    }
+        //    return RedirectToAction("AdministrateUsers", "User");
+        //}
+
+        public ActionResult Delete(int id)
         {
-            return false;
+            try
+            {
+                User tmp = db.Users.FirstOrDefault(_ => _.UserID == id);
+                db.Users.Remove(tmp);
+                db.SaveChanges();
+            }
+            catch {
+                ModelState.AddModelError("ErrorMessage", "删除失败，请再次删除。");
+                return RedirectToAction("AdministrateUsers","User");
+            }
+            return RedirectToAction("AdministrateUsers", "User");
         }
 
         public ActionResult Info()
@@ -164,6 +313,61 @@ namespace PIPOSKY2.Controllers
                 return View(tmp);
             }
             return View();
+        }
+
+        [NonAction]
+        public static string ReadFile(string Path)
+        {
+            string s = "";
+            if (!System.IO.File.Exists(Path))
+            {
+                FileInfo file = new FileInfo(Path);
+
+                //创建文件   
+
+                FileStream fs = file.Create();
+
+                //关闭文件流   
+
+                fs.Close();
+            }
+            else
+            {
+                StreamReader f2 = new StreamReader(Path, System.Text.Encoding.GetEncoding("gb2312"));
+                s = f2.ReadToEnd();
+                f2.Close();
+                f2.Dispose();
+            }
+            return s;
+        }
+
+        [NonAction]
+        public static userInfo getUserInfo(string userInfo,int beginIndex) {
+            userInfo str = new userInfo();
+            for (int i = beginIndex; i < userInfo.Length; i++)
+            {
+                if (userInfo[i] == ',' && userInfo[i + 1] != ',')
+                {
+                    str.lengthAdded = i - beginIndex + 1;
+                    return str;
+                }
+                else if (userInfo[i] == ',' && userInfo[i + 1] == ',')
+                {
+                    str.lengthAdded = i - beginIndex + 2;
+                    return str;
+                }
+                if (userInfo[i] == ' ')
+                {
+                    continue;
+                }
+                str.strU += userInfo[i];
+            }
+            return str;
+        }
+
+        public class userInfo {
+            public string strU { get; set; }
+            public int lengthAdded { get; set; }
         }
     }
 }

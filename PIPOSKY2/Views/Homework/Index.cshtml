@@ -6,34 +6,67 @@
 @model Homework
 
 <h2>@Model.HomeworkName</h2>
+<p>结束时间：@Model.EndTime</p>
 @{
     User tmp = Session["User"] as User;
     if ((tmp == null) || ((tmp.UserType != "admin") && (tmp.UserType != "editor")))
     {
-        if (DateTime.Compare(DateTime.Now, Model.StartTime) < 0)
+        if (DateTime.Compare(DateTime.Now, Model.EndTime) >= 0)
         {
-    <p>作业尚未开始</p>
+    <p>作业已截止。之后您可以前往题目页面查看本次作业的题目，但作业成绩不会修改。</p>
         }
-        else
-        {
     <table class="table table-striped">
         <tr>
             <th>题目ID</th>
             <th>题目名称</th>
+            <th>上传用户</th>
+            <th>题目得分</th>
         </tr>
         @{
-            PIPOSKY2DbContext db = new PIPOSKY2DbContext();
-            PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
-            foreach (var i in db.HomeworkProblems.Where(p => p.HomeworkID == Model.HomeworkID))
-            {
+        PIPOSKY2DbContext db = new PIPOSKY2DbContext();
+        PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
+        foreach (var i in db.HomeworkProblems.Where(p => p.HomeworkID == Model.HomeworkID))
+        {
             <tr>
                 <td>@i.ProblemID</td>
-                <td>@dbtemp.Problems.Find(i.ProblemID).ProblemName</td>
-            </tr>
+                @{
+            if (DateTime.Compare(DateTime.Now, Model.EndTime) < 0)
+            {
+                    <td>@Html.ActionLink(@dbtemp.Problems.Find(i.ProblemID).ProblemName, "Content", "Problem", new { id = @i.ProblemID, type = "Homework" }, null)</td>
             }
+            else
+            {
+                    <td>@dbtemp.Problems.Find(i.ProblemID).ProblemName</td>
+            }
+                }
+                <td>@dbtemp.Problems.Find(i.ProblemID).Creator.UserName</td>
+                @{
+            if (tmp == null)
+            {
+                    <td>无记录</td>
+            }
+            else
+            {
+                IQueryable<Submit> t = dbtemp.Submits.Where(s => s.Prob.ProblemID == i.ProblemID && s.User.UserID == tmp.UserID && s.Time.CompareTo(Model.EndTime) < 0);
+                if (t.Count() == 0)
+                {
+                    <td>无记录</td>
+                }
+                else
+                    if (DateTime.Compare(DateTime.Now, Model.EndTime) < 0)
+                    {
+                    <td>未测</td>
+                    }
+                    else
+                    {
+                    <td>@t.ToList().Last().Score</td>
+                    }
+            }
+                }
+            </tr>
+        }
         }
     </table>
-        }
     }
     else
     {
@@ -44,6 +77,9 @@
         <tr>
             <th>题目ID</th>
             <th>题目名称</th>
+            <th>上传用户</th>
+            <th>题目得分</th>
+            <th>操作</th>
         </tr>
         @{
         PIPOSKY2DbContext db = new PIPOSKY2DbContext();
@@ -52,7 +88,31 @@
         {
             <tr>
                 <td>@i.ProblemID</td>
-                <td>@dbtemp.Problems.Find(i.ProblemID).ProblemName</td>
+                <td>@Html.ActionLink(@dbtemp.Problems.Find(i.ProblemID).ProblemName, "Content", "Problem", new { id = @i.ProblemID, type = "Homework" }, null)</td>
+                <td>@dbtemp.Problems.Find(i.ProblemID).Creator.UserName</td>
+                @{
+            if (tmp == null)
+            {
+                    <td>无记录</td>
+            }
+            else
+            {
+                IQueryable<Submit> t = dbtemp.Submits.Where(s => s.Prob.ProblemID == i.ProblemID && s.User.UserID == tmp.UserID && s.Time.CompareTo(Model.EndTime) < 0);
+                if (t.Count() == 0)
+                {
+                    <td>无记录</td>
+                }
+                else
+                {
+                    <td>@t.ToList().Last().Score</td>
+                }
+            }
+                }
+                <td>
+                    @Html.ActionLink("编辑题目", "Edit", "Problem", new { id = @i.ProblemID }, null)
+                    |
+                    @Html.ActionLink("下载数据", "Downland", "Problem", new { id = @i.ProblemID }, null)
+                </td>
             </tr>
         }
         }

@@ -16,8 +16,9 @@ namespace PIPOSKY2.Models
     public class SubmitResultApiModels
     {
         public int SubmitID { get; set; }
+        public int Score { get; set; }
 		public string State { get; set; }
 		public string Result { get; set; }
+        public string CompilerRes { get; set; }
     }
-    
 }

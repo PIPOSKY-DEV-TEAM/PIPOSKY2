@@ -2,49 +2,54 @@
 
 @{
     ViewBag.Title = "Details";
+    var Res = ViewBag.Res;
 }
+<h2>评测详情</h2>
 
-<h2>Details</h2>
+<table class="table table-striped">
+    <tr>
+        <td>@Model.User.UserName</td>
+        <td>@Model.Prob.ProblemName</td>
+        <td>@Model.SubmitID</td>
+        <td colspan="2" title="@Model.CompilerRes">@Model.State</td>
+    </tr>
+    <tr>
+        <th width="20%">得分</th>
+        <th>详情</th>
+        <th width="15%">时间</th>
+        <th width="15%">内存</th>
+    </tr>
+    @if (Res.Count >0)
+    {
+        foreach (var x in Res)
+        {
+            <tr>
+                @foreach (var y in x)
+                {
+                    <td>@y</td>
+                }
+            </tr>   
+            
+        }
+    <tr>
+        <th>总分</th>
+        <th>@Model.Score</th>
+        <th>@Model.Time</th>
+        <th>@Model.Lang</th>
+    </tr>
+    }
+    else
+    {
+        <tr><th colspan="4">空</th></tr>
+    }
 
-<fieldset>
-    <legend>Submit</legend>
-     
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.Lang)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Lang)
-    </div>
+</table>
 
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.Time)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Time)
-    </div>
+<h3>源代码</h3>
+<pre class="brush: @Model.Lang;">@Model.Source</pre>
 
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.Source)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Source)
-    </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.State)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.State)
-    </div>
-
-    <div class="display-label">
-         @Html.DisplayNameFor(model => model.Result)
-    </div>
-    <div class="display-field">
-        @Html.DisplayFor(model => model.Result)
-    </div>
-</fieldset>
-<p>
-    @Html.ActionLink("Edit", "Edit", new { id=Model.SubmitID }) |
-    @Html.ActionLink("Back to List", "Index")
-</p>
+@if (Model.CompilerRes != null && Model.CompilerRes.Length > 0)
+{
+    <h3>编译器输出</h3>
+    <pre>@Model.CompilerRes</pre>
+}

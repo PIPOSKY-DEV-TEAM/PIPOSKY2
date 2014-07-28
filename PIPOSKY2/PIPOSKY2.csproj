@@ -52,6 +52,8 @@
       <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="SharpCompress">
+    <Reference Include="SharpCompress, Version=0.10.3.0, Culture=neutral, PublicKeyToken=beaf6f427e128133, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\sharpcompress.0.10.3\lib\net40\SharpCompress.dll</HintPath>
     </Reference>
     <Reference Include="System" />
@@ -207,6 +209,7 @@
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
+    <Content Include="Scripts\userManagefunction.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -243,6 +246,9 @@
     <Content Include="Views\Submit\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\Problem\Upload.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Views\Submit\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
@@ -265,12 +271,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Properties\PublishProfiles\PIPOSKY2.pubxml" />
-    <Content Include="Views\Course\Delete.cshtml" />
-    <Content Include="Views\User\AdministrateUsers.cshtml" />
+    <Content Include="Views\Contests\Delete.cshtml" />
+    <Content Include="Views\User\BatchAddUsers.cshtml" />
     <Content Include="Views\ContestGroups\Index.cshtml" />
     <Content Include="Views\ContestGroups\Add.cshtml" />
     <Content Include="Views\ContestGroups\Delete.cshtml" />
     <Content Include="Views\Problem\Delete.cshtml" />
+    <Content Include="Views\User\AdministrateUsers.cshtml" />
     <Content Include="Views\Problem\Upload.cshtml" />
     <Content Include="Views\Courses\Index.cshtml" />
     <Content Include="Views\Courses\Add.cshtml" />

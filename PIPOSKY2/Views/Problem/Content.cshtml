@@ -5,12 +5,6 @@
 }
 
 <h2>@Model.ProblemName</h2>
-
-<div>
-    <pre>@Html.Raw(Model.Description.Replace("\r\n","<br/>"))</pre>
+	@Html.Raw(Model.Description)
     @Html.Raw(Model.Solution)
     @Html.Raw(Model.Config);
-</div>
-
-<p></p>
-

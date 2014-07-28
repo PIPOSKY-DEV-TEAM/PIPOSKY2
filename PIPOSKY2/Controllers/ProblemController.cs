@@ -110,6 +110,8 @@ namespace PIPOSKY2.Controllers
                             x3 = false;
                             ViewBag.mention = "Config文件格式错误！";
                         }
+                        StreamReader temp = new StreamReader(entry,encoding);
+                        content = temp.ReadToEnd();
                     }
                 }
             }
@@ -159,10 +161,13 @@ namespace PIPOSKY2.Controllers
             User tmp = Session["User"] as User;
             if ((tmp == null) || (tmp.UserType != "admin" && tmp.UserType != "editor"))
                 return RedirectToAction("Index"); ;
-            foreach (var i in db.Problems)
+            PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
+            foreach (var i in dbtemp.Problems)
                 if (form[i.ProblemID.ToString()] == "on")
                 {
-                    db.Problems.Remove(i);
+                    foreach (var j in db.HomeworkProblems.Where(p => p.ProblemID == i.ProblemID))
+                        db.HomeworkProblems.Remove(j);
+                    db.Problems.Remove(db.Problems.Find(i.ProblemID));
                 }
             db.SaveChanges();
             return RedirectToAction("Index");
