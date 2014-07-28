@@ -10,30 +10,23 @@
     User tmp = Session["User"] as User;
     if ((tmp == null) || ((tmp.UserType != "admin") && (tmp.UserType != "editor")))
     {
-        if (DateTime.Compare(DateTime.Now, Model.StartTime) < 0)
-        {
-    <p>作业尚未开始</p>
-        }
-        else
-        {
     <table class="table table-striped">
         <tr>
             <th>题目ID</th>
             <th>题目名称</th>
         </tr>
         @{
-            PIPOSKY2DbContext db = new PIPOSKY2DbContext();
-            PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
-            foreach (var i in db.HomeworkProblems.Where(p => p.HomeworkID == Model.HomeworkID))
-            {
+        PIPOSKY2DbContext db = new PIPOSKY2DbContext();
+        PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
+        foreach (var i in db.HomeworkProblems.Where(p => p.HomeworkID == Model.HomeworkID))
+        {
             <tr>
                 <td>@i.ProblemID</td>
-                <td>@dbtemp.Problems.Find(i.ProblemID).ProblemName</td>
+                <td>@Html.ActionLink(@dbtemp.Problems.Find(i.ProblemID).ProblemName, "Content", "Problem", new { id = @i.ProblemID }, null)</td>
             </tr>
-            }
+        }
         }
     </table>
-        }
     }
     else
     {
@@ -52,7 +45,7 @@
         {
             <tr>
                 <td>@i.ProblemID</td>
-                <td>@dbtemp.Problems.Find(i.ProblemID).ProblemName</td>
+                <td>@Html.ActionLink(@dbtemp.Problems.Find(i.ProblemID).ProblemName, "Content", "Problem", new { id = @i.ProblemID }, null)</td>
             </tr>
         }
         }

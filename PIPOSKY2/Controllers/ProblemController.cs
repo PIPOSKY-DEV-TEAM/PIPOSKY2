@@ -70,7 +70,7 @@ namespace PIPOSKY2.Controllers
                     {
                         Console.WriteLine(reader.Entry.FilePath);
                         EntryStream entry = reader.OpenEntryStream();
-                        StreamReader temp = new StreamReader(entry,enconding);
+                        StreamReader temp = new StreamReader(entry,encoding);
                         content = temp.ReadToEnd();
                     }
                 }
