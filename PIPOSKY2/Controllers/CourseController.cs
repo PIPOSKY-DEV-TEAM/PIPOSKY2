@@ -25,6 +25,8 @@ namespace PIPOSKY2.Controllers
                 return RedirectToAction("Index");
             HomeworkFormModel addHomework = new HomeworkFormModel();
             addHomework.CourseID = int.Parse(RouteData.Values["id"].ToString());
+            addHomework.StartTime = DateTime.Now.ToString();
+            addHomework.EndTime = addHomework.StartTime;
             return View(addHomework);
         }
 

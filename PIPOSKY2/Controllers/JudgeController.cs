@@ -44,6 +44,8 @@ namespace PIPOSKY2.Controllers
 		    {
 			    tmp.Result = value.Result;
 			    tmp.State = value.State;
+                tmp.Score = value.Score;
+                tmp.CompilerRes = value.CompilerRes;
 			    db.Submits.AddOrUpdate(tmp);
 			    db.SaveChanges();
 		    }
