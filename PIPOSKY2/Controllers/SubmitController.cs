@@ -21,6 +21,8 @@ namespace PIPOSKY2.Controllers
 	        var tmp = db.Submits.Find(id);
 	        if (tmp == null)
 		        return HttpNotFound();
+            if (tmp.Result == null)
+                tmp.Result = "[]";
             ViewBag.Res = JsonConvert.DeserializeObject<List< List<string> > >(tmp.Result);
             return View(tmp);
         }
@@ -64,6 +66,11 @@ namespace PIPOSKY2.Controllers
             {
                 int x = Int32.Parse(Request.QueryString["p"]);
                 tmp = tmp.Where(_ => _.Prob.ProblemID == x);
+            }
+            if (Request.QueryString["u"] != null && Request.QueryString["u"].Length > 0)
+            {
+                string x = Request.QueryString["u"];
+                tmp = tmp.Where(_ => _.User.UserName == x);
             }
             if (Request.QueryString["id"] != null && Request.QueryString["id"].Length > 0)
             {
