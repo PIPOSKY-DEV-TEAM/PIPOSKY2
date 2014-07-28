@@ -6,6 +6,7 @@
 @model Homework
 
 <h2>@Model.HomeworkName</h2>
+<p>结束时间：@Model.EndTime</p>
 @{
     User tmp = Session["User"] as User;
     if ((tmp == null) || ((tmp.UserType != "admin") && (tmp.UserType != "editor")))
@@ -58,7 +59,7 @@
                     }
                     else
                     {
-                    <td>@t.ToList().Last().State</td>
+                    <td>@t.ToList().Last().Score</td>
                     }
             }
                 }
@@ -77,6 +78,7 @@
             <th>题目ID</th>
             <th>题目名称</th>
             <th>上传用户</th>
+            <th>题目得分</th>
             <th>操作</th>
         </tr>
         @{
@@ -86,8 +88,26 @@
         {
             <tr>
                 <td>@i.ProblemID</td>
-                <td>@Html.ActionLink(@dbtemp.Problems.Find(i.ProblemID).ProblemName, "Content", "Problem", new { id = @i.ProblemID }, null)</td>
+                <td>@Html.ActionLink(@dbtemp.Problems.Find(i.ProblemID).ProblemName, "Content", "Problem", new { id = @i.ProblemID, type = "Homework" }, null)</td>
                 <td>@dbtemp.Problems.Find(i.ProblemID).Creator.UserName</td>
+                @{
+            if (tmp == null)
+            {
+                    <td>无记录</td>
+            }
+            else
+            {
+                IQueryable<Submit> t = dbtemp.Submits.Where(s => s.Prob.ProblemID == i.ProblemID && s.User.UserID == tmp.UserID && s.Time.CompareTo(Model.EndTime) < 0);
+                if (t.Count() == 0)
+                {
+                    <td>无记录</td>
+                }
+                else
+                {
+                    <td>@t.ToList().Last().Score</td>
+                }
+            }
+                }
                 <td>
                     @Html.ActionLink("编辑题目", "Edit", "Problem", new { id = @i.ProblemID }, null)
                     |
