@@ -146,33 +146,42 @@ namespace PIPOSKY2.Controllers
             return View();
         }
 
-        //public ActionResult AdministrateUsers() {
-        //    return View(db.Users.ToList());
-        //}
-
-        //[HttpPost]
         public ActionResult AdministrateUsers()
         {
-            int userid = (int)Session["_EditUserTypeID"];
+            return View(db.Users.ToList());
+        }
+
+        [HttpPost]
+        public ActionResult AdministrateUsers(FormCollection info)
+        {
+            int userid;
+            try
+            {
+                userid = (int)Session["_EditUserTypeID"];
+            }
+            catch {
+                return View(db.Users.ToList());
+            }
             if (userid == -1) {
                 return View(db.Users.ToList());
             }
             try
             {
                 User tmp = db.Users.FirstOrDefault(_ => _.UserID == userid);
-                tmp.UserType = Request.QueryString["editusertype"];
+                tmp.UserType = info["edittype"];
+                
                 db.Users.AddOrUpdate(tmp);
                 db.SaveChanges();
+                Session["_EditUserTypeID"] = -1;
             }
             catch
             {
                 ModelState.AddModelError("ErrorMessage", "保存失败，请再次修改。");
                 return View(db.Users.ToList());
             }
-            Session["_EditUserTypeID"] = -1;
+            
             return View(db.Users.ToList());
         }
-
         [HttpPost]
         public ActionResult BatchAddUsers(FormCollection form)
         {

@@ -32,13 +32,10 @@
             <th>
             </th>
         </tr>
-        @{  int idEdit;
+        @{  
+            int idEdit;
             try{idEdit = (int)Session["_EditUserTypeID"];}
             catch { idEdit = -1; }
-            List<SelectListItem> userTypes = new List<SelectListItem>{
-            new SelectListItem { Text = "editor", Value = "editor" },
-            new SelectListItem { Text = "normal", Value = "normal" }
-            };
            }
     @foreach (var item in Model) {
         
@@ -52,12 +49,14 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.UserEmail)
                 </td>
-                
                     @if(item.UserID == idEdit){
                         <td>
-                            <form>
-                                @Html.DropDownListFor(modelItem => item.UserType,userTypes)
-                                <input type="submit" name="editusertype" id="editusertype"/>
+                            <form action="/user/AdministrateUsers" method="post">
+                                <select id="edittype" name="edittype">
+                                    <option value="editor">editor</option>
+                                    <option value="normal">normal</option>
+                                </select>
+                                <input type="submit"/>
                             </form>
                         </td>
                     }
