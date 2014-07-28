@@ -176,9 +176,9 @@ namespace PIPOSKY2.Controllers
         public FileStreamResult Download(int? id)
         {
             Problem problem = db.Problems.Find(id);
-            string date = DateTime.Now.ToFileTime().ToString();
+            //string date = DateTime.Now.ToFileTime().ToString();
             FileStream filestream = new FileStream(problem.ProblemPath, FileMode.Create);
-            return File(filestream,"text/plain", problem.ProblemName + "_" + date);
+            return File(filestream,"Application/octet-stream", Path.GetFileName(problem.ProblemPath));
         }
     }
 }
