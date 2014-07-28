@@ -129,6 +129,10 @@ namespace PIPOSKY2.Controllers
             //获取文件
             HttpPostedFileBase file = form.File;
             //处理文件
+            if (file == null)
+            {
+                return true;
+            }
             string ext = Path.GetExtension(file.FileName);
             if (ext == ".rar" || ext == ".zip")
             {
@@ -136,6 +140,11 @@ namespace PIPOSKY2.Controllers
                 if (OpenRar(file,problem))
                 {
                     //保存文件
+                    if (problem.ProblemPath != null)
+                    {
+                        if (System.IO.File.Exists(problem.ProblemPath))
+                            System.IO.File.Delete(problem.ProblemPath);
+                    }
                     string date = DateTime.Now.ToFileTime().ToString();
                     string filePath = Path.Combine(HttpContext.Server.MapPath("~/Problems"), problem.ProblemName+"_"+date+ext);
                     problem.ProblemPath = filePath;
@@ -165,7 +174,11 @@ namespace PIPOSKY2.Controllers
                 if (form[i.ProblemID.ToString()] == "on")
                 {
                     foreach (var j in db.HomeworkProblems.Where(p => p.ProblemID == i.ProblemID))
+                    {
                         db.HomeworkProblems.Remove(j);
+                    }
+                    if (System.IO.File.Exists(i.ProblemPath))
+                        System.IO.File.Delete(i.ProblemPath);
                     db.Problems.Remove(db.Problems.Find(i.ProblemID));
                 }
             db.SaveChanges();
@@ -180,9 +193,9 @@ namespace PIPOSKY2.Controllers
         public FileStreamResult Download(int? id)
         {
             Problem problem = db.Problems.Find(id);
-            //string date = DateTime.Now.ToFileTime().ToString();
-            FileStream filestream = new FileStream(problem.ProblemPath, FileMode.Create);
-            return File(filestream,"Application/octet-stream", Path.GetFileName(problem.ProblemPath));
+            FileStream filestream = new FileStream(problem.ProblemPath, FileMode.Open, FileAccess.Read, FileShare.None);
+            return File(filestream,
+                "text/plain", problem.ProblemName + Path.GetExtension(problem.ProblemPath));
         }
     }
 }
