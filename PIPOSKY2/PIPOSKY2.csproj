@@ -47,6 +47,10 @@
       <HintPath>..\packages\EntityFramework.6.1.1\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NUnrar">
       <HintPath>..\packages\nunrar.1.0.1\lib\net40\NUnrar.dll</HintPath>
     </Reference>
@@ -77,9 +81,6 @@
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.4.5.6\lib\net40\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System.Net.Http">
     </Reference>
@@ -274,7 +275,6 @@
     <None Include="Properties\PublishProfiles\PIPOSKY2.pubxml" />
     <Content Include="Views\Contests\Delete.cshtml" />
     <Content Include="Views\User\BatchAddUsers.cshtml" />
-    <Content Include="Views\User\AdministrateUsers.cshtml" />
     <Content Include="Views\ContestGroups\Index.cshtml" />
     <Content Include="Views\ContestGroups\Add.cshtml" />
     <Content Include="Views\ContestGroups\Delete.cshtml" />
