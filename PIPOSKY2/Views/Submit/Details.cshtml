@@ -6,7 +6,7 @@
 }
 <h2>评测详情</h2>
 
-<table class="table">
+<table class="table table-striped">
     <tr>
         <td>@Model.User.UserName</td>
         <td>@Model.Prob.ProblemName</td>
@@ -35,7 +35,7 @@
         <th>总分</th>
         <th>@Model.Score</th>
         <th>@Model.Time</th>
-        <th></th>
+        <th>@Model.Lang</th>
     </tr>
     }
     else
@@ -45,10 +45,11 @@
 
 </table>
 
-<pre class="brush: @Model.Lang">@Model.Source</pre>
+<h3>源代码</h3>
+<pre class="brush: @Model.Lang;">@Model.Source</pre>
 
 @if (Model.CompilerRes != null && Model.CompilerRes.Length > 0)
 {
-    <p>编译器输出</p>
+    <h3>编译器输出</h3>
     <pre>@Model.CompilerRes</pre>
 }

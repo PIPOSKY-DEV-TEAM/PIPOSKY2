@@ -37,10 +37,10 @@ namespace PIPOSKY2.Models
 
 			var submit = new Submit
 			{
-				Lang = "C++",
+				Lang = "cpp",
 				Prob = prob,
 				Result = "",
-				Source = "TEST",
+				Source = "int main() { return 0;}",
 				State = "wait",
 				Time = DateTime.Now,
 				User = user

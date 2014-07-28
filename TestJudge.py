@@ -31,7 +31,7 @@ def TEST_RES(x):
             }
 		
 
-def TEST_RES(x):		
+def TEST_RES_x(x):		
     return {
                 "SubmitID":x,  # 提交记录ID
                 "State": "CompileError",  #评测结果
