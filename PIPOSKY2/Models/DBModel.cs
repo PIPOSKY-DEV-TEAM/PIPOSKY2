@@ -32,7 +32,7 @@ namespace PIPOSKY2.Models
 			var user = new User {UserEmail = "test@test.com", UserName = "root", UserPwd = "admin", UserType = "admin"};
 			context.Users.AddOrUpdate(user);
 
-            var prob = new Problem { Creator = user, Downloadable = true, ProblemName = "a", Visible = true, ProblemPath = "a.zip" ,Content="TEST"};
+            var prob = new Problem { Creator = user, Downloadable = true, ProblemName = "a", Visible = true, ProblemPath = "a.zip" ,Description="TEST"};
 			context.Problems.AddOrUpdate(prob);
 
 			var submit = new Submit
@@ -80,7 +80,11 @@ namespace PIPOSKY2.Models
         [Required]
         public virtual User Creator { set; get; }
         [Required]
-        public string Content { set; get; }
+        public string Description { set; get; }
+        [Required]
+        public string Solution { set; get; }
+        [Required]
+        public string Config { set; get; }
     }
 
     public class Homework

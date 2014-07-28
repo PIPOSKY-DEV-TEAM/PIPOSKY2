@@ -1,6 +1,5 @@
 ﻿@using PIPOSKY2.Models 
 @model Problem
-
 @{
     ViewBag.Title = "编辑题目";
 }
@@ -8,11 +7,8 @@
 <h2>@ViewBag.Title</h2>
 @using (Html.BeginForm("Edit","Problem",FormMethod.Post,new { enctype ="multipart/form-data"}))
 {
-    <label>题目名称</label>
-    <input type="text" name="Name" required="required" value="@Model.ProblemName" class ="form-control"/>
-    <p></p>
     <label>上传文件</label>
-    <input type="file" name="File" accept="" required="required"/>
+    <input type="file" class="filestyle" data-classButton="btn btn-primary" name="File" accept="" required="required"/>
     <p style="color:red">@ViewBag.mention</p>;
     <p></p>
     <label>对所有用户可见</label>

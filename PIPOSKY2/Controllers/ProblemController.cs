@@ -11,6 +11,7 @@ using SharpCompress.Common;
 using SharpCompress.Reader;
 using PIPOSKY2.Models;
 using System.Data.Entity.Migrations;
+using Newtonsoft.Json.Linq;
 
 namespace PIPOSKY2.Controllers
 {
@@ -24,6 +25,11 @@ namespace PIPOSKY2.Controllers
         }
         public ActionResult Upload()
         {
+            User tmp = Session["User"] as User;
+            if ((tmp == null) || (tmp.UserType != "admin" && tmp.UserType != "editor"))
+            {
+                return RedirectToAction("Index", "Problem");
+            }
             Problem problem = new Problem();
             return View(problem);
         }
@@ -42,6 +48,11 @@ namespace PIPOSKY2.Controllers
 
         public ActionResult Edit(int ?id)
         {
+            User tmp = Session["User"] as User;
+            if ((tmp == null) || (tmp.UserType != "admin" && tmp.UserType != "editor"))
+            {
+                return RedirectToAction("Index", "Problem");
+            }
             Problem problem = db.Problems.Find(id);
             return View(problem);
         }
@@ -57,54 +68,81 @@ namespace PIPOSKY2.Controllers
             return View(problem);
         }
 
-        public string OpenRar(HttpPostedFileBase file)
+        public bool OpenRar(HttpPostedFileBase file, Problem problem)
         {
-            string content = "";
+            string filename = "";
+            bool x1 = false, x2 = false, x3 = false;
             Encoding encoding = System.Text.Encoding.GetEncoding("GB2312");
-            using (Stream stream = file.InputStream)
+            Stream stream = file.InputStream;
+            var reader = ReaderFactory.Open(stream);
+            while (reader.MoveToNextEntry())
             {
-                var reader = ReaderFactory.Open(stream);
-                while (reader.MoveToNextEntry())
+                filename = reader.Entry.FilePath;
+                if (!reader.Entry.IsDirectory)
                 {
-                    if (!reader.Entry.IsDirectory && reader.Entry.FilePath.EndsWith("Content.txt"))
+                    if (filename.EndsWith("Prob.html"))
                     {
-                        Console.WriteLine(reader.Entry.FilePath);
                         EntryStream entry = reader.OpenEntryStream();
-                        StreamReader temp = new StreamReader(entry,enconding);
-                        content = temp.ReadToEnd();
+                        StreamReader temp = new StreamReader(entry, encoding);
+                        problem.Description = temp.ReadToEnd();
+                        x1 = true;
+                    }
+                    else if (filename.EndsWith("Solve.html"))
+                    {
+                        EntryStream entry = reader.OpenEntryStream();
+                        StreamReader temp = new StreamReader(entry, encoding);
+                        problem.Solution = temp.ReadToEnd();
+                        x2 = true;
+                    }
+                    else if (filename.EndsWith("Config.json"))
+                    {
+                        EntryStream entry = reader.OpenEntryStream();
+                        StreamReader temp = new StreamReader(entry);
+                        problem.Config = temp.ReadToEnd();
+                        x3 = true;
+                        try
+                        {
+                            JObject obj = JObject.Parse(problem.Config);
+                            problem.ProblemName = (string)obj["Title"];
+                        }
+                        catch
+                        {
+                            x3 = false;
+                            ViewBag.mention = "Config文件格式错误！";
+                        }
                     }
                 }
             }
-            return content;
+            stream.Flush();
+            return (x1 && x2 && x3);
         }
+
         public bool DealWithForm(UploadProblemFormModel form, Problem problem)
         {
-            //题目名称
-            problem.ProblemName = form.Name;
-            //获取文件
-            HttpPostedFileBase file = form.File;
             //题目是否公开
             if (form.visible == "on")
                 problem.Visible = true;
             else problem.Visible = false;
             //上传用户
             problem.Creator = Session["User"] as User;
+            //获取文件
+            HttpPostedFileBase file = form.File;
             //处理文件
             string ext = Path.GetExtension(file.FileName);
             if (ext == ".rar" || ext == ".zip")
             {
-                //文件路径
-                string filePath = Path.Combine(HttpContext.Server.MapPath("~/Problems"), problem.ProblemName + ext);
-                problem.ProblemPath = filePath;
-                problem.Content = OpenRar(file);
-                if (problem.Content.Length > 0)
+                //解压文件获取数据   
+                if (OpenRar(file,problem))
                 {
                     //保存文件
+                    string date = DateTime.Now.ToFileTime().ToString();
+                    string filePath = Path.Combine(HttpContext.Server.MapPath("~/Problems"), problem.ProblemName+"_"+date+ext);
+                    problem.ProblemPath = filePath;
                     file.SaveAs(filePath);
                     return true;
                 }
             }
-            ViewBag.mention = "文件格式错误！";
+            if (ViewBag.mention == null) ViewBag.mention = "文件格式错误！";
             return false;
         }
 
@@ -135,5 +173,12 @@ namespace PIPOSKY2.Controllers
             return View(db.Problems.Find(id));
         }
 
+        public FileStreamResult Download(int? id)
+        {
+            Problem problem = db.Problems.Find(id);
+            string date = DateTime.Now.ToFileTime().ToString();
+            FileStream filestream = new FileStream(problem.ProblemPath, FileMode.Create);
+            return File(filestream,"text/plain", problem.ProblemName + "_" + date);
+        }
     }
 }

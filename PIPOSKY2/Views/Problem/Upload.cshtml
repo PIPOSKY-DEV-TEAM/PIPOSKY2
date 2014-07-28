@@ -8,19 +8,23 @@
 <h2>@ViewBag.Title</h2>
 @using (Html.BeginForm("Upload","Problem",FormMethod.Post,new { enctype ="multipart/form-data"}))
 {
-    <p>
-        题目名称
-        <input type="text" name="Name" required="required" value =" @Model.ProblemName"/>
-    </p>
-    <p>
-        上传文件
-        <input type="file" name="File" accept="" required="required" />
-    </p>
+    <label>上传文件</label>
+    <input id="upfile" type="file" name="File" style="display:none" required/>  
+    <div class="input-append">  
+        <input id="photoCover" class="input-large" type="text" style="height:30px;">  
+        <a class="btn btn-default" onclick="$('input[id=upfile]').click();">浏览</a>  
+    </div>  
+    <script type="text/javascript">  
+        $('input[id=upfile]').change(function(){
+            $('#photoCover').val($(this).val());  
+        });  
+    </script>
     <p style="color:red">@ViewBag.mention</p>;
-    <p>
-        对所有用户可见
-        <input type="checkbox" name="visible" checked =" @Model.Visible"/>
-    </p>
-    <br />
+    <p></p>
+    
+    <label>对所有用户可见</label>
+    <input type="checkbox" name="visible" checked =" @Model.Visible"/>
+    <p></p>
+    
     <input type="submit" value="提交" class="btn btn-default" />
 }

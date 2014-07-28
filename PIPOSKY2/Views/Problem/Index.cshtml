@@ -24,27 +24,29 @@
 
 <table class="table table-striped">
     <tr>
-        <th>题目ID</th>
         <th>题目名称</th>
-        <th>上传用户</th>
-        @{if (editRight) {<th>操作</th>}}
+        <th>得分</th>
+        @{if (editRight) 
+          {
+              <th>上传用户</th>
+              <th>操作</th>
+        }}
     </tr>
     @foreach (Problem i in Model)
     {
         if (editRight || i.Visible)
         {
             <tr>
-                <td>@i.ProblemID</td>
-                <td>@Html.ActionLink(@i.ProblemName, "Content", new { id = @i.ProblemID })</td>
-                <td>@i.Creator.UserName</td>
-
+                <td>@Html.ActionLink(@i.ProblemName, "Content", new { id = @i.ProblemID })</td>        
+                <td></td> 
                 @{
                     if (editRight)
                     {
+                        <td>@i.Creator.UserName</td>
                         <td>
                             @Html.ActionLink("编辑题目", "Edit", new { id= @i.ProblemID})
                             |
-                            @Html.ActionLink("下载数据", "Downland", new { id= @i.ProblemID})
+                            @Html.ActionLink("下载数据", "Download", new { id= @i.ProblemID})
                         </td>
                     }
                 }
