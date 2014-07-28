@@ -13,6 +13,7 @@
     <p>
         @Html.ActionLink("添加作业", "Add", new { id = @Model.CourseID }, new { @class = "btn btn-default" })
         @Html.ActionLink("删除作业", "Delete", new { id = @Model.CourseID }, new { @class = "btn btn-default" })
+        @Html.ActionLink("导出成绩", "Score", new { id = @Model.CourseID }, new { @class = "btn btn-default" })
     </p>
     }
 }
