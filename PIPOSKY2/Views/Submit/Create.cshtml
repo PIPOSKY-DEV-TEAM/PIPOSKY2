@@ -15,6 +15,7 @@
             <option value="java">Java</option>
         </select>
     </div>
+    
     <div class="form-group">
         @Html.LabelFor(model => model.PID)
         @Html.TextBoxFor(model => model.PID,new {@class ="form-control"})
@@ -23,9 +24,9 @@
 
     <div class="form-group">
         @Html.ValidationMessageFor(model => model.Source)
-        @Html.TextAreaFor(model => model.Source,new {@class ="form-control",@id="SrcEdit"})
+        @Html.TextAreaFor(model => model.Source,new {@class ="form-control",@id="SrcEdit",@rows=30})
     </div>
     <input type="submit" value="Create" />
 
-    }
+}
 

@@ -111,7 +111,7 @@ namespace PIPOSKY2.Models
 
 		[Required]
 		[Display(Name="题目")]
-		public int PID { get; set; }
+		public int? PID { get; set; }
 
 		[Required]
 		[Display(Name="提交代码")]

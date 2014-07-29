@@ -150,19 +150,14 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css" />
+    <Content Include="Content\github.css" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Scripts\bootstrap-filestyle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
+    <Content Include="Scripts\highlight.pack.js" />
     <Content Include="Scripts\keeplogin.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
-    <Content Include="Scripts\shBrushCpp.js" />
-    <Content Include="Scripts\shBrushCSharp.js" />
-    <Content Include="Scripts\shBrushJava.js" />
-    <Content Include="Scripts\shBrushJScript.js" />
-    <Content Include="Scripts\shBrushPlain.js" />
-    <Content Include="Scripts\shBrushPython.js" />
-    <Content Include="Scripts\shCore.js" />
     <Content Include="Scripts\userManagefunction.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -221,6 +216,7 @@
     <Content Include="Views\Homework\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap.css.map" />
     <None Include="Properties\PublishProfiles\PIPOSKY2.pubxml" />
     <Content Include="Views\User\BatchAddUsers.cshtml" />
     <Content Include="Views\Problem\Delete.cshtml" />

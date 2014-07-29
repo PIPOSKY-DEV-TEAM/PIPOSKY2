@@ -12,5 +12,5 @@
 
 <p>
     @Html.ActionLink("下载数据", "Download", "Problem", new { id = @Model.ProblemID }, new { @class = "btn btn-default" })
-    @Html.ActionLink("提交代码", "Submit", "Submit", null, new { @class = "btn btn-default" })
+    @Html.ActionLink("提交代码", "Create", "Submit", new { id = @Model.ProblemID }, new { @class = "btn btn-default" })
 </p>
