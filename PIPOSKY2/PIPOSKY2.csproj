@@ -193,9 +193,6 @@
     <Content Include="Views\Submit\Create.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Problem\Upload.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\Submit\Details.cshtml" />
   </ItemGroup>
   <ItemGroup>
