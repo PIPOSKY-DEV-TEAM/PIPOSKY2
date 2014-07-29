@@ -1,0 +1,13 @@
+﻿@{
+    
+    var MinPage =  Math.Max(1, ViewBag.page - 10);
+    var MaxPage = Math.Min(ViewBag.totpage, ViewBag.page + 10) ;
+}
+<ul class="pagination">
+     <li><a href="#">&laquo;</a></li>
+@for (var i = MinPage; i <= MaxPage; i++)
+{
+  <li><a href="">@i</a></li>
+}
+    <li><a href="#">&raquo;</a></li>
+</ul>

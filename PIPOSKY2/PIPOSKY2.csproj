@@ -156,6 +156,13 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\keeplogin.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
+    <Content Include="Scripts\shBrushCpp.js" />
+    <Content Include="Scripts\shBrushCSharp.js" />
+    <Content Include="Scripts\shBrushJava.js" />
+    <Content Include="Scripts\shBrushJScript.js" />
+    <Content Include="Scripts\shBrushPlain.js" />
+    <Content Include="Scripts\shBrushPython.js" />
+    <Content Include="Scripts\shCore.js" />
     <Content Include="Scripts\userManagefunction.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -222,6 +229,7 @@
     <Content Include="Views\Courses\Index.cshtml" />
     <Content Include="Views\Courses\Add.cshtml" />
     <Content Include="Views\Courses\Delete.cshtml" />
+    <Content Include="Views\Shared\_Pagination.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Problem\Content.cshtml" />

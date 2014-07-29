@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Web.Mvc;
 using Newtonsoft.Json;
 
+
 namespace PIPOSKY2.Controllers
 {
     public class SubmitController : Controller
@@ -92,6 +93,16 @@ namespace PIPOSKY2.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            int PAGE_SIZE = 10;
+            int page = 1, totpage = (tmp.Count() + PAGE_SIZE - 1)/ PAGE_SIZE;
+            if (Request.QueryString["page"] != null)
+            {
+                Int32.TryParse(Request.QueryString["page"],out page);
+            }
+            ViewBag.page = page ; ViewBag.totpage = totpage;
+
+            ViewBag.pageUrl = Request.QueryString.ToString();
+            tmp = tmp.OrderBy(_ => - _.SubmitID).Skip((page-1)*PAGE_SIZE).Take(PAGE_SIZE);
             return View(tmp.ToList());
         }
 
