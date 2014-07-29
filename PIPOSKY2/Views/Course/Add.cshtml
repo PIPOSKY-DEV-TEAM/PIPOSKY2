@@ -26,16 +26,18 @@
     </div>
     <table class="table table-striped">
         <tr>
-            <th>题目ID</th>
+            <th>#</th>
             <th>题目名称</th>
             <th>添加题目</th>
         </tr>
         @{
     PIPOSKY2DbContext db = new PIPOSKY2DbContext();
-    foreach (var i in db.Problems)
+    int ord = 0;
+    foreach (var i in db.Problems.Where(p => p.Visible))
     {
+        ord++;
             <tr>
-                <td>@i.ProblemID</td>
+                <td>@ord</td>
                 <td>@i.ProblemName</td>
                 <td><input type="checkbox" name="@i.ProblemID" /></td>
             </tr>
