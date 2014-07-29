@@ -21,7 +21,7 @@ namespace PIPOSKY2.Controllers
 	        var tmp = db.Submits.Find(id);
 	        if (tmp == null)
 		        return HttpNotFound();
-            if (tmp.Result == null)
+            if (tmp.Result == null || tmp.Result.Length == 0)
                 tmp.Result = "[]";
             ViewBag.Res = JsonConvert.DeserializeObject<List< List<string> > >(tmp.Result);
             return View(tmp);

@@ -32,7 +32,7 @@ namespace PIPOSKY2.Models
 			var user = new User {UserEmail = "test@test.com", UserName = "root", UserPwd = "admin123", UserType = "admin"};
 			context.Users.AddOrUpdate(user);
 
-            var prob = new Problem { Creator = user, Downloadable = true, ProblemName = "a", Visible = true, ProblemPath = "a.zip" ,Description="TEST"};
+            var prob = new Problem { Creator = user, Downloadable = true, ProblemName = "a", Visible = true, ProblemPath = "a.zip" ,Description="<h2>TEST</h2>", Solution="<p>AAAA</p>",Config="[]"};
 			context.Problems.AddOrUpdate(prob);
 
 			var submit = new Submit
