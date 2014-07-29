@@ -5,8 +5,11 @@
 }
 
 <h2>@Model.ProblemName</h2>
-@Html.Raw(Model.Description.Replace("\r\n", "<br />"))
-
+<pre>@Html.Raw(Model.Description.Replace("\r\n", "<br />"))</pre>
+<p>
+    @Html.ActionLink("下载数据", "Download", "Problem", new { id = @Model.ProblemID }, new { @class = "btn btn-default" })
+    @Html.ActionLink("提交代码", "Submit", "Submit", null, new { @class = "btn btn-default" })
+</p>
 <div>
     <div id="disqus_thread"></div>
     <script type="text/javascript">
