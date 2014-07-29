@@ -12,6 +12,7 @@
     </script>
     <p>@Html.ValidationMessage("ErrorMessage")</p>
     <input type="submit" name="Upload" value="确定" class="btn btn-default"/>
+    @Html.ActionLink("返回", "AdministrateUsers", "User", new { @class = "btn btn-default" })
 }
 <br />
 <div>

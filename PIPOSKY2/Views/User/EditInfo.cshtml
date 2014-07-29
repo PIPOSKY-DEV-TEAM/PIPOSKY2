@@ -7,6 +7,11 @@
 @using (Html.BeginForm())
 {
     <div class="form-group">
+        @Html.LabelFor(m => m.UserName)
+        @Html.TextBoxFor(m => m.UserName, new { @class = "form-control", @type = "email" })
+        @Html.ValidationMessageFor(m => m.UserName)
+    </div>
+    <div class="form-group">
         @Html.LabelFor(m => m.UserEmail)
         @Html.TextBoxFor(m => m.UserEmail, new { @class = "form-control", @type = "email" })
         @Html.ValidationMessageFor(m => m.UserEmail)

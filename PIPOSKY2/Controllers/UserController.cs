@@ -67,11 +67,8 @@ namespace PIPOSKY2.Controllers
                     HttpCookie hc = new HttpCookie("_currentUser");
                     hc["UserName"] = currentLogin.UserName;
                     hc["UserPwd"] = currentLogin.UserPwd;
-                    //hc.Expires = DateTime.Today.AddDays(7);
-                    //hc.Expires = DateTime.Today.AddMinutes(1);
-                    hc.Expires = DateTime.Now.AddMinutes(5);
+                    hc.Expires = DateTime.Today.AddDays(7);
                     Response.Cookies.Add(hc);
-                    Session.Timeout = 1;
                 }
                 return RedirectToAction("Index","Courses");
             }
@@ -87,7 +84,6 @@ namespace PIPOSKY2.Controllers
             try
             {
                 string name = Request.Cookies["_currentUser"]["UserName"].ToString();
-                var a = 2;
                 if (name != null)
                 {
                     User tmp = db.Users.FirstOrDefault(m => m.UserName == name);
@@ -128,6 +124,7 @@ namespace PIPOSKY2.Controllers
             if (tmp!= null)
             {
                 tmp.UserEmail = EditUser.UserEmail;
+                tmp.UserName = EditUser.UserName;
                 db.Users.AddOrUpdate(tmp);
                 db.SaveChanges();
                 Session["User"] = tmp;
@@ -182,32 +179,40 @@ namespace PIPOSKY2.Controllers
         [HttpPost]
         public ActionResult AdministrateUsers(FormCollection info)
         {
-            int userid;
-            try
+            if (info["edittype"] != null)
             {
-                userid = (int)Session["_EditUserTypeID"];
+               try
+               {
+                    int userid = (int)Session["_EditUserTypeID"];
+                    User tmp = db.Users.FirstOrDefault(_ => _.UserID == userid);
+                    tmp.UserType = info["edittype"];
+                    db.Users.AddOrUpdate(tmp);
+                    db.SaveChanges();
+                    Session["_EditUserTypeID"] = -1;
+                }
+               catch
+               {
+                   ModelState.AddModelError("ErrorMessage", "保存用户类型失败，请再次修改。");
+                   return View(db.Users.ToList());
+               }
             }
-            catch {
-                return View(db.Users.ToList());
-            }
-            if (userid == -1) {
-                return View(db.Users.ToList());
-            }
-            try
+            if (info["item.StudentNumber"] != null)
             {
-                User tmp = db.Users.FirstOrDefault(_ => _.UserID == userid);
-                tmp.UserType = info["edittype"];
-                
-                db.Users.AddOrUpdate(tmp);
-                db.SaveChanges();
-                Session["_EditUserTypeID"] = -1;
+                try
+                {
+                    int stuNumID = (int)Session["_EditStuNumID"];
+                    User tmp1 = db.Users.FirstOrDefault(_ => _.UserID == stuNumID);
+                    tmp1.StudentNumber = info["item.StudentNumber"];
+                    db.Users.AddOrUpdate(tmp1);
+                    db.SaveChanges();
+                    Session["_EditStuNumID"] = -1;
+                }
+                catch 
+                {
+                    ModelState.AddModelError("ErrorMessage", "保存学号失败，请再次修改。");
+                    return View(db.Users.ToList());
+                }
             }
-            catch
-            {
-                ModelState.AddModelError("ErrorMessage", "保存失败，请再次修改。");
-                return View(db.Users.ToList());
-            }
-            
             return View(db.Users.ToList());
         }
         [HttpPost]
@@ -288,7 +293,7 @@ namespace PIPOSKY2.Controllers
                 }
             }
             ModelState.AddModelError("ErrorMessage", "成功添加"+numofNewUser+"名新用户！");
-            return View();
+            return RedirectToAction("AdministrateUsers","User");
         }
         
         public ActionResult BatchAddUsers() {
@@ -297,6 +302,11 @@ namespace PIPOSKY2.Controllers
 
         public ActionResult EditUserType(int id) {
             Session["_EditUserTypeID"] = id;
+            return RedirectToAction("AdministrateUsers", "User");
+        }
+
+        public ActionResult EditStuNum(int id) {
+            Session["_EditStuNumID"] = id;
             return RedirectToAction("AdministrateUsers", "User");
         }
 
@@ -317,12 +327,12 @@ namespace PIPOSKY2.Controllers
 
         public ActionResult Info()
         {
-            if (Session["User"] != null)
+            User tmp = Session["User"] as User;
+            if (tmp != null)
             {
-                User tmp = Session["User"] as User;
                 return View(tmp);
             }
-            return View();
+            return RedirectToAction("Login","User");
         }
 
         [NonAction]
