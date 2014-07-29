@@ -124,6 +124,11 @@ namespace PIPOSKY2.Controllers
 
         public ActionResult Score(int? id)
         {
+            User tmp = Session["User"] as User;
+            if (tmp == null)
+                return RedirectToAction("Index", RouteData.Values);
+            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
+                return RedirectToAction("Index", RouteData.Values);
             string path = Server.MapPath("~/Score") + "\\" + db.Courses.Find(id).CourseName + ".csv";
             FileStream fs = new FileStream(path, FileMode.Create);
             StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.GetEncoding("GB2312"));

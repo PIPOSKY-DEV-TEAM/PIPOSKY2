@@ -17,18 +17,19 @@
         }
     <table class="table table-striped">
         <tr>
-            <th>题目ID</th>
+            <th>#</th>
             <th>题目名称</th>
-            <th>上传用户</th>
             <th>题目得分</th>
         </tr>
         @{
         PIPOSKY2DbContext db = new PIPOSKY2DbContext();
         PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
+        int ord = 0;
         foreach (var i in db.HomeworkProblems.Where(p => p.HomeworkID == Model.HomeworkID))
         {
+            ord++;
             <tr>
-                <td>@i.ProblemID</td>
+                <td>@ord</td>
                 @{
             if (DateTime.Compare(DateTime.Now, Model.EndTime) < 0)
             {
@@ -38,9 +39,6 @@
             {
                     <td>@dbtemp.Problems.Find(i.ProblemID).ProblemName</td>
             }
-                }
-                <td>@dbtemp.Problems.Find(i.ProblemID).Creator.UserName</td>
-                @{
             if (tmp == null)
             {
                     <td>无记录</td>
@@ -75,7 +73,7 @@
     </p>
     <table class="table table-striped">
         <tr>
-            <th>题目ID</th>
+            <th>#</th>
             <th>题目名称</th>
             <th>上传用户</th>
             <th>题目得分</th>
@@ -84,10 +82,12 @@
         @{
         PIPOSKY2DbContext db = new PIPOSKY2DbContext();
         PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
+        int ord = 0;
         foreach (var i in db.HomeworkProblems.Where(p => p.HomeworkID == Model.HomeworkID))
         {
+            ord++;
             <tr>
-                <td>@i.ProblemID</td>
+                <td>@ord</td>
                 <td>@Html.ActionLink(@dbtemp.Problems.Find(i.ProblemID).ProblemName, "Content", "Problem", new { id = @i.ProblemID, type = "Homework" }, null)</td>
                 <td>@dbtemp.Problems.Find(i.ProblemID).Creator.UserName</td>
                 @{
