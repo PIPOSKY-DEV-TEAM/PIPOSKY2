@@ -154,9 +154,8 @@ namespace PIPOSKY2.Controllers
                         if (System.IO.File.Exists(problem.ProblemPath))
                             System.IO.File.Delete(problem.ProblemPath);
                     }
-                    string date = DateTime.Now.ToFileTime().ToString();
-                    string filePath = Path.Combine(HttpContext.Server.MapPath("~/Problems"), problem.ProblemName + "_" + date + ext);
-                    problem.ProblemPath = filePath;
+                    string filePath = Path.Combine(HttpContext.Server.MapPath("~/Problems"), problem.ProblemName + ext);
+                    problem.ProblemPath = "Problems/" + problem.ProblemName + ext;
                     file.SaveAs(filePath);
                     return true;
                 }
@@ -209,10 +208,19 @@ namespace PIPOSKY2.Controllers
 
         public FileStreamResult Download(int? id)
         {
+            User tmp = Session["User"] as User;
+            bool CanDown = false;
+            if ((tmp != null) && (tmp.UserType == "admin" || tmp.UserType == "editor"))
+                CanDown = true;
             Problem problem = db.Problems.Find(id);
-            FileStream filestream = new FileStream(problem.ProblemPath, FileMode.Open, FileAccess.Read, FileShare.None);
-            return File(filestream,
-                "text/plain", problem.ProblemName + Path.GetExtension(problem.ProblemPath));
+            if (CanDown || problem.Downloadable)
+            {
+                FileStream filestream = new FileStream(Server.MapPath("~/")+problem.ProblemPath, 
+                    FileMode.Open, FileAccess.Read, FileShare.None);
+                return File(filestream,
+                    "text/plain", problem.ProblemName + Path.GetExtension(problem.ProblemPath));
+            }
+            else return null;
         }
     }
 }

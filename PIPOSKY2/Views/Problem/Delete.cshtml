@@ -11,21 +11,23 @@
     //@Html.TextBoxFor(model=>model.ProblemID, new { type = "hidden" });
     <table class="table">
         <tr>
-            <th>题目ID</th>
+            <th>#</th>
             <th>题目名称</th>
             <th>存储路径</th>
             <th>上传用户</th>
-            <th>删除题目</th>
+            <th>删除题目<input type="checkbox" name="DeleteAll" /></th>
         </tr>
+        @{int num = 1;}
         @foreach (Problem i in Model)
         {
             <tr>
-                <td>@i.ProblemID</td>
+                <td>@num</td>
                 <td>@Html.ActionLink(@i.ProblemName, "Content", new { id = @i.ProblemID })</td>
                 <td>@i.ProblemPath</td>
                 <td>@i.Creator.UserName</td>
                 <td><input type="checkbox" name="@i.ProblemID" /></td>
             </tr>
+            num ++;
         }
     </table>
     <button type="submit" class="btn btn-default">确定</button>

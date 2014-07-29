@@ -9,7 +9,10 @@
 @using (Html.BeginForm("Upload","Problem",FormMethod.Post,new { enctype ="multipart/form-data"}))
 {
     <label>上传文件</label>
-    <input type="file" class="filestyle" data-classButton="btn btn-primary" name="File" accept="" required="required"/>
+    <input type="file" class="filestyle" name="File" accept="" required="required"/>
+    <script type ="text/javascript">
+        $(":file").filestyle({ icon:false, buttonBefore: true, buttonText: "浏览"});
+    </script>
     <p style="color:red">@ViewBag.mention</p>;
     <p></p>
     

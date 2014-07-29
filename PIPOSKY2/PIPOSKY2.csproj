@@ -154,6 +154,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\bootstrap-filestyle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\keeplogin.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
