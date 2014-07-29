@@ -142,6 +142,8 @@ namespace PIPOSKY2.Controllers
             {
                 return true;
             }
+            if (!Directory.Exists(Server.MapPath("~/Problems")))
+                Directory.CreateDirectory(Server.MapPath("~/Problems"));
             string ext = Path.GetExtension(file.FileName);
             if (ext == ".rar" || ext == ".zip")
             {
