@@ -117,7 +117,6 @@ namespace PIPOSKY2.Controllers
             stream.Flush();
             return (x1 && x2 && x3);
         }
-
         public bool DealWithForm(UploadProblemFormModel form, Problem problem)
         {
             //题目是否公开
@@ -187,7 +186,14 @@ namespace PIPOSKY2.Controllers
 
         public ActionResult Content(int? id)
         {
-            return View(db.Problems.Find(id));
+            User tmp = Session["User"] as User;
+            bool CanRead = false;
+            if ((tmp != null) && (tmp.UserType == "admin" || tmp.UserType == "editor"))
+                CanRead = true;
+            Problem problem = db.Problems.Find(id);
+            if (problem.Visible || CanRead)
+                return View(problem);
+            else return RedirectToAction("index");
         }
 
         public FileStreamResult Download(int? id)

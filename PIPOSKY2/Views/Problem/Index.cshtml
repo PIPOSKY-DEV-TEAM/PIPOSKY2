@@ -7,6 +7,8 @@
     {
          editRight = true;
     }
+    PIPOSKY2DbContext db = new PIPOSKY2DbContext();
+    PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
 }
 @{
     ViewBag.Title = "题目列表";
@@ -25,7 +27,7 @@
 <table class="table table-striped">
     <tr>
         <th>题目名称</th>
-        <th>得分</th>
+        <th>题目得分</th>
         @{if (editRight) 
           {
               <th>上传用户</th>
@@ -37,8 +39,25 @@
         if (editRight || i.Visible)
         {
             <tr>
-                <td>@Html.ActionLink(@i.ProblemName, "Content", new { id = @i.ProblemID })</td>        
-                <td></td> 
+                <td>@Html.ActionLink(@i.ProblemName, "Content", new { id = @i.ProblemID, type="Exam"})</td>        
+                @{
+                    if (tmp == null)
+                    {
+                        <td>无记录</td>
+                    }
+                    else
+                    {
+                        IQueryable<Submit> t = dbtemp.Submits.Where(s => s.Prob.ProblemID == i.ProblemID && s.User.UserID == tmp.UserID);
+                        if (t.Count() == 0)
+                        {
+                            <td>无记录</td>
+                        }
+                        else
+                        {
+                            <td>@t.ToList().Last().Score</td>
+                        }
+                    }
+                }
                 @{
                     if (editRight)
                     {
