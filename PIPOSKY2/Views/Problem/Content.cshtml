@@ -5,9 +5,7 @@
 }
 
 <h2>@Model.ProblemName</h2>
-<pre>@Html.Raw(Model.Description.Replace("\r\n", "<br>"))</pre>
-@Html.Raw(Model.Solution)
-@Html.Raw(Model.Config)
+@Html.Raw(Model.Description.Replace("\r\n", "<br />"))
 
 <div>
     <div id="disqus_thread"></div>

@@ -9,16 +9,18 @@
 {
     <table class="table table-striped">
         <tr>
-            <th>课程ID</th>
+            <th>#</th>
             <th>课程名称</th>
             <th>删除课程</th>
         </tr>
         @{
     PIPOSKY2DbContext db = new PIPOSKY2DbContext();
+    int ord = 0;
     foreach (var i in db.Courses)
     {
+        ord++;
             <tr>
-                <td>@i.CourseID</td>
+                <td>@ord</td>
                 <td>@i.CourseName</td>
                 <td>
                     <input type="checkbox" name="@i.CourseID" /></td>

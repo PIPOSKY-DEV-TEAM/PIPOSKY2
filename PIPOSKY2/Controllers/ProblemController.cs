@@ -40,6 +40,11 @@ namespace PIPOSKY2.Controllers
             Problem problem = new Problem();
             if (DealWithForm(form, problem))
             {
+                foreach (var i in db.Problems.Where(x => x.ProblemName == problem.ProblemName))
+                {
+                    ViewBag.mention = "题目已经存在！请更改题目名称！";
+                    return View(problem);
+                }
                 db.Problems.Add(problem);
                 db.SaveChanges();
                 return RedirectToAction("Index", "Problem");                
@@ -105,19 +110,23 @@ namespace PIPOSKY2.Controllers
                         {
                             JObject obj = JObject.Parse(problem.Config);
                             problem.ProblemName = (string)obj["Title"];
-                        }
+                         }
                         catch
                         {
-                            x3 = false;
                             ViewBag.mention = "Config文件格式错误！";
+                            return false;
                         }
                     }
                 }
             }
             stream.Flush();
-            return (x1 && x2 && x3);
+            if (!(x1 && x2 && x3))
+            {
+                ViewBag.mention = "压缩包内文件不足！";
+                return false;
+            }
+            return true;
         }
-
         public bool DealWithForm(UploadProblemFormModel form, Problem problem)
         {
             //题目是否公开
@@ -125,7 +134,7 @@ namespace PIPOSKY2.Controllers
                 problem.Visible = true;
             else problem.Visible = false;
             //上传用户
-            problem.Creator = Session["User"] as User;
+            problem.Creator = db.Users.Find(Session["_UserID"] as int?);
             //获取文件
             HttpPostedFileBase file = form.File;
             //处理文件
@@ -137,7 +146,7 @@ namespace PIPOSKY2.Controllers
             if (ext == ".rar" || ext == ".zip")
             {
                 //解压文件获取数据   
-                if (OpenRar(file,problem))
+                if (OpenRar(file, problem))
                 {
                     //保存文件
                     if (problem.ProblemPath != null)
@@ -145,14 +154,14 @@ namespace PIPOSKY2.Controllers
                         if (System.IO.File.Exists(problem.ProblemPath))
                             System.IO.File.Delete(problem.ProblemPath);
                     }
-                    string date = DateTime.Now.ToFileTime().ToString();
-                    string filePath = Path.Combine(HttpContext.Server.MapPath("~/Problems"), problem.ProblemName+"_"+date+ext);
-                    problem.ProblemPath = filePath;
+                    string filePath = Path.Combine(HttpContext.Server.MapPath("~/Problems"), problem.ProblemName + ext);
+                    problem.ProblemPath = "Problems/" + problem.ProblemName + ext;
                     file.SaveAs(filePath);
                     return true;
                 }
+                return false;
             }
-            if (ViewBag.mention == null) ViewBag.mention = "文件格式错误！";
+            ViewBag.mention = "文件格式错误！请上传压缩包！";
             return false;
         }
 
@@ -187,15 +196,31 @@ namespace PIPOSKY2.Controllers
 
         public ActionResult Content(int? id)
         {
-            return View(db.Problems.Find(id));
+            User tmp = Session["User"] as User;
+            bool CanRead = false;
+            if ((tmp != null) && (tmp.UserType == "admin" || tmp.UserType == "editor"))
+                CanRead = true;
+            Problem problem = db.Problems.Find(id);
+            if (problem.Visible || CanRead)
+                return View(problem);
+            else return RedirectToAction("index");
         }
 
         public FileStreamResult Download(int? id)
         {
+            User tmp = Session["User"] as User;
+            bool CanDown = false;
+            if ((tmp != null) && (tmp.UserType == "admin" || tmp.UserType == "editor"))
+                CanDown = true;
             Problem problem = db.Problems.Find(id);
-            FileStream filestream = new FileStream(problem.ProblemPath, FileMode.Open, FileAccess.Read, FileShare.None);
-            return File(filestream,
-                "text/plain", problem.ProblemName + Path.GetExtension(problem.ProblemPath));
+            if (CanDown || problem.Downloadable)
+            {
+                FileStream filestream = new FileStream(Server.MapPath("~/")+problem.ProblemPath, 
+                    FileMode.Open, FileAccess.Read, FileShare.None);
+                return File(filestream,
+                    "text/plain", problem.ProblemName + Path.GetExtension(problem.ProblemPath));
+            }
+            else return null;
         }
     }
 }
