@@ -12,10 +12,12 @@
     </script>
     <p>@Html.ValidationMessage("ErrorMessage")</p>
     <input type="submit" name="Upload" value="确定" class="btn btn-default"/>
+    @Html.ActionLink("返回", "AdministrateUsers", "User", new { @class = "btn btn-default" })
 }
 <br />
 <div>
-    <p>请上传csv或txt格式文件，文件内每行数据格式需为“用户名,密码,邮箱”。</p>
+    <p>请上传csv或txt格式文件，文件内每行数据格式需为“用户名,密码,邮箱,学号”。</p>
+    <p>其中逗号为英文，用户名、密码、邮箱为必填项，学号为选填项。</p>
     <p>用户名长度要在4到100个字符之间，不能包含空格。</p>
     <p>密码长度要在6到20个字符之间，不能包含空格。</p>
     <p>邮箱的格式为“XXX@XXX”。</p>

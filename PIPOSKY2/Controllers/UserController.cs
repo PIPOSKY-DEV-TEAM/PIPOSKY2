@@ -67,11 +67,8 @@ namespace PIPOSKY2.Controllers
                     HttpCookie hc = new HttpCookie("_currentUser");
                     hc["UserName"] = currentLogin.UserName;
                     hc["UserPwd"] = currentLogin.UserPwd;
-                    //hc.Expires = DateTime.Today.AddDays(7);
-                    //hc.Expires = DateTime.Today.AddMinutes(1);
-                    hc.Expires = DateTime.Now.AddMinutes(5);
+                    hc.Expires = DateTime.Today.AddDays(7);
                     Response.Cookies.Add(hc);
-                    Session.Timeout = 1;
                 }
                 return RedirectToAction("Index","Courses");
             }
@@ -87,14 +84,17 @@ namespace PIPOSKY2.Controllers
             try
             {
                 string name = Request.Cookies["_currentUser"]["UserName"].ToString();
-                var a = 2;
+                string pwd = Request.Cookies["_currentUser"]["UserPwd"].ToString();
                 if (name != null)
                 {
                     User tmp = db.Users.FirstOrDefault(m => m.UserName == name);
-                    Session["User"] = tmp;
-                    Session["_UserName"] = tmp.UserName;
-                    Session["_UserID"] = tmp.UserID;
-                    return RedirectToAction("Index", "Courses");
+                    if (tmp.UserPwd == pwd)
+                    {
+                        Session["User"] = tmp;
+                        Session["_UserName"] = tmp.UserName;
+                        Session["_UserID"] = tmp.UserID;
+                        return RedirectToAction("Index", "Courses");
+                    }
                 }
             }
             catch {
@@ -128,6 +128,7 @@ namespace PIPOSKY2.Controllers
             if (tmp!= null)
             {
                 tmp.UserEmail = EditUser.UserEmail;
+                tmp.UserName = EditUser.UserName;
                 db.Users.AddOrUpdate(tmp);
                 db.SaveChanges();
                 Session["User"] = tmp;
@@ -182,32 +183,40 @@ namespace PIPOSKY2.Controllers
         [HttpPost]
         public ActionResult AdministrateUsers(FormCollection info)
         {
-            int userid;
-            try
+            if (info["edittype"] != null)
             {
-                userid = (int)Session["_EditUserTypeID"];
+               try
+               {
+                    int userid = (int)Session["_EditUserTypeID"];
+                    User tmp = db.Users.FirstOrDefault(_ => _.UserID == userid);
+                    tmp.UserType = info["edittype"];
+                    db.Users.AddOrUpdate(tmp);
+                    db.SaveChanges();
+                    Session["_EditUserTypeID"] = -1;
+                }
+               catch
+               {
+                   ModelState.AddModelError("ErrorMessage", "保存用户类型失败，请再次修改。");
+                   return View(db.Users.ToList());
+               }
             }
-            catch {
-                return View(db.Users.ToList());
-            }
-            if (userid == -1) {
-                return View(db.Users.ToList());
-            }
-            try
+            if (info["item.StudentNumber"] != null)
             {
-                User tmp = db.Users.FirstOrDefault(_ => _.UserID == userid);
-                tmp.UserType = info["edittype"];
-                
-                db.Users.AddOrUpdate(tmp);
-                db.SaveChanges();
-                Session["_EditUserTypeID"] = -1;
+                try
+                {
+                    int stuNumID = (int)Session["_EditStuNumID"];
+                    User tmp1 = db.Users.FirstOrDefault(_ => _.UserID == stuNumID);
+                    tmp1.StudentNumber = info["item.StudentNumber"];
+                    db.Users.AddOrUpdate(tmp1);
+                    db.SaveChanges();
+                    Session["_EditStuNumID"] = -1;
+                }
+                catch 
+                {
+                    ModelState.AddModelError("ErrorMessage", "保存学号失败，请再次修改。");
+                    return View(db.Users.ToList());
+                }
             }
-            catch
-            {
-                ModelState.AddModelError("ErrorMessage", "保存失败，请再次修改。");
-                return View(db.Users.ToList());
-            }
-            
             return View(db.Users.ToList());
         }
         [HttpPost]
@@ -238,57 +247,56 @@ namespace PIPOSKY2.Controllers
             string UserInfoStr = ReadFile(Server.MapPath(@"~\") + ViewBag.FileName);
             UserInfoStr = Regex.Replace(UserInfoStr, @"[\n\r]", ",");  
             UserInfoStr = UserInfoStr.TrimEnd((char[])"\n\r".ToCharArray());
-            userInfo strUserName;
-            userInfo strUserPwd;
-            userInfo strUserEmail;
+            userInfo str;
             int length = UserInfoStr.Length;
             int numofNewUser = 0;
             for (int beginIndex = 0; beginIndex < length; )
             {
-                strUserName = getUserInfo(UserInfoStr, beginIndex);
-                beginIndex += strUserName.lengthAdded;
-                strUserPwd = getUserInfo(UserInfoStr, beginIndex);
-                beginIndex += strUserPwd.lengthAdded;
-                strUserEmail = getUserInfo(UserInfoStr, beginIndex);
-                beginIndex += strUserEmail.lengthAdded;
-
+                str = getUserInfo(UserInfoStr, beginIndex);
+                beginIndex = str.beginIndex;
+                
                 //验证输入
-                if (strUserName.strU != null && db.Users.Any(_ => _.UserName == strUserName.strU))
+                if (str.strU.UserName != null && db.Users.Any(_ => _.UserName == str.strU.UserName))
                 {
-                    ModelState.AddModelError("ErrorMessage", "用户名" + strUserName.strU+"已经存在");
+                    ModelState.AddModelError("ErrorMessage", "用户名" + str.strU.UserName + "已经存在");
                     return View();
                 }
-                if (strUserEmail.strU != null && db.Users.Any(_ => _.UserEmail == strUserEmail.strU))
+                if (str.strU.UserEmail != null && db.Users.Any(_ => _.UserEmail == str.strU.UserEmail))
                 {
-                    ModelState.AddModelError("ErrorMessage", "Email" + strUserEmail.strU+"已经存在");
+                    ModelState.AddModelError("ErrorMessage", "邮箱" + str.strU.UserEmail + "已经存在");
                     return View();
                 }
-                if (strUserPwd.strU == null || strUserPwd.strU.Length < 6 || strUserPwd.strU.Length > 20)
+                if (str.strU.StudentNumber != null && db.Users.Any(_ => _.StudentNumber == str.strU.StudentNumber))
                 {
-                    ModelState.AddModelError("ErrorMessage", "密码"+ strUserPwd.strU+"的格式错误" );
+                    ModelState.AddModelError("ErrorMessage", "学号" + str.strU.StudentNumber + "已经存在");
                     return View();
                 }
-                if (strUserName.strU == null || strUserName.strU.Length < 4 || strUserName.strU.Length > 100)
+                if (str.strU.UserPwd == null || str.strU.UserPwd.Length < 6 || str.strU.UserPwd.Length > 20)
                 {
-                    ModelState.AddModelError("ErrorMessage", "用户名" + strUserName.strU+"的格式错误");
+                    ModelState.AddModelError("ErrorMessage", "密码" + str.strU.UserPwd + "的格式错误");
+                    return View();
+                }
+                if (str.strU.UserName == null || str.strU.UserName.Length < 4 || str.strU.UserName.Length > 100)
+                {
+                    ModelState.AddModelError("ErrorMessage", "用户名" + str.strU.UserName + "的格式错误");
                     return View();
                 }
                 string emailPatern = @"^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*$";
-                //
-                if (!Regex.IsMatch(strUserEmail.strU,emailPatern)) {
-                    ModelState.AddModelError("ErrorMessage", "邮箱" + strUserEmail.strU + "的格式错误");
+                if (!Regex.IsMatch(str.strU.UserEmail, emailPatern))
+                {
+                    ModelState.AddModelError("ErrorMessage", "邮箱" + str.strU.UserEmail + "的格式错误");
                     return View();
                 }
                 if (ModelState.IsValid)
                 {
-                    var tmp = new User { UserName = strUserName.strU, UserPwd = strUserPwd.strU, UserEmail = strUserEmail.strU, UserType = "normal" };
+                    var tmp = new User { UserName = str.strU.UserName, UserPwd = str.strU.UserPwd, UserEmail = str.strU.UserEmail, UserType = "normal", StudentNumber = str.strU.StudentNumber };
                     db.Users.Add(tmp);
                     db.SaveChanges();
                     numofNewUser++;
                 }
             }
             ModelState.AddModelError("ErrorMessage", "成功添加"+numofNewUser+"名新用户！");
-            return View();
+            return RedirectToAction("AdministrateUsers","User");
         }
         
         public ActionResult BatchAddUsers() {
@@ -297,6 +305,11 @@ namespace PIPOSKY2.Controllers
 
         public ActionResult EditUserType(int id) {
             Session["_EditUserTypeID"] = id;
+            return RedirectToAction("AdministrateUsers", "User");
+        }
+
+        public ActionResult EditStuNum(int id) {
+            Session["_EditStuNumID"] = id;
             return RedirectToAction("AdministrateUsers", "User");
         }
 
@@ -317,12 +330,12 @@ namespace PIPOSKY2.Controllers
 
         public ActionResult Info()
         {
-            if (Session["User"] != null)
+            User tmp = Session["User"] as User;
+            if (tmp != null)
             {
-                User tmp = Session["User"] as User;
                 return View(tmp);
             }
-            return View();
+            return RedirectToAction("Login","User");
         }
 
         [NonAction]
@@ -352,32 +365,111 @@ namespace PIPOSKY2.Controllers
         }
 
         [NonAction]
-        public static userInfo getUserInfo(string userInfo,int beginIndex) {
+        public static userInfo getUserInfo(string Info,int beginIndex) {
             userInfo str = new userInfo();
-            for (int i = beginIndex; i < userInfo.Length; i++)
+            str.strU = new User();
+            try
             {
-                if (userInfo[i] == ',' && userInfo[i + 1] != ',')
+                //user name
+                for (; beginIndex < Info.Length; beginIndex++)
                 {
-                    str.lengthAdded = i - beginIndex + 1;
-                    return str;
+                    if (Info[beginIndex] == ',' && Info[beginIndex + 1] != ',')
+                    {
+                        beginIndex += 1;
+                        break;
+                    }
+                    if (Info[beginIndex] == ' ')
+                    {
+                        continue;
+                    }
+                    str.strU.UserName += Info[beginIndex];
                 }
-                else if (userInfo[i] == ',' && userInfo[i + 1] == ',')
+                //user password
+                for (; beginIndex < Info.Length; beginIndex++)
                 {
-                    str.lengthAdded = i - beginIndex + 2;
-                    return str;
+                    if (Info[beginIndex] == ',' && Info[beginIndex + 1] != ',')
+                    {
+                        beginIndex += 1;
+                        break;
+                    }
+                    if (Info[beginIndex] == ' ')
+                    {
+                        continue;
+                    }
+                    str.strU.UserPwd += Info[beginIndex];
                 }
-                if (userInfo[i] == ' ')
+                //user email
+                for (; beginIndex < Info.Length; beginIndex++)
                 {
-                    continue;
+                    if (Info[beginIndex] == ',' && (beginIndex + 1) < Info.Length && Info[beginIndex + 1] != ',')
+                    {
+                        beginIndex += 1;
+                        break;
+                    }
+                    else if (Info[beginIndex] == ',' && (beginIndex + 1) < Info.Length && Info[beginIndex + 1] == ',')
+                    {
+                        if ((beginIndex+2) < Info.Length && Info[beginIndex + 2] == ',')
+                        {
+                            beginIndex += 3;
+                            str.beginIndex = beginIndex;
+                            return str;
+                        }
+                        beginIndex += 2;
+                        str.beginIndex = beginIndex;
+                        return str;
+                    }
+                    else if (Info[beginIndex] == ',' && (beginIndex + 1) == Info.Length)
+                    {
+                        beginIndex += 1;
+                        break;
+                    }
+                    if (Info[beginIndex] == ' ')
+                    {
+                        continue;
+                    }
+                    str.strU.UserEmail += Info[beginIndex];
                 }
-                str.strU += userInfo[i];
+                //user student number
+                for (; beginIndex < Info.Length; beginIndex++)
+                {
+                    if (Info[beginIndex] == ',' && (beginIndex + 1) < Info.Length && Info[beginIndex + 1] != ',')
+                    {
+                        beginIndex += 1;
+                        break;
+                    }
+                    else if (Info[beginIndex] == ',' && (beginIndex + 1) < Info.Length && Info[beginIndex + 1] == ',')
+                    {
+                        if ((beginIndex + 2) < Info.Length && Info[beginIndex + 2] == ',')
+                        {
+                            beginIndex += 3;
+                            str.beginIndex = beginIndex;
+                            return str;
+                        }
+                        beginIndex += 2;
+                        str.beginIndex = beginIndex;
+                        return str;
+                    }
+                    else if (Info[beginIndex] == ',' && (beginIndex + 1) == Info.Length) {
+                        beginIndex += 1;
+                        break;
+                    }
+                    if (Info[beginIndex] == ' ')
+                    {
+                        continue;
+                    }
+                    str.strU.StudentNumber += Info[beginIndex];
+                }
             }
+            catch { 
+                
+            }
+            str.beginIndex = beginIndex;
             return str;
         }
 
         public class userInfo {
-            public string strU { get; set; }
-            public int lengthAdded { get; set; }
+            public User strU { get; set; }
+            public int beginIndex { get; set; }
         }
     }
 }

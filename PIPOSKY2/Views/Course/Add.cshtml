@@ -33,7 +33,7 @@
         @{
     PIPOSKY2DbContext db = new PIPOSKY2DbContext();
     int ord = 0;
-    foreach (var i in db.Problems.Where(p => p.Visible))
+    foreach (var i in db.Problems)
     {
         ord++;
             <tr>

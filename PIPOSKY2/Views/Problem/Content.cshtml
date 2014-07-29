@@ -5,6 +5,12 @@
 }
 
 <h2>@Model.ProblemName</h2>
+
 <div class="well">
 @Html.Raw(Model.Description)
 </div>
+
+<p>
+    @Html.ActionLink("下载数据", "Download", "Problem", new { id = @Model.ProblemID }, new { @class = "btn btn-default" })
+    @Html.ActionLink("提交代码", "Submit", "Submit", null, new { @class = "btn btn-default" })
+</p>

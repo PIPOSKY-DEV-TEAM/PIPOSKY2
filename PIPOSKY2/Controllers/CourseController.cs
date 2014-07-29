@@ -80,7 +80,7 @@ namespace PIPOSKY2.Controllers
             }
             db.Course.Add(Homework);
             db.SaveChanges();
-            foreach (var i in db.Problems.Where(p => p.Visible))
+            foreach (var i in db.Problems)
                 if (form[i.ProblemID.ToString()] == "on")
                 {
                     HomeworkProblem HomeworkProblem = new HomeworkProblem();
@@ -129,10 +129,12 @@ namespace PIPOSKY2.Controllers
                 return RedirectToAction("Index", RouteData.Values);
             if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
                 return RedirectToAction("Index", RouteData.Values);
+            if (!Directory.Exists(Server.MapPath("~/Scores")))
+                Directory.CreateDirectory(Server.MapPath("~/Scores"));
             string path = Server.MapPath("~/Scores") + "\\" + db.Courses.Find(id).CourseName + ".csv";
             FileStream fs = new FileStream(path, FileMode.Create);
             StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.GetEncoding("GB2312"));
-            string s = "用户ID,用户名";
+            string s = "用户ID,用户学号,用户名";
             int sum;
             IQueryable<Submit> t;
             foreach (var i in db.Course.Where(c => c.CourseID == id))
@@ -143,7 +145,7 @@ namespace PIPOSKY2.Controllers
             PIPOSKY2DbContext dbtemp3 = new PIPOSKY2DbContext();
             foreach (var i in dbtemp1.Users.Where(u => u.UserType == "normal"))
             {
-                s = i.UserID.ToString() + "," + i.UserName;
+                s = i.UserID.ToString() + "," + i.StudentNumber + "," + i.UserName;
                 foreach (var j in dbtemp2.Course.Where(c => c.CourseID == id))
                 {
                     sum = 0;

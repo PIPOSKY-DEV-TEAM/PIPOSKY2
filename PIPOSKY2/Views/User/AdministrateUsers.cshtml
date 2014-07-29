@@ -7,24 +7,32 @@
 <h2>用户管理</h2>
 <p>
     @Html.ActionLink("批量添加用户", "BatchAddUsers", "User", new { @class = "btn btn-default" })
+     @Html.ActionLink("返回个人页面", "info", "User", new { @class = "btn btn-default" })
 </p>
 <div>
     @Html.ValidationMessage("ErrorMessage")
 </div>
 <div id="Hidden" style="opacity: 0"></div>
 <div>
-    <table class="table">
+    <table class="table table-striped">
         <tr>
             <th>@Html.DisplayNameFor(model => model.UserID)</th>
             <th>@Html.DisplayNameFor(model => model.UserName)</th>
             <th>@Html.DisplayNameFor(model => model.UserEmail)</th>
+            <th>@Html.DisplayNameFor(model => model.StudentNumber)</th>
             <th>@Html.DisplayNameFor(model => model.UserType)</th>
             <th>操作</th>
         </tr>
         @{  
-            int idEdit;
+            int idEdit, idStuNum;
             try { idEdit = (int)Session["_EditUserTypeID"]; }
             catch { idEdit = -1; }
+            try{
+                idStuNum = (int)Session["_EditStuNumID"];
+            }
+            catch{
+                idStuNum = -1;
+            }
         }
         @foreach (var item in Model)
         {
@@ -33,6 +41,19 @@
                 <td>@Html.DisplayFor(modelItem => item.UserID)</td>
                 <td>@Html.DisplayFor(modelItem => item.UserName)</td>
                 <td>@Html.DisplayFor(modelItem => item.UserEmail)</td>
+                @if(item.UserID == idStuNum){
+                    <td>
+                        <form  id ="editStuNum" action="/user/AdministrateUsers" method="post">
+                            @Html.EditorFor(modelItem => item.StudentNumber)
+                            <input type="submit" value="保存"/>
+                        </form>
+                    </td>
+                }
+                else{
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StudentNumber)
+                    </td>
+                }
                 @if (item.UserID == idEdit)
                 {
                     <td>
@@ -52,6 +73,8 @@
                 @if (item.UserType != "admin")
                 {
                     <td>
+                        @Html.ActionLink("设置用户学号", "EditStuNum", new { id = item.UserID })
+                        | 
                         @Html.ActionLink("设置用户类型", "EditUserType", new { id = item.UserID })
                         | 
                         @Html.ActionLink("删除", "Delete", new { id = item.UserID }, new { @class = "deleteTd" })
