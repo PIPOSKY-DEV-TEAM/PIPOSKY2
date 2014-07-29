@@ -1,9 +1,9 @@
 ﻿@model PIPOSKY2.Models.ChangePasswordModel
 @{
-    ViewBag.Title = "EditPwd";
+    ViewBag.Title = "修改密码";
 }
 
-<h2>EditPwd</h2>
+<h2>修改密码</h2>
 @using (Html.BeginForm())
 { 
     <div class="form-group">
@@ -21,5 +21,5 @@
         @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
         @Html.ValidationMessageFor(m => m.ConfirmPassword)
     </div>
-    <input type="submit"  class="btn btn-default" value="save" />
+    <input type="submit"  class="btn btn-default" value="保存" />
 }

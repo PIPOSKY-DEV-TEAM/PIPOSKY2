@@ -6,79 +6,63 @@
 
 <h2>用户管理</h2>
 <div>
-    @Html.ActionLink("返回个人信息主页", "Info","User")&nbsp;&nbsp;&nbsp;&nbsp&nbsp;&nbsp;&nbsp;&nbsp;
-    @Html.ActionLink("批量添加用户", "BatchAddUsers","User")
+    @Html.ActionLink("批量添加用户", "BatchAddUsers", "User", new { @class = "btn btn-default" })
 </div>
 <div>
     @Html.ValidationMessage("ErrorMessage")
 </div>
-<div id="Hidden"style="opacity:0"></div>
+<div id="Hidden" style="opacity: 0"></div>
 <div>
-    <table>
+    <table class="table">
         <tr>
-            <th>
-            @Html.DisplayNameFor(model => model.UserID)
-            </th>
-            <th>
-            @Html.DisplayNameFor(model => model.UserName)
-            </th>
-            <th>
-            @Html.DisplayNameFor(model => model.UserEmail)
-            </th>
-            <th>
-            @Html.DisplayNameFor(model => model.UserType)
-            </th>
-            <th>
-            </th>
-            <th>
-            </th>
+            <th>@Html.DisplayNameFor(model => model.UserID)</th>
+            <th>@Html.DisplayNameFor(model => model.UserName)</th>
+            <th>@Html.DisplayNameFor(model => model.UserEmail)</th>
+            <th>@Html.DisplayNameFor(model => model.UserType)</th>
+            <th>操作</th>
         </tr>
         @{  
             int idEdit;
-            try{idEdit = (int)Session["_EditUserTypeID"];}
+            try { idEdit = (int)Session["_EditUserTypeID"]; }
             catch { idEdit = -1; }
-           }
-    @foreach (var item in Model) {
+        }
+        @foreach (var item in Model)
+        {
         
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UserID)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UserName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.UserEmail)
-                </td>
-                    @if(item.UserID == idEdit){
-                        <td>
-                            <form action="/user/AdministrateUsers" method="post">
-                                <select id="edittype" name="edittype">
-                                    <option value="editor">editor</option>
-                                    <option value="normal">normal</option>
-                                </select>
-                                <input type="submit"/>
-                            </form>
-                        </td>
-                    }
-                    else
-                    {
-                        <td>@Html.DisplayFor(modelItem => item.UserType)</td>
-                    }
-                    @if (item.UserType != "admin"){
-                        <td>@Html.ActionLink("Edit Type", "EditUserType", new { id=item.UserID }) |</td>
-                        <td class="deleteTd">
-                            @Html.ActionLink("Delete", "Delete", new{ id= item.UserID })
-                        </td>
-                    }
-                    else{
-                        <td>
-                        </td>
-                        <td>
-                        </td>
-                    }
+                <td>@Html.DisplayFor(modelItem => item.UserID)</td>
+                <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+                <td>@Html.DisplayFor(modelItem => item.UserEmail)</td>
+                @if (item.UserID == idEdit)
+                {
+                    <td>
+                        <form action="/user/AdministrateUsers" method="post">
+                            <select id="edittype" name="edittype">
+                                <option value="editor">editor</option>
+                                <option value="normal">normal</option>
+                            </select>
+                            <input type="submit" value="保存"/>
+                        </form>
+                    </td>
+                }
+                else
+                {
+                    <td>@Html.DisplayFor(modelItem => item.UserType)</td>
+                }
+                @if (item.UserType != "admin")
+                {
+                    <td>
+                        @Html.ActionLink("设置用户类型", "EditUserType", new { id = item.UserID })
+                        | 
+                        @Html.ActionLink("删除", "Delete", new { id = item.UserID }, new { @class = "deleteTd" })
+                    </td>
+                }
+                else
+                {
+                    <td></td>
+                }
             </tr>
-    }
+        }
     </table>
 </div>
 <script src="~/Scripts/userManagefunction.js">

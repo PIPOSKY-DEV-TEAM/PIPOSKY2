@@ -1,42 +1,31 @@
 ﻿@model PIPOSKY2.Models.User
 @{
-    ViewBag.Title = "Info";
+    ViewBag.Title = "个人信息";
 }
 
-<h2>Personal Info</h2>
-@using (Html.BeginForm()){
+<h2>个人信息</h2>
+@using (Html.BeginForm())
+{
     <div>
-        <div>
-            @Html.ActionLink("修改个人信息","EditInfo","User")
-        </div>
-        <div>
-            @Html.LabelFor(m => m.UserName)
-        </div>
-        <div>
-            @Html.DisplayFor(m => m.UserName)
-        </div>
-        <div>
-            @Html.LabelFor(m => m.UserEmail)
-        </div>
-        <div>
-            @Html.DisplayFor(m => m.UserEmail)
-        </div>
-        <div>
-            @Html.ActionLink("修改密码","EditPwd","User")
-        </div>
-        <div>
-            @Html.LabelFor(m => m.UserType)
-        </div>
-        <div>
-            @Html.DisplayFor(m => m.UserType)
-        </div>
+        <label>用户名：</label>
+        @Html.DisplayFor(m => m.UserName)
+    </div>
+    <div>
+        <label>用户邮箱：</label>
+        @Html.DisplayFor(m => m.UserEmail)
+    </div>
+    <div>
+        <label>用户类型：</label>
+        @Html.DisplayFor(m => m.UserType)
+    </div>
+    <div>
+        @Html.ActionLink("修改个人信息", "EditInfo", "User", new { @class = "btn btn-default" })
+        @Html.ActionLink("修改密码", "EditPwd", "User", new { @class = "btn btn-default" })
         @{
-            if (Model.UserType == "admin") { 
-                <div>
-                   @Html.ActionLink("用户管理","AdministrateUsers","User")
-                </div>    
-            }
-          }
-        <div></div>
+    if (Model.UserType == "admin")
+    { 
+            @Html.ActionLink("用户管理", "AdministrateUsers", "User", new { @class = "btn btn-default" })
+    }
+        }
     </div>
 }
