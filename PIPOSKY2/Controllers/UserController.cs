@@ -24,7 +24,6 @@ namespace PIPOSKY2.Controllers
 			}
 			if (info.UserEmail != null && db.Users.Any(_ => _.UserEmail == info.UserEmail))
 			{
-				ModelState.AddModelError("UserName", "Email已经存在");
                 ModelState.AddModelError("UserEmail", "Email已经存在");
 			}
 			if (info.UserPwd2 != null && info.UserPwd != info.UserPwd2)
@@ -39,7 +38,6 @@ namespace PIPOSKY2.Controllers
 				db.SaveChanges();
                 tmp = db.Users.FirstOrDefault(m => m.UserName == tmp.UserName);
                 Session["User"] = tmp;
-				//Session["_massage"] =  "注册成功";
 				Session["_UserID"] = tmp.UserID;
                 Session["_UserName"] = tmp.UserName;
                 return RedirectToAction("Index","Courses");
@@ -65,6 +63,16 @@ namespace PIPOSKY2.Controllers
                 Session["User"] = tmp;
                 Session["_UserID"] = tmp.UserID;
                 Session["_UserName"] = tmp.UserName;
+                if (currentLogin.KeepLogin) {
+                    HttpCookie hc = new HttpCookie("_currentUser");
+                    hc["UserName"] = currentLogin.UserName;
+                    hc["UserPwd"] = currentLogin.UserPwd;
+                    //hc.Expires = DateTime.Today.AddDays(7);
+                    //hc.Expires = DateTime.Today.AddMinutes(1);
+                    hc.Expires = DateTime.Now.AddMinutes(5);
+                    Response.Cookies.Add(hc);
+                    Session.Timeout = 1;
+                }
                 return RedirectToAction("Index","Courses");
             }
             ModelState.AddModelError("UserName", "用户名不存在，登陆失败！");
@@ -73,13 +81,39 @@ namespace PIPOSKY2.Controllers
 
         public ActionResult Login()
         {
+            if (Session["User"] != null) {
+                return RedirectToAction("Index", "Courses");
+            }
+            try
+            {
+                string name = Request.Cookies["_currentUser"]["UserName"].ToString();
+                var a = 2;
+                if (name != null)
+                {
+                    User tmp = db.Users.FirstOrDefault(m => m.UserName == name);
+                    Session["User"] = tmp;
+                    Session["_UserName"] = tmp.UserName;
+                    Session["_UserID"] = tmp.UserID;
+                    return RedirectToAction("Index", "Courses");
+                }
+            }
+            catch {
+                return View();
+            }
             return View();
         }
 
         public ActionResult Exit() {
-            Session["User"] = null;
-            Session["_UserName"] = null;
-            Session["_UserID"] = null;
+            Session.Abandon();
+            HttpCookie hc = Request.Cookies["_currentUser"];
+            try
+            {
+                hc.Expires = DateTime.Now.AddDays(-1);
+                Response.AppendCookie(hc);
+            }
+            catch {
+                return RedirectToAction("Login", "User");
+            }
             return RedirectToAction("Login", "User");
         }
 
@@ -87,22 +121,16 @@ namespace PIPOSKY2.Controllers
         public ActionResult EditInfo(RegFormModel EditUser)
         {
             var tmp = Session["User"] as User;
-            if (EditUser.UserName != null && db.Users.Any(_ => _.UserName == EditUser.UserName))
-            {
-                ModelState.AddModelError("UserName", "用户名已经存在");
-            }
             if (EditUser.UserEmail != null && db.Users.Any(_ => _.UserEmail == EditUser.UserEmail))
             {
                 ModelState.AddModelError("UserEmail", "Email已经存在");
             }
             if (tmp!= null)
             {
+                tmp.UserEmail = EditUser.UserEmail;
                 db.Users.AddOrUpdate(tmp);
                 db.SaveChanges();
-
                 Session["User"] = tmp;
-                Session["_UserID"] = tmp.UserID;
-                Session["_UserName"] = tmp.UserName;
             }
             
             return RedirectToAction("info", "User");
