@@ -134,7 +134,7 @@ namespace PIPOSKY2.Controllers
                 problem.Visible = true;
             else problem.Visible = false;
             //上传用户
-            problem.Creator = Session["User"] as User;
+            problem.Creator = db.Users.Find(Session["_UserID"] as int?);
             //获取文件
             HttpPostedFileBase file = form.File;
             //处理文件

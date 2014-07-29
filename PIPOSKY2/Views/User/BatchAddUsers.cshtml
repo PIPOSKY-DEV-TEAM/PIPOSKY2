@@ -6,7 +6,10 @@
 @using (Html.BeginForm("BatchAddUsers", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     <label>选择上传文件：</label>
-    <input name="file" type="file" id="file" />
+    <input name="file" type="file" id="file" class="filestyle"/>
+    <script type ="text/javascript">
+        $(":file").filestyle({ icon:false, buttonBefore: true, buttonText: "浏览"});
+    </script>
     <p>@Html.ValidationMessage("ErrorMessage")</p>
     <input type="submit" name="Upload" value="确定" class="btn btn-default"/>
 }

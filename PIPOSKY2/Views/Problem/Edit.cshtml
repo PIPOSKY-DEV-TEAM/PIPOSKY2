@@ -11,7 +11,8 @@
     <input type="file" class="filestyle" name="File" accept=""/>
     <script type ="text/javascript">
         $(":file").filestyle({ icon: false, buttonBefore: true, buttonText: "浏览" });
-        $(":text").attr("value","@Model.ProblemPath");
+        $(":text").attr("value", "@Model.ProblemPath");
+        $(":text").css("width", "500px");
     </script>
     <p style="color:red">@ViewBag.mention</p>;
     <p></p>
