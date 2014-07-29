@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using PIPOSKY2.Models;
+using System.IO;
 
 namespace PIPOSKY2.Controllers
 {
@@ -119,6 +120,45 @@ namespace PIPOSKY2.Controllers
                 }
             db.SaveChanges();
             return RedirectToAction("Index", new { id = Course.CourseID });
+        }
+
+        public ActionResult Score(int? id)
+        {
+            User tmp = Session["User"] as User;
+            if (tmp == null)
+                return RedirectToAction("Index", RouteData.Values);
+            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
+                return RedirectToAction("Index", RouteData.Values);
+            string path = Server.MapPath("~/Score") + "\\" + db.Courses.Find(id).CourseName + ".csv";
+            FileStream fs = new FileStream(path, FileMode.Create);
+            StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.GetEncoding("GB2312"));
+            string s = "用户ID,用户名";
+            int sum;
+            IQueryable<Submit> t;
+            foreach (var i in db.Course.Where(c => c.CourseID == id))
+                s = s + "," + i.HomeworkName;
+            sw.WriteLine(s);
+            PIPOSKY2DbContext dbtemp1 = new PIPOSKY2DbContext();
+            PIPOSKY2DbContext dbtemp2 = new PIPOSKY2DbContext();
+            PIPOSKY2DbContext dbtemp3 = new PIPOSKY2DbContext();
+            foreach (var i in dbtemp1.Users.Where(u => u.UserType == "normal"))
+            {
+                s = i.UserID.ToString() + "," + i.UserName;
+                foreach (var j in dbtemp2.Course.Where(c => c.CourseID == id))
+                {
+                    sum = 0;
+                    foreach (var k in dbtemp3.HomeworkProblems.Where(p => p.HomeworkID == j.HomeworkID))
+                    {
+                        t = db.Submits.Where(model => model.Prob.ProblemID == k.ProblemID && model.User.UserID == i.UserID && model.Time.CompareTo(j.EndTime) < 0);
+                        if (t.Count() > 0)
+                            sum += t.ToList().Last().Score;
+                    }
+                    s = s + "," + sum.ToString();
+                }
+                sw.WriteLine(s);
+            }
+            sw.Close();
+            return File(path, "Application/x-csv", Path.GetFileName(path));
         }
     }
 }
