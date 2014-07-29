@@ -40,6 +40,11 @@ namespace PIPOSKY2.Controllers
             Problem problem = new Problem();
             if (DealWithForm(form, problem))
             {
+                foreach (var i in db.Problems.Where(x => x.ProblemName == problem.ProblemName))
+                {
+                    ViewBag.mention = "题目已经存在！请更改题目名称！";
+                    return View(problem);
+                }
                 db.Problems.Add(problem);
                 db.SaveChanges();
                 return RedirectToAction("Index", "Problem");                
@@ -105,17 +110,22 @@ namespace PIPOSKY2.Controllers
                         {
                             JObject obj = JObject.Parse(problem.Config);
                             problem.ProblemName = (string)obj["Title"];
-                        }
+                         }
                         catch
                         {
-                            x3 = false;
                             ViewBag.mention = "Config文件格式错误！";
+                            return false;
                         }
                     }
                 }
             }
             stream.Flush();
-            return (x1 && x2 && x3);
+            if (!(x1 && x2 && x3))
+            {
+                ViewBag.mention = "压缩包内文件不足！";
+                return false;
+            }
+            return true;
         }
         public bool DealWithForm(UploadProblemFormModel form, Problem problem)
         {
@@ -136,7 +146,7 @@ namespace PIPOSKY2.Controllers
             if (ext == ".rar" || ext == ".zip")
             {
                 //解压文件获取数据   
-                if (OpenRar(file,problem))
+                if (OpenRar(file, problem))
                 {
                     //保存文件
                     if (problem.ProblemPath != null)
@@ -145,13 +155,14 @@ namespace PIPOSKY2.Controllers
                             System.IO.File.Delete(problem.ProblemPath);
                     }
                     string date = DateTime.Now.ToFileTime().ToString();
-                    string filePath = Path.Combine(HttpContext.Server.MapPath("~/Problems"), problem.ProblemName+"_"+date+ext);
+                    string filePath = Path.Combine(HttpContext.Server.MapPath("~/Problems"), problem.ProblemName + "_" + date + ext);
                     problem.ProblemPath = filePath;
                     file.SaveAs(filePath);
                     return true;
                 }
+                return false;
             }
-            if (ViewBag.mention == null) ViewBag.mention = "文件格式错误！";
+            ViewBag.mention = "文件格式错误！请上传压缩包！";
             return false;
         }
 

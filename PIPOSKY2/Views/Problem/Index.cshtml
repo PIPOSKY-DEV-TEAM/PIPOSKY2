@@ -9,6 +9,7 @@
     }
     PIPOSKY2DbContext db = new PIPOSKY2DbContext();
     PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
+    int num = 0;
 }
 @{
     ViewBag.Title = "题目列表";
@@ -26,6 +27,7 @@
 
 <table class="table table-striped">
     <tr>
+        <th>#</th>
         <th>题目名称</th>
         <th>题目得分</th>
         @{if (editRight) 
@@ -39,6 +41,7 @@
         if (editRight || i.Visible)
         {
             <tr>
+                <td>@num</td>
                 <td>@Html.ActionLink(@i.ProblemName, "Content", new { id = @i.ProblemID, type="Exam"})</td>        
                 @{
                     if (tmp == null)
@@ -70,6 +73,7 @@
                     }
                 }
             </tr>
+            num++;
         }
     }
 </table>
