@@ -80,7 +80,7 @@ namespace PIPOSKY2.Controllers
             }
             db.Course.Add(Homework);
             db.SaveChanges();
-            foreach (var i in db.Problems.Where(p => p.Visible))
+            foreach (var i in db.Problems)
                 if (form[i.ProblemID.ToString()] == "on")
                 {
                     HomeworkProblem HomeworkProblem = new HomeworkProblem();
