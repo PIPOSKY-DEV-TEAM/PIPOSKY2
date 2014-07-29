@@ -129,6 +129,8 @@ namespace PIPOSKY2.Controllers
                 return RedirectToAction("Index", RouteData.Values);
             if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
                 return RedirectToAction("Index", RouteData.Values);
+            if (!Directory.Exists(Server.MapPath("~/Scores")))
+                Directory.CreateDirectory(Server.MapPath("~/Scores"));
             string path = Server.MapPath("~/Scores") + "\\" + db.Courses.Find(id).CourseName + ".csv";
             FileStream fs = new FileStream(path, FileMode.Create);
             StreamWriter sw = new StreamWriter(fs, System.Text.Encoding.GetEncoding("GB2312"));
