@@ -55,12 +55,17 @@
                     else
                         if (t.ToList().Last().State == "wait")
                         {
-                    <td>评测中</td>
+                    <td>等待中</td>
                         }
                         else
-                        {
+                            if (t.ToList().Last().State == "run")
+                            {
+                    <td>评测中</td>
+                            }
+                            else
+                            {
                     <td>@t.ToList().Last().Score</td>
-                        }
+                            }
                 }
                 }
             </tr>
@@ -108,12 +113,17 @@
                 else
                     if (t.ToList().Last().State == "wait")
                     {
-                    <td>评测中</td>
+                    <td>等待中</td>
                     }
                     else
-                    {
+                        if (t.ToList().Last().State == "run")
+                        {
+                    <td>评测中</td>
+                        }
+                        else
+                        {
                     <td>@t.ToList().Last().Score</td>
-                    }
+                        }
             }
                 }
                 <td>

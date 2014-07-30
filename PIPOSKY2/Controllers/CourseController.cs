@@ -17,13 +17,9 @@ namespace PIPOSKY2.Controllers
             return View(db.Courses.Find(id));
         }
 
+        [CheckAdminOrEditor]
         public ActionResult Add(int? id)
         {
-            User tmp = Session["User"] as User;
-            if (tmp == null)
-                return RedirectToAction("Index", RouteData.Values);
-            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
-                return RedirectToAction("Index", RouteData.Values);
             HomeworkFormModel addHomework = new HomeworkFormModel();
             addHomework.CourseID = (int)id;
             addHomework.StartTime = DateTime.Now.ToString();
@@ -32,13 +28,9 @@ namespace PIPOSKY2.Controllers
         }
 
         [HttpPost]
+        [CheckAdminOrEditor]
         public ActionResult Add(HomeworkFormModel addHomework, FormCollection form)
         {
-            User tmp = Session["User"] as User;
-            if (tmp == null)
-                return RedirectToAction("Index", RouteData.Values);
-            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
-                return RedirectToAction("Index", RouteData.Values);
             try
             {
                 addHomework.HomeworkName = addHomework.HomeworkName.Trim();
@@ -92,24 +84,16 @@ namespace PIPOSKY2.Controllers
             return RedirectToAction("Index", new { id = Homework.CourseID });
         }
 
+        [CheckAdminOrEditor]
         public ActionResult Delete(int? id)
         {
-            User tmp = Session["User"] as User;
-            if (tmp == null)
-                return RedirectToAction("Index", RouteData.Values);
-            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
-                return RedirectToAction("Index", RouteData.Values);
             return View(db.Courses.Find(id));
         }
 
         [HttpPost]
+        [CheckAdminOrEditor]
         public ActionResult Delete(Course Course, FormCollection form)
         {
-            User tmp = Session["User"] as User;
-            if (tmp == null)
-                return RedirectToAction("Index", RouteData.Values);
-            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
-                return RedirectToAction("Index", RouteData.Values);
             PIPOSKY2DbContext dbtemp = new PIPOSKY2DbContext();
             foreach (var i in dbtemp.Course.Where(c => c.CourseID == Course.CourseID))
                 if (form[i.HomeworkID.ToString()] == "on")
@@ -122,13 +106,9 @@ namespace PIPOSKY2.Controllers
             return RedirectToAction("Index", new { id = Course.CourseID });
         }
 
+        [CheckAdminOrEditor]
         public ActionResult Score(int? id)
         {
-            User tmp = Session["User"] as User;
-            if (tmp == null)
-                return RedirectToAction("Index", RouteData.Values);
-            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
-                return RedirectToAction("Index", RouteData.Values);
             if (!Directory.Exists(Server.MapPath("~/Scores")))
                 Directory.CreateDirectory(Server.MapPath("~/Scores"));
             string path = Server.MapPath("~/Scores") + "\\" + db.Courses.Find(id).CourseName + ".csv";
@@ -137,6 +117,7 @@ namespace PIPOSKY2.Controllers
             string s = "用户ID,用户学号,用户名";
             int sum;
             IQueryable<Submit> t;
+            bool ok = true;
             foreach (var i in db.Course.Where(c => c.CourseID == id))
                 s = s + "," + i.HomeworkName;
             sw.WriteLine(s);
@@ -153,12 +134,18 @@ namespace PIPOSKY2.Controllers
                     {
                         t = db.Submits.Where(model => model.Prob.ProblemID == k.ProblemID && model.User.UserID == i.UserID && model.Time.CompareTo(j.EndTime) < 0);
                         if (t.Count() > 0)
+                        {
                             sum += t.ToList().Last().Score;
+                            if ((t.ToList().Last().State == "wait") || (t.ToList().Last().State == "run"))
+                                ok = false;
+                        }
                     }
                     s = s + "," + sum.ToString();
                 }
                 sw.WriteLine(s);
             }
+            if (!ok)
+                sw.WriteLine("警告：成绩中有未完成的评测");
             sw.Close();
             return File(path, "Application/x-csv", Path.GetFileName(path));
         }

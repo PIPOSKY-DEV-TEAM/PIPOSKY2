@@ -17,13 +17,9 @@ namespace PIPOSKY2.Controllers
             return View(db.Course.Find(id));
         }
 
+        [CheckAdminOrEditor]
         public ActionResult Edit(int? id)
         {
-            User tmp = Session["User"] as User;
-            if (tmp == null)
-                return RedirectToAction("Index", RouteData.Values);
-            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
-                return RedirectToAction("Index", RouteData.Values);
             HomeworkFormModel editHomework = new HomeworkFormModel();
             editHomework.HomeworkID = (int)id;
             editHomework.HomeworkName = db.Course.Find(editHomework.HomeworkID).HomeworkName;
@@ -33,13 +29,9 @@ namespace PIPOSKY2.Controllers
         }
 
         [HttpPost]
+        [CheckAdminOrEditor]
         public ActionResult Edit(HomeworkFormModel editHomework, FormCollection form)
         {
-            User tmp = Session["User"] as User;
-            if (tmp == null)
-                return RedirectToAction("Index", RouteData.Values);
-            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
-                return RedirectToAction("Index", RouteData.Values);
             try
             {
                 editHomework.HomeworkName = editHomework.HomeworkName.Trim();

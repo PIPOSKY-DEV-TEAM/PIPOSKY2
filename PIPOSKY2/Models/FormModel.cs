@@ -110,7 +110,23 @@ namespace PIPOSKY2.Models
                 filterContext.HttpContext.Response.Redirect("/User/info");
             }
         }
-    }  
+    }
+
+    public class CheckAdminOrEditorAttribute : ActionFilterAttribute
+    {
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            if (filterContext.HttpContext.Session["User"] == null)
+            {
+                filterContext.HttpContext.Response.Redirect("/User/Login");
+            }
+            User tmp = filterContext.HttpContext.Session["User"] as User;
+            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
+            {
+                filterContext.HttpContext.Response.Redirect("/User/info");
+            }
+        }
+    } 
 
     public class HomeworkFormModel
     {
