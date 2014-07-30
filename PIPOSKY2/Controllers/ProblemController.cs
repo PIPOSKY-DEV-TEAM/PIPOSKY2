@@ -217,12 +217,13 @@ namespace PIPOSKY2.Controllers
             Problem problem = db.Problems.Find(id);
             if (CanDown || problem.Downloadable)
             {
-                FileStream filestream = new FileStream(Server.MapPath("~/")+problem.ProblemPath, 
+                FileStream filestream = new FileStream(Server.MapPath("~/") + problem.ProblemPath,
                     FileMode.Open, FileAccess.Read, FileShare.None);
                 return File(filestream,
                     "text/plain", problem.ProblemName + Path.GetExtension(problem.ProblemPath));
             }
-            else return null;
+            else
+                return null;
         }
     }
 }

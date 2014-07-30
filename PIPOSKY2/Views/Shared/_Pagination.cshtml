@@ -1,0 +1,62 @@
+﻿@{
+    var nowPage = ViewBag.page;
+    var totPage = ViewBag.totpage;
+    var MinPage = Math.Max(1, nowPage - 5);
+    var MaxPage = Math.Min(totPage, nowPage + 5);
+}
+
+@functions { 
+    public String GetPageUrl(int x)
+    {
+        var querystring = HttpContext.Current.Request.QueryString;
+        var str = new System.Text.StringBuilder();
+        str.Append("?").AppendFormat("page=" + x.ToString());
+        foreach(string key in querystring.Keys)
+        {
+            if (key != "page")
+                str.AppendFormat("&{0}={1}", key, HttpContext.Current.Server.UrlEncode(querystring[key]));
+        }
+        return Request.Url.AbsolutePath  + str.ToString();
+    }
+}
+<ul class="pagination">
+@if(nowPage >1)
+{   
+    <li><a href="@GetPageUrl(nowPage-1)">&laquo;</a></li>
+}
+else
+{
+    <li class="disabled"><span>&laquo;</span></li>
+}
+@if (MinPage > 1)
+{
+    <li><a href="@GetPageUrl(1)">1</a></li>
+}
+
+@for (var i = MinPage; i <= MaxPage; i++)
+{
+    if (i == nowPage)
+    {
+        <li class="active"><span>@i</span></li>
+    }
+    else
+    {
+        <li><a href="@GetPageUrl(i)">@i</a></li>
+    }
+}
+
+@if (MaxPage <totPage)
+{
+    <li><a href="@GetPageUrl(totPage)">@totPage</a></li>
+}
+
+@if (nowPage < totPage)
+{   
+    <li><a href="@GetPageUrl(nowPage+1)">&raquo;</a></li>
+}
+else
+{
+    <li class="disabled"><span>&raquo;</span></li>
+}
+
+</ul>

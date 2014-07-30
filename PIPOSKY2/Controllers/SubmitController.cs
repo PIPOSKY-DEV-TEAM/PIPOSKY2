@@ -8,6 +8,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Mvc;
 using Newtonsoft.Json;
+using System.Collections.Specialized;
 
 namespace PIPOSKY2.Controllers
 {
@@ -27,9 +28,11 @@ namespace PIPOSKY2.Controllers
             return View(tmp);
         }
 
-        public ActionResult Create()
+        public ActionResult Create(int? id)
         {
-            return View();
+            var tmp =new SubmitFormModel();
+            tmp.PID = id;
+            return View(tmp);
         }
 
         [HttpPost]
@@ -53,7 +56,9 @@ namespace PIPOSKY2.Controllers
 	        {
 		        db.Submits.Add(tmp);
 		        db.SaveChanges();
-		        return RedirectToAction("Index");
+                Session["alertetype"] = "success";
+                Session["alertetext"] = "提交成功";
+                return RedirectToAction("Details", new { @id = tmp.SubmitID });
 	        }
 
 			return View();
@@ -92,6 +97,14 @@ namespace PIPOSKY2.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            int PAGE_SIZE = 30;
+            int page = 1, totpage = (tmp.Count() + PAGE_SIZE - 1)/ PAGE_SIZE;
+            if (Request.QueryString["page"] != null)
+            {
+                Int32.TryParse(Request.QueryString["page"],out page);
+            }
+            ViewBag.page = page ; ViewBag.totpage = totpage;
+            tmp = tmp.OrderBy(_ => - _.SubmitID).Skip((page-1)*PAGE_SIZE).Take(PAGE_SIZE);
             return View(tmp.ToList());
         }
 
