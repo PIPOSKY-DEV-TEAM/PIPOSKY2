@@ -445,6 +445,7 @@ namespace PIPOSKY2.Controllers
             return View();
         }
 
+        [CheckAdmin]
         public ActionResult BatchRemoveUsers() {
             var tmpPage = db.Users.AsQueryable();                            // tmp是数据库查询
             int PAGE_SIZE = 20;
@@ -466,10 +467,16 @@ namespace PIPOSKY2.Controllers
         }
 
         [HttpPost]
+        [CheckAdmin]
         public ActionResult BatchRemoveUsers(FormCollection info)
         {
-
-            return View();
+            foreach(var item in db.Users){
+                if (info[item.UserID.ToString()] == "on") {
+                    db.Users.Remove(item);
+                }
+            }
+            db.SaveChanges();
+            return RedirectToAction("BatchRemoveUsers","User");
         }
 
         [CheckAdmin]

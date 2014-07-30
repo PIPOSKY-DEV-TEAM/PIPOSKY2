@@ -4,12 +4,13 @@
 }
 <h2>批量删除用户</h2>
 <p>
-     @Html.ActionLink("返回用户管理页面", "info", "User", new { @class = "btn btn-default" })
+     @Html.ActionLink("返回用户管理页面", "AdministrateUsers", "User", new { @class = "btn btn-default" })
 </p>
 <div>
-    <form>
+    <form action="BatchRemoveUsers" method="post">
+         <input type="submit" id="ensureBatchRemove" value="提交删除" class = "btn btn-default"/>
+        <br />
         @Html.Partial("_Pagination")
-        <input type="submit" id="ensureBatchRemove" value="提交删除" class = "btn btn-default"/>
         <table class="table table-striped">
             <tr>
                 <th>@Html.DisplayNameFor(model => model.UserID)</th>
@@ -33,6 +34,7 @@
                 }
             }
         </table>
+       
     </form>
 </div>
 <script src="~/Scripts/userManagefunction.js">
