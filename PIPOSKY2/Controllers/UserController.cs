@@ -65,8 +65,8 @@ namespace PIPOSKY2.Controllers
                 Session["_UserName"] = tmp.UserName;
                 if (currentLogin.KeepLogin) {
                     HttpCookie hc = new HttpCookie("_currentUser");
-                    hc["UserName"] = currentLogin.UserName;
-                    hc["UserPwd"] = currentLogin.UserPwd;
+                    hc["UserID"] = tmp.UserID.ToString();
+                    hc["UserPwd"] = tmp.UserPwd;
                     hc.Expires = DateTime.Today.AddDays(7);
                     Response.Cookies.Add(hc);
                 }
@@ -83,22 +83,24 @@ namespace PIPOSKY2.Controllers
             }
             try
             {
-                string name = Request.Cookies["_currentUser"]["UserName"].ToString();
+                string ID = Request.Cookies["_currentUser"]["UserID"].ToString();
                 string pwd = Request.Cookies["_currentUser"]["UserPwd"].ToString();
-                if (name != null)
+                if (ID != null)
                 {
-                    User tmp = db.Users.FirstOrDefault(m => m.UserName == name);
+                    int userid;
+                    Int32.TryParse(ID, out userid);
+                    User tmp = db.Users.FirstOrDefault(m => m.UserID == userid);
                     if (tmp.UserPwd == pwd)
                     {
                         Session["User"] = tmp;
                         Session["_UserName"] = tmp.UserName;
                         Session["_UserID"] = tmp.UserID;
+                        Session.Timeout = 10080;
                         return RedirectToAction("Index", "Courses");
                     }
                 }
             }
             catch {
-                return View();
             }
             return View();
         }
@@ -132,8 +134,9 @@ namespace PIPOSKY2.Controllers
                 db.Users.AddOrUpdate(tmp);
                 db.SaveChanges();
                 Session["User"] = tmp;
+                Session["_UserID"] = tmp.UserID;
+                Session["_UserName"] = tmp.UserName;
             }
-            
             return RedirectToAction("info", "User");
         }
 
@@ -163,6 +166,14 @@ namespace PIPOSKY2.Controllers
                 db.SaveChanges();
 
                 Session["User"] = tmp;
+                
+                string userID = Request.Cookies["_currentUser"]["UserID"].ToString();
+                if (userID != null)
+                {
+                    HttpCookie hc = new HttpCookie("_currentUser");
+                    hc["UserPwd"] = tmp.UserPwd;
+                    Response.Cookies.Add(hc);
+                }
                 return RedirectToAction("info", "User");
             }
 
@@ -177,12 +188,30 @@ namespace PIPOSKY2.Controllers
 
         public ActionResult AdministrateUsers()
         {
-            return View(db.Users.ToList());
+            var tmpPage = db.Users.AsQueryable();                            // tmp是数据库查询
+            int PAGE_SIZE = 30;                                                           //每页显示条目
+            int page = 1, totpage = (tmpPage.Count() + PAGE_SIZE - 1) / PAGE_SIZE;  //计算总页数
+            if (Request.QueryString["page"] == null && Session["_PageNum"] != null)
+            {
+                page = (int)Session["_PageNum"];
+            }
+            else if (Request.QueryString["page"] != null)                        //取出当前显示的页码
+            {
+                Session["_PageNum"] = null;
+                Session["_EditUserTypeID"] = -1;
+                Session["_EditStuNumID"] = -1;
+                Int32.TryParse(Request.QueryString["page"], out page);
+            }
+            ViewBag.page = page; ViewBag.totpage = totpage;  //数据传递给ViewBag
+            tmpPage = tmpPage.OrderBy(_ => _.UserID).Skip((page - 1) * PAGE_SIZE).Take(PAGE_SIZE);
+            // 先对数据排序，在取出该页的数据，SubmitID是排序属性，注意前面有一个负号（逆序）
+            return View(tmpPage.ToList());
         }
 
         [HttpPost]
         public ActionResult AdministrateUsers(FormCollection info)
         {
+
             if (info["edittype"] != null)
             {
                try
@@ -197,7 +226,22 @@ namespace PIPOSKY2.Controllers
                catch
                {
                    ModelState.AddModelError("ErrorMessage", "保存用户类型失败，请再次修改。");
-                   return View(db.Users.ToList());
+                   var tmpPage = db.Users.AsQueryable();                            // tmp是数据库查询
+                   int PAGE_SIZE = 30;                                                           //每页显示条目
+                   int page = 1, totpage = (tmpPage.Count() + PAGE_SIZE - 1) / PAGE_SIZE;  //计算总页数
+                   if (Session["_PageNum"] != null)
+                   {
+                       page = (int)Session["_PageNum"];
+                       Session["_PageNum"] = null;
+                   }
+                   else if (Request.QueryString["page"] != null)                        //取出当前显示的页码
+                   {
+                       Int32.TryParse(Request.QueryString["page"], out page);
+                   }
+                   ViewBag.page = page; ViewBag.totpage = totpage;  //数据传递给ViewBag
+                   tmpPage = tmpPage.OrderBy(_ => _.UserID).Skip((page - 1) * PAGE_SIZE).Take(PAGE_SIZE);
+                   // 先对数据排序，在取出该页的数据，SubmitID是排序属性，注意前面有一个负号（逆序）
+                   return View(tmpPage.ToList());
                }
             }
             if (info["item.StudentNumber"] != null)
@@ -214,10 +258,40 @@ namespace PIPOSKY2.Controllers
                 catch 
                 {
                     ModelState.AddModelError("ErrorMessage", "保存学号失败，请再次修改。");
-                    return View(db.Users.ToList());
+                    var tmpPage1 = db.Users.AsQueryable();                            // tmp是数据库查询
+                    int PAGE_SIZE1 = 30;                                                           //每页显示条目
+                    int page1 = 1, totpage1 = (tmpPage1.Count() + PAGE_SIZE1 - 1) / PAGE_SIZE1;  //计算总页数
+                    if (Session["_PageNum"] != null)
+                    {
+                        page1 = (int)Session["_PageNum"];
+                        Session["_PageNum"] = null;
+                    }
+                    else if (Request.QueryString["page"] != null)                        //取出当前显示的页码
+                    {
+                        Int32.TryParse(Request.QueryString["page"], out page1);
+                    }
+                    ViewBag.page = page1; ViewBag.totpage = totpage1;  //数据传递给ViewBag
+                    tmpPage1 = tmpPage1.OrderBy(_ => _.UserID).Skip((page1 - 1) * PAGE_SIZE1).Take(PAGE_SIZE1);
+                    // 先对数据排序，在取出该页的数据，SubmitID是排序属性，注意前面有一个负号（逆序）
+                    return View(tmpPage1.ToList());
                 }
             }
-            return View(db.Users.ToList());
+            var tmpPage2 = db.Users.AsQueryable();                            // tmp是数据库查询
+            int PAGE_SIZE2 = 30;                                                           //每页显示条目
+            int page2 = 1, totpage2 = (tmpPage2.Count() + PAGE_SIZE2 - 1) / PAGE_SIZE2;  //计算总页数
+            if (Session["_PageNum"] != null)
+            {
+                page2 = (int)Session["_PageNum"];
+                Session["_PageNum"] = null;
+            }
+            else if (Request.QueryString["page"] != null)                        //取出当前显示的页码
+            {
+                Int32.TryParse(Request.QueryString["page"], out page2);
+            }
+            ViewBag.page = page2; ViewBag.totpage = totpage2;  //数据传递给ViewBag
+            tmpPage2 = tmpPage2.OrderBy(_ => _.UserID).Skip((page2 - 1) * PAGE_SIZE2).Take(PAGE_SIZE2);
+            // 先对数据排序，在取出该页的数据，SubmitID是排序属性，注意前面有一个负号（逆序）
+            return View(tmpPage2.ToList());
         }
         [HttpPost]
         public ActionResult BatchAddUsers(FormCollection form)
@@ -303,13 +377,15 @@ namespace PIPOSKY2.Controllers
             return View();
         }
 
-        public ActionResult EditUserType(int id) {
+        public ActionResult EditUserType(int id, int pageNum) {
             Session["_EditUserTypeID"] = id;
+            Session["_PageNum"] = pageNum;
             return RedirectToAction("AdministrateUsers", "User");
         }
 
-        public ActionResult EditStuNum(int id) {
+        public ActionResult EditStuNum(int id, int pageNum) {
             Session["_EditStuNumID"] = id;
+            Session["_PageNum"] = pageNum;
             return RedirectToAction("AdministrateUsers", "User");
         }
 
