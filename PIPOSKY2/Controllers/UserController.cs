@@ -14,6 +14,7 @@ namespace PIPOSKY2.Controllers
         private PIPOSKY2DbContext db = new PIPOSKY2DbContext();
 
         [HttpPost]
+        [CheckinLogOff]
         public ActionResult Reg(RegFormModel info)
         {
           
@@ -45,12 +46,14 @@ namespace PIPOSKY2.Controllers
 			return View(info);
         }
 
+        [CheckinLogOff]
         public ActionResult Reg()
         {
             return View();
         }
 
         [HttpPost]
+        [CheckinLogOff]
         public ActionResult Login(LoginFormModel currentLogin)
         {
             var tmp = db.Users.FirstOrDefault( m => m.UserName == currentLogin.UserName);
@@ -76,11 +79,9 @@ namespace PIPOSKY2.Controllers
             return View();
         }
 
+        [CheckinLogOff]
         public ActionResult Login()
         {
-            if (Session["User"] != null) {
-                return RedirectToAction("Index", "Courses");
-            }
             try
             {
                 string ID = Request.Cookies["_currentUser"]["UserID"].ToString();
@@ -105,6 +106,7 @@ namespace PIPOSKY2.Controllers
             return View();
         }
 
+        [CheckinLogin]
         public ActionResult Exit() {
             Session.Abandon();
             HttpCookie hc = Request.Cookies["_currentUser"];
@@ -120,6 +122,7 @@ namespace PIPOSKY2.Controllers
         }
 
         [HttpPost]
+        [CheckinLogin]
         public ActionResult EditInfo(RegFormModel EditUser)
         {
             var tmp = Session["User"] as User;
@@ -140,6 +143,7 @@ namespace PIPOSKY2.Controllers
             return RedirectToAction("info", "User");
         }
 
+        [CheckinLogin]
         public ActionResult EditInfo()
         {
             var tmp = Session["User"] as User;
@@ -150,6 +154,7 @@ namespace PIPOSKY2.Controllers
         }
 
         [HttpPost]
+        [CheckinLogin]
         public ActionResult EditPwd(ChangePasswordModel EditPwd)
         {
             var tmp = Session["User"] as User;
@@ -167,9 +172,9 @@ namespace PIPOSKY2.Controllers
 
                 Session["User"] = tmp;
                 
-                string userID = Request.Cookies["_currentUser"]["UserID"].ToString();
-                if (userID != null)
+                if (Request.Cookies["_currentUser"] != null)
                 {
+                    string userID = Request.Cookies["_currentUser"]["UserID"].ToString();
                     HttpCookie hc = new HttpCookie("_currentUser");
                     hc["UserPwd"] = tmp.UserPwd;
                     Response.Cookies.Add(hc);
@@ -181,15 +186,17 @@ namespace PIPOSKY2.Controllers
             return View();
         }
 
+        [CheckinLogin]
         public ActionResult EditPwd()
         {
             return View();
         }
 
+        [CheckAdmin]
         public ActionResult AdministrateUsers()
         {
             var tmpPage = db.Users.AsQueryable();                            // tmp是数据库查询
-            int PAGE_SIZE = 30;                                                           //每页显示条目
+            int PAGE_SIZE = 20;                                                           //每页显示条目
             int page = 1, totpage = (tmpPage.Count() + PAGE_SIZE - 1) / PAGE_SIZE;  //计算总页数
             if (Request.QueryString["page"] == null && Session["_PageNum"] != null)
             {
@@ -209,6 +216,7 @@ namespace PIPOSKY2.Controllers
         }
 
         [HttpPost]
+        [CheckAdmin]
         public ActionResult AdministrateUsers(FormCollection info)
         {
 
@@ -227,7 +235,7 @@ namespace PIPOSKY2.Controllers
                {
                    ModelState.AddModelError("ErrorMessage", "保存用户类型失败，请再次修改。");
                    var tmpPage = db.Users.AsQueryable();                            // tmp是数据库查询
-                   int PAGE_SIZE = 30;                                                           //每页显示条目
+                   int PAGE_SIZE = 20;                                                           //每页显示条目
                    int page = 1, totpage = (tmpPage.Count() + PAGE_SIZE - 1) / PAGE_SIZE;  //计算总页数
                    if (Session["_PageNum"] != null)
                    {
@@ -259,7 +267,7 @@ namespace PIPOSKY2.Controllers
                 {
                     ModelState.AddModelError("ErrorMessage", "保存学号失败，请再次修改。");
                     var tmpPage1 = db.Users.AsQueryable();                            // tmp是数据库查询
-                    int PAGE_SIZE1 = 30;                                                           //每页显示条目
+                    int PAGE_SIZE1 = 20;                                                           //每页显示条目
                     int page1 = 1, totpage1 = (tmpPage1.Count() + PAGE_SIZE1 - 1) / PAGE_SIZE1;  //计算总页数
                     if (Session["_PageNum"] != null)
                     {
@@ -277,7 +285,7 @@ namespace PIPOSKY2.Controllers
                 }
             }
             var tmpPage2 = db.Users.AsQueryable();                            // tmp是数据库查询
-            int PAGE_SIZE2 = 30;                                                           //每页显示条目
+            int PAGE_SIZE2 = 20;                                                           //每页显示条目
             int page2 = 1, totpage2 = (tmpPage2.Count() + PAGE_SIZE2 - 1) / PAGE_SIZE2;  //计算总页数
             if (Session["_PageNum"] != null)
             {
@@ -293,7 +301,9 @@ namespace PIPOSKY2.Controllers
             // 先对数据排序，在取出该页的数据，SubmitID是排序属性，注意前面有一个负号（逆序）
             return View(tmpPage2.ToList());
         }
+        
         [HttpPost]
+        [CheckAdmin]
         public ActionResult BatchAddUsers(FormCollection form)
         {
             //导入csv用户信息文件
@@ -372,23 +382,27 @@ namespace PIPOSKY2.Controllers
             ModelState.AddModelError("ErrorMessage", "成功添加"+numofNewUser+"名新用户！");
             return RedirectToAction("AdministrateUsers","User");
         }
-        
+
+        [CheckAdmin]
         public ActionResult BatchAddUsers() {
             return View();
         }
 
+        [CheckAdmin]
         public ActionResult EditUserType(int id, int pageNum) {
             Session["_EditUserTypeID"] = id;
             Session["_PageNum"] = pageNum;
             return RedirectToAction("AdministrateUsers", "User");
         }
 
+        [CheckAdmin]
         public ActionResult EditStuNum(int id, int pageNum) {
             Session["_EditStuNumID"] = id;
             Session["_PageNum"] = pageNum;
             return RedirectToAction("AdministrateUsers", "User");
         }
 
+        [CheckAdmin]
         public ActionResult Delete(int id)
         {
             try
@@ -404,6 +418,7 @@ namespace PIPOSKY2.Controllers
             return RedirectToAction("AdministrateUsers", "User");
         }
 
+        [CheckinLogin]
         public ActionResult Info()
         {
             User tmp = Session["User"] as User;

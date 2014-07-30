@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
-
+using System.Web.Mvc;
 namespace PIPOSKY2.Models
 {
     public class LoginFormModel
@@ -73,6 +73,44 @@ namespace PIPOSKY2.Models
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
     }
+
+    public class CheckinLoginAttribute : ActionFilterAttribute
+    {
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            if (filterContext.HttpContext.Session["User"] == null)
+            {
+                filterContext.HttpContext.Response.Redirect("/User/Login");
+            }
+        }
+    }
+
+    public class CheckinLogOffAttribute : ActionFilterAttribute
+    {
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            if (filterContext.HttpContext.Session["User"] != null)
+            {
+                filterContext.HttpContext.Response.Redirect("/User/info");
+            }
+        }
+    }  
+
+    public class CheckAdminAttribute : ActionFilterAttribute
+    {
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            if (filterContext.HttpContext.Session["User"] == null)
+            {
+                filterContext.HttpContext.Response.Redirect("/User/Login");
+            }
+            User tmp = filterContext.HttpContext.Session["User"] as User;
+            if (tmp.UserType != "admin")
+            {
+                filterContext.HttpContext.Response.Redirect("/User/info");
+            }
+        }
+    }  
 
     public class HomeworkFormModel
     {
