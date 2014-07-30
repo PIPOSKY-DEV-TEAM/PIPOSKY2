@@ -117,6 +117,7 @@ namespace PIPOSKY2.Controllers
             string s = "用户ID,用户学号,用户名";
             int sum;
             IQueryable<Submit> t;
+            bool ok = true;
             foreach (var i in db.Course.Where(c => c.CourseID == id))
                 s = s + "," + i.HomeworkName;
             sw.WriteLine(s);
@@ -133,12 +134,18 @@ namespace PIPOSKY2.Controllers
                     {
                         t = db.Submits.Where(model => model.Prob.ProblemID == k.ProblemID && model.User.UserID == i.UserID && model.Time.CompareTo(j.EndTime) < 0);
                         if (t.Count() > 0)
+                        {
                             sum += t.ToList().Last().Score;
+                            if ((t.ToList().Last().State == "wait") || (t.ToList().Last().State == "run"))
+                                ok = false;
+                        }
                     }
                     s = s + "," + sum.ToString();
                 }
                 sw.WriteLine(s);
             }
+            if (!ok)
+                sw.WriteLine("警告：成绩中有未完成的评测");
             sw.Close();
             return File(path, "Application/x-csv", Path.GetFileName(path));
         }
