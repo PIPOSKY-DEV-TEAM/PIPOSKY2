@@ -226,6 +226,7 @@
     <Content Include="Views\Courses\Add.cshtml" />
     <Content Include="Views\Courses\Delete.cshtml" />
     <Content Include="Views\Shared\_Pagination.cshtml" />
+    <Content Include="Views\User\BatchRemoveUsers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Problem\Content.cshtml" />

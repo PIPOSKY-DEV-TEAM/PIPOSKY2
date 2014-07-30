@@ -75,6 +75,7 @@ namespace PIPOSKY2.Controllers
                     Session["User"] = tmp;
                     Session["_UserID"] = tmp.UserID;
                     Session["_UserName"] = tmp.UserName;
+                    Session.Timeout = 10080;
                     if (currentLogin.KeepLogin)
                     {
                         HttpCookie hc = new HttpCookie("_currentUser");
@@ -441,6 +442,33 @@ namespace PIPOSKY2.Controllers
 
         [CheckAdmin]
         public ActionResult BatchAddUsers() {
+            return View();
+        }
+
+        public ActionResult BatchRemoveUsers() {
+            var tmpPage = db.Users.AsQueryable();                            // tmp是数据库查询
+            int PAGE_SIZE = 20;
+            try
+            {                                                          //每页显示条目
+                int page = 1, totpage = (tmpPage.Count() + PAGE_SIZE - 1) / PAGE_SIZE;  //计算总页数
+                if (Request.QueryString["page"] != null)                        //取出当前显示的页码
+                {
+                    Int32.TryParse(Request.QueryString["page"], out page);
+                }
+                ViewBag.page = page; ViewBag.totpage = totpage;  //数据传递给ViewBag
+                tmpPage = tmpPage.OrderBy(_ => _.UserID).Skip((page - 1) * PAGE_SIZE).Take(PAGE_SIZE);
+                // 先对数据排序，在取出该页的数据，SubmitID是排序属性，注意前面有一个负号（逆序）
+                return View(tmpPage.ToList());
+            }
+            catch { }
+            tmpPage = tmpPage.OrderBy(_ => _.UserID).Skip(0).Take(PAGE_SIZE);
+            return View(tmpPage.ToList());
+        }
+
+        [HttpPost]
+        public ActionResult BatchRemoveUsers(FormCollection info)
+        {
+
             return View();
         }
 
