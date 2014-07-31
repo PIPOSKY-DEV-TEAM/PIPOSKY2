@@ -307,12 +307,8 @@ namespace PIPOSKY2.Controllers
 
         public FileStreamResult DownloadData(int? id)
         {
-            User tmp = Session["User"] as User;
-            bool CanDown = false;
-            if ((tmp != null) && (tmp.UserType == "admin" || tmp.UserType == "editor"))
-                CanDown = true;
             Problem problem = db.Problems.Find(id);
-            if (CanDown || problem.Downloadable)
+            if (true)
             {
                 FileStream filestream = new FileStream(Server.MapPath("~/ProblemData/")+problem.ProblemName+".zip",
                     FileMode.Open, FileAccess.Read, FileShare.None);
