@@ -159,6 +159,7 @@
     <Content Include="Scripts\keeplogin.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\userManagefunction.js" />
+    <Content Include="Scripts\warningInfoStyle.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

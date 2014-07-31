@@ -140,11 +140,15 @@ namespace PIPOSKY2.Controllers
             try
             {
                 var tmp = Session["User"] as User;
+                if (EditUser.UserName != null && db.Users.Any(_ => _.UserName == EditUser.UserName))
+                {
+                    ModelState.AddModelError("UserName", "用户名"+EditUser.UserName+"已经存在");
+                }
                 if (EditUser.UserEmail != null && db.Users.Any(_ => _.UserEmail == EditUser.UserEmail))
                 {
-                    ModelState.AddModelError("UserEmail", "Email已经存在");
+                    ModelState.AddModelError("UserEmail", "Email"+EditUser.UserEmail+"已经存在");
                 }
-                if (tmp != null)
+                if (tmp != null && ModelState.IsValid)
                 {
                     tmp.UserEmail = EditUser.UserEmail;
                     tmp.UserName = EditUser.UserName;
@@ -300,6 +304,25 @@ namespace PIPOSKY2.Controllers
                 }
                 if (info["item.StudentNumber"] != null)
                 {
+                    if (info["item.StudentNumber"].Length != 10) {
+                        ModelState.AddModelError("ErrorMessage", "学号格式错误，请再次修改。");
+                        var tmpPage1 = db.Users.AsQueryable();                            // tmp是数据库查询
+                        int PAGE_SIZE1 = 20;                                                           //每页显示条目
+                        int page1 = 1, totpage1 = (tmpPage1.Count() + PAGE_SIZE1 - 1) / PAGE_SIZE1;  //计算总页数
+                        if (Session["_PageNum"] != null)
+                        {
+                            page1 = (int)Session["_PageNum"];
+                            Session["_PageNum"] = null;
+                        }
+                        else if (Request.QueryString["page"] != null)                        //取出当前显示的页码
+                        {
+                            Int32.TryParse(Request.QueryString["page"], out page1);
+                        }
+                        ViewBag.page = page1; ViewBag.totpage = totpage1;  //数据传递给ViewBag
+                        tmpPage1 = tmpPage1.OrderBy(_ => _.UserID).Skip((page1 - 1) * PAGE_SIZE1).Take(PAGE_SIZE1);
+                        // 先对数据排序，在取出该页的数据，SubmitID是排序属性，注意前面有一个负号（逆序）
+                        return View(tmpPage1.ToList());
+                    }
                     try
                     {
                         int stuNumID = (int)Session["_EditStuNumID"];
@@ -384,6 +407,7 @@ namespace PIPOSKY2.Controllers
                 string UserInfoStr = ReadFile(Server.MapPath(@"~\") + ViewBag.FileName);
                 UserInfoStr = Regex.Replace(UserInfoStr, @"[\n\r]", ",");
                 UserInfoStr = UserInfoStr.TrimEnd((char[])"\n\r".ToCharArray());
+                UserInfoStr = Regex.Replace(UserInfoStr, @"[\t]", " ");
                 userInfo str;
                 int length = UserInfoStr.Length;
                 int numofNewUser = 0;
@@ -418,10 +442,15 @@ namespace PIPOSKY2.Controllers
                         ModelState.AddModelError("ErrorMessage", "用户名" + str.strU.UserName + "的格式错误");
                         return View();
                     }
-                    string emailPatern = @"^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*$";
+                    string emailPatern = @"^\w+((-\w+)|(\.\w+))*\@[A-Za-z0-9]+((\.|-)[A-Za-z0-9]+)*\.[A-Za-z0-9]+$";
                     if (!Regex.IsMatch(str.strU.UserEmail, emailPatern))
                     {
                         ModelState.AddModelError("ErrorMessage", "邮箱" + str.strU.UserEmail + "的格式错误");
+                        return View();
+                    }
+                    if (str.strU.StudentNumber != null && str.strU.StudentNumber.Length < 10)
+                    {
+                        ModelState.AddModelError("ErrorMessage", "学号" + str.strU.StudentNumber + "的格式错误");
                         return View();
                     }
                     if (ModelState.IsValid)
