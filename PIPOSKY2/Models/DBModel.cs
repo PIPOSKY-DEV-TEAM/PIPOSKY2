@@ -31,24 +31,6 @@ namespace PIPOSKY2.Models
 		{
 			var user = new User {UserEmail = "test@test.com", UserName = "root", UserPwd = "admin123", UserType = "admin", StudentNumber = ""};
 			context.Users.AddOrUpdate(user);
-
-            var prob = new Problem { Creator = user, Downloadable = true, ProblemName = "a", Visible = true, ProblemPath = "a.zip" ,Description="<h2>TEST</h2>", Solution="<p>AAAA</p>",Config="[]"};
-			context.Problems.AddOrUpdate(prob);
-
-            for (var x = 1; x <= 200; ++x)
-            {
-                var submit = new Submit
-                {
-                    Lang = "cpp",
-                    Prob = prob,
-                    Result = "",
-                    Source = "int main() \n { \n return 0; \n} \n",
-                    State = "wait",
-                    Time = DateTime.Now,
-                    User = user
-                };
-                context.Submits.AddOrUpdate(submit);
-            }
             context.SaveChanges();
 
 			base.Seed(context);

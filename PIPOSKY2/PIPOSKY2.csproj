@@ -228,6 +228,7 @@
     <Content Include="Views\Courses\Delete.cshtml" />
     <Content Include="Views\Shared\_Pagination.cshtml" />
     <Content Include="Views\User\BatchRemoveUsers.cshtml" />
+    <Content Include="Views\Course\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Problem\Content.cshtml" />
@@ -254,7 +255,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>55334</DevelopmentServerPort>
+          <DevelopmentServerPort>62215</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:61070/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

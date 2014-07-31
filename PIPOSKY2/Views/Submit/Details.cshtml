@@ -1,4 +1,5 @@
-﻿@model PIPOSKY2.Models.Submit
+﻿@using PIPOSKY2.Models;
+@model PIPOSKY2.Models.Submit
 
 @{
     ViewBag.Title = "Details";
@@ -8,10 +9,10 @@
 
 <table class="table table-striped">
     <tr>
-        <td>@Model.User.UserName</td>
-        <td>@Model.Prob.ProblemName</td>
-        <td>@Model.SubmitID</td>
-        <td colspan="2" title="@Model.CompilerRes">@Model.State</td>
+        <td>用户名：@Model.User.UserName</td>
+        <td>题目：@Model.Prob.ProblemName</td>
+        <td>提交ID：@Model.SubmitID</td>
+        <td colspan="2" title="@Model.CompilerRes">状态：@Model.State</td>
     </tr>
     <tr>
         <th width="20%">得分</th>
@@ -19,34 +20,42 @@
         <th width="15%">时间</th>
         <th width="15%">内存</th>
     </tr>
-    @if (Res.Count >0)
+    @if (Res.Count > 0)
     {
         foreach (var x in Res)
         {
-            <tr>
-                @foreach (var y in x)
-                {
-                    <td>@y</td>
-                }
-            </tr>   
+        <tr>
+            @foreach (var y in x)
+            {
+                <td>@y</td>
+            }
+        </tr>   
             
         }
-    <tr>
-        <th>总分</th>
-        <th>@Model.Score</th>
-        <th>@Model.Time</th>
-        <th>@Model.Lang</th>
-    </tr>
+        <tr>
+            <th>总分</th>
+            <th>@Model.Score</th>
+            <th>@Model.Time</th>
+            <th>@Model.Lang</th>
+        </tr>
     }
     else
     {
-        <tr><th colspan="4">空</th></tr>
+        <tr>
+            <th colspan="4">空</th>
+        </tr>
     }
 
 </table>
 
-<h3>源代码</h3>
-<pre><code>@Model.Source</code></pre>
+@{
+    User tmp = Session["User"] as User;
+    if ((tmp != null) && ((tmp.UserType == "admin") || (tmp.UserType == "editor") || (tmp.UserID == Model.User.UserID)))
+    {
+    <h3>源代码</h3>
+    <pre><code>@Model.Source</code></pre>
+    }
+}
 
 @if (Model.CompilerRes != null && Model.CompilerRes.Length > 0)
 {

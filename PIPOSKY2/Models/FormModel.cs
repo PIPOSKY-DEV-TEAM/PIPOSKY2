@@ -164,7 +164,7 @@ namespace PIPOSKY2.Models
 		public string Lang { get; set; }
 
 		[Required]
-		[Display(Name="题目")]
+		[Display(Name="题目ID")]
 		public int? PID { get; set; }
 
 		[Required]
