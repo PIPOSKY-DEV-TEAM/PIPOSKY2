@@ -10,14 +10,14 @@ namespace PIPOSKY2.Models
     {
         [Required]
         [Display(Name = "用户名")]
-        [StringLength(100, MinimumLength = 4, ErrorMessage = "用户名长度不能大于{2} 且要小于{1}")]
+        [StringLength(100, MinimumLength = 4, ErrorMessage = "用户名长度不能大于{1} 且要小于{2}")]
         [RegularExpression(@"^[^\s]*$",
             ErrorMessage = "用户名格式有误，不能有空格")]
         public string UserName { get; set; }
         [Required]
         [Display(Name = "密码")]
         [DataType(DataType.Password)]
-        [StringLength(20, MinimumLength = 6, ErrorMessage = "密码不能大于{2} 且要小于{1}")]
+        [StringLength(20, MinimumLength = 6, ErrorMessage = "密码不能大于{1} 且要小于{2}")]
         [RegularExpression(@"^[^\s]*$",
             ErrorMessage = "密码格式有误，不能有空格")]
         public string UserPwd { get; set; }
@@ -30,7 +30,7 @@ namespace PIPOSKY2.Models
     {
         [Required]
         [Display(Name = "用户名")]
-        [StringLength(100, MinimumLength = 4, ErrorMessage = "用户名长度不能大于{2} 且要小于{1}")]
+        [StringLength(100, MinimumLength = 4, ErrorMessage = "用户名长度不能大于{1} 且要小于{2}")]
         [RegularExpression(@"^[^\s]*$",
             ErrorMessage = "用户名格式有误，不能有空格")]
         public string UserName { get; set; }
@@ -38,7 +38,7 @@ namespace PIPOSKY2.Models
         [Required]
         [Display(Name = "密码")]
 		[DataType(DataType.Password)]
-        [StringLength(20, MinimumLength = 6, ErrorMessage = "密码不能大于{2} 且要小于{1}")]
+        [StringLength(20, MinimumLength = 6, ErrorMessage = "密码不能大于{1} 且要小于{2}")]
         [RegularExpression(@"^[^\s]*$",
             ErrorMessage = "密码格式有误，不能有空格")]
         public string UserPwd { get; set; }
@@ -51,6 +51,20 @@ namespace PIPOSKY2.Models
         [Required]
         [Display(Name = "Email")]
 		[DataType(DataType.EmailAddress)]
+        public string UserEmail { get; set; }
+    }
+
+    public class EditPersonalInfoModel {
+        [Required]
+        [Display(Name = "用户名")]
+        [StringLength(100, MinimumLength = 4, ErrorMessage = "用户名长度不能大于{1} 且要小于{2}")]
+        [RegularExpression(@"^[^\s]*$",
+            ErrorMessage = "用户名格式有误，不能有空格")]
+        public string UserName { get; set; }
+
+        [Required]
+        [Display(Name = "Email")]
+        [DataType(DataType.EmailAddress)]
         public string UserEmail { get; set; }
     }
 

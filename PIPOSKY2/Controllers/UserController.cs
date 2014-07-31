@@ -135,20 +135,20 @@ namespace PIPOSKY2.Controllers
 
         [HttpPost]
         [CheckinLogin]
-        public ActionResult EditInfo(RegFormModel EditUser)
+        public ActionResult EditInfo(EditPersonalInfoModel EditUser)
         {
             try
             {
                 var tmp = Session["User"] as User;
-                if (EditUser.UserName != null && db.Users.Any(_ => _.UserName == EditUser.UserName))
+                if (EditUser.UserName != null && tmp.UserName != EditUser.UserName && db.Users.Any(_ => _.UserName == EditUser.UserName))
                 {
                     ModelState.AddModelError("UserName", "用户名"+EditUser.UserName+"已经存在");
                 }
-                if (EditUser.UserEmail != null && db.Users.Any(_ => _.UserEmail == EditUser.UserEmail))
+                if (EditUser.UserEmail != null && tmp.UserEmail != EditUser.UserEmail && db.Users.Any(_ => _.UserEmail == EditUser.UserEmail))
                 {
                     ModelState.AddModelError("UserEmail", "Email"+EditUser.UserEmail+"已经存在");
                 }
-                if (tmp != null && ModelState.IsValid)
+                if (ModelState.IsValid)
                 {
                     tmp.UserEmail = EditUser.UserEmail;
                     tmp.UserName = EditUser.UserName;
@@ -157,6 +157,9 @@ namespace PIPOSKY2.Controllers
                     Session["User"] = tmp;
                     Session["_UserID"] = tmp.UserID;
                     Session["_UserName"] = tmp.UserName;
+                    Session["alertetype"] = "success";
+                    Session["alertetext"] = "保存个人信息成功";
+                    return RedirectToAction("info", "User");
                 }
             }
             catch {
@@ -164,9 +167,13 @@ namespace PIPOSKY2.Controllers
                 Session["alertetext"] = "保存个人信息失败";
                 return RedirectToAction("info", "User");
             }
-            Session["alertetype"] = "success";
-            Session["alertetext"] = "保存个人信息成功";
-            return RedirectToAction("info", "User");
+            var tmp1 = Session["User"] as User;
+            EditPersonalInfoModel Edit = new EditPersonalInfoModel();
+            Edit.UserName = tmp1.UserName;
+            Edit.UserEmail = tmp1.UserEmail;
+            Session["alertetype"] = "warning";
+            Session["alertetext"] = "保存个人信息失败";
+            return View(Edit);
         }
 
         [CheckinLogin]
@@ -175,7 +182,7 @@ namespace PIPOSKY2.Controllers
             try
             {
                 var tmp = Session["User"] as User;
-                RegFormModel Edit = new RegFormModel();
+                EditPersonalInfoModel Edit = new EditPersonalInfoModel();
                 Edit.UserName = tmp.UserName;
                 Edit.UserEmail = tmp.UserEmail;
                 return View(Edit);
