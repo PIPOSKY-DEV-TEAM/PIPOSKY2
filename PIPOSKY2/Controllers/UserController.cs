@@ -455,7 +455,7 @@ namespace PIPOSKY2.Controllers
                         ModelState.AddModelError("ErrorMessage", "邮箱" + str.strU.UserEmail + "的格式错误");
                         return View();
                     }
-                    if (str.strU.StudentNumber != null && str.strU.StudentNumber.Length < 10)
+                    if (str.strU.StudentNumber != null && str.strU.StudentNumber.Length != 10)
                     {
                         ModelState.AddModelError("ErrorMessage", "学号" + str.strU.StudentNumber + "的格式错误");
                         return View();
