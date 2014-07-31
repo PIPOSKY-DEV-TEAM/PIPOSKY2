@@ -162,12 +162,20 @@ namespace PIPOSKY2.Controllers
                 filename = dataReader.Entry.FilePath;
                 if (filename.Contains("Data") && !dataReader.Entry.IsDirectory)
                 {
-                    for (int i = 0; i < data.Length; i++)
+                    try
                     {
-                        if (filename.EndsWith("Data/" + data[i]["input"].ToString()))
-                            data[i]["input"] = "true";
-                        else if (filename.EndsWith("Data/" + data[i]["output"].ToString()))
-                            data[i]["output"] = "true";
+                        for (int i = 0; i < data.Length; i++)
+                        {
+                            if (filename.EndsWith("Data/" + data[i]["input"].ToString()))
+                                data[i]["input"] = "true";
+                            else if (filename.EndsWith("Data/" + data[i]["output"].ToString()))
+                                data[i]["output"] = "true";
+                        }
+                    }
+                    catch 
+                    {
+                        ViewBag.mention = "Config文件格式错误！";
+                        return false;
                     }
                 }
                 else if (filename.Contains("Source") && dataReader.Entry.IsDirectory)
@@ -182,6 +190,8 @@ namespace PIPOSKY2.Controllers
                     }
                     while (dataReader.MoveToNextEntry() && !dataReader.Entry.IsDirectory)
                     {
+                        if (!Directory.Exists(Server.MapPath("~/ProblemData")))
+                            Directory.CreateDirectory(Server.MapPath("~/ProblemData"));
                         if (!Directory.Exists(Server.MapPath("~/ProblemData/"+problem.ProblemName)))
                             Directory.CreateDirectory(Server.MapPath("~/ProblemData/"+problem.ProblemName));
                         dataReader.WriteEntryToDirectory(Server.MapPath("~/ProblemData/" + problem.ProblemName), 
