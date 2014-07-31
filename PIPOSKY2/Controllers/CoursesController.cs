@@ -48,6 +48,8 @@ namespace PIPOSKY2.Controllers
             Course.CourseName = addCourse.CourseName;
             db.Courses.Add(Course);
             db.SaveChanges();
+            Session["alertetype"] = "success";
+            Session["alertetext"] = "添加成功";
             return RedirectToAction("Index");
         }
 
@@ -74,6 +76,8 @@ namespace PIPOSKY2.Controllers
                     }
                     db.Courses.Remove(db.Courses.Find(i.CourseID));
                 }
+            Session["alertetype"] = "success";
+            Session["alertetext"] = "删除成功";
             db.SaveChanges();
             return RedirectToAction("Index");
         }

@@ -87,6 +87,8 @@ namespace PIPOSKY2.Controllers
                     db.HomeworkProblems.Add(HomeworkProblem);
                 }
             db.SaveChanges();
+            Session["alertetype"] = "success";
+            Session["alertetext"] = "修改成功";
             return RedirectToAction("Index", "Course", new { id = Homework.CourseID });
         }
     }
