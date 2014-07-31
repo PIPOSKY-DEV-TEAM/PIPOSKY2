@@ -45,11 +45,11 @@ def Main():
     while True:
         x = read_json()
         if x["SubmitID"] != 0:
-            print "Get !" , x["SubmitID"]
+            print ("Get !" , x["SubmitID"])
             ret = TEST_RES(x["SubmitID"])
             post_json(ret)
         else:
-            print "Wait"
+            print ("Wait")
             time.sleep(1)
 
 

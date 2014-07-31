@@ -1,0 +1,41 @@
+﻿@model IEnumerable<PIPOSKY2.Models.User>
+@{
+    ViewBag.Title = "BatchRemoveUsers";
+}
+<h2>批量删除用户</h2>
+<p>
+     @Html.ActionLink("返回", "AdministrateUsers", "User", new { @class = "btn btn-default" })
+</p>
+<div>
+    <form action="BatchRemoveUsers" method="post">
+         <input type="submit" id="ensureBatchRemove" value="提交删除" class = "btn btn-default"/>
+        <br />
+        @Html.Partial("_Pagination")
+        <table class="table table-striped">
+            <tr>
+                <th>@Html.DisplayNameFor(model => model.UserID)</th>
+                <th>@Html.DisplayNameFor(model => model.UserName)</th>
+                <th>@Html.DisplayNameFor(model => model.UserEmail)</th>
+                <th>@Html.DisplayNameFor(model => model.StudentNumber)</th>
+                <th>@Html.DisplayNameFor(model => model.UserType)</th>
+                <th>全选<input type="checkbox" id="SelectAll" name="DeleteAll" /></th>
+            </tr>
+            @foreach (var item in Model)
+            {
+                if(item.UserType != "admin"){
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => item.UserID)</td>
+                        <td>@Html.DisplayFor(modelItem => item.UserName)</td>
+                        <td>@Html.DisplayFor(modelItem => item.UserEmail)</td>
+                        <td>@Html.DisplayFor(modelItem => item.StudentNumber)</td>
+                        <td>@Html.DisplayFor(modelItem => item.UserType)</td>
+                        <td><input type="checkbox" class="selected" name="@item.UserID" /></td>
+                    </tr>
+                }
+            }
+        </table>
+       
+    </form>
+</div>
+<script src="~/Scripts/userManagefunction.js">
+</script>

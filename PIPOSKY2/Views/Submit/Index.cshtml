@@ -1,35 +1,47 @@
-﻿@model List<PIPOSKY2.Models.Submit>
+﻿@using PIPOSKY2.Models;
+@model List<PIPOSKY2.Models.Submit>
 
 @{
     ViewBag.Title = "评测状态";
 }
 
-<h2>Index</h2>
+<h2>评测状态</h2>
 
-@Html.ActionLink("Create", "Create","Submit",null,new {@class="btn btn-default"})
+@{
+    User tmp = Session["User"] as User;
+    if ((tmp != null) && ((tmp.UserType == "admin") || (tmp.UserType == "editor")))
+    {
+    @Html.ActionLink("Create", "Create", "Submit", null, new { @class = "btn btn-default" })
+    }
+}
 
-<form class="form-inline" role="form" style="display:inline-block;margin-left:20px">
+<form class="form-inline" role="form" style="display: inline-block; margin-left: 20px">
     <div class="form-group">
-    <label for="p">题目ID</label> 
-    <input type="text" name="p" id="p"/>
+        <label for="p">题目ID</label>
+        <input type="text" name="p" id="p" />
     </div>
     <div class="form-group">
-    <label for="u">用户名</label> 
-    <input type="text" name="u" id="u"/>
-        </div>
+        <label for="u">用户名</label>
+        <input type="text" name="u" id="u" />
+    </div>
     <div class="form-group">
-    <label for="s">状态</label>
-    <select name="s" id="s">
-        <option value="">(未指定)</option>
-        <option value="wait">等待</option>
-        <option value="run">运行</option>
-        <option value="Accepted">通过</option>
-    </select>
+        <label for="s">状态</label>
+        <select name="s" id="s">
+            <option value="">(未指定)</option>
+            <option value="wait">等待</option>
+            <option value="run">运行</option>
+            <option value="Accepted">通过</option>
+        </select>
+    </div>
+    @{
+        if ((tmp != null) && ((tmp.UserType == "admin") || (tmp.UserType == "editor")))
+        {
+        <div class="form-group">
+            <input type="checkbox" name="rejudge" id="rejudge" value="on" />
+            <label for="rejudge">重新评测</label>
         </div>
-    <div class="form-group">
-    <input type="checkbox" name="rejudge" id="rejudge" value="on" />
-    <label for="rejudge">重新评测</label>
-        </div>
+        }
+    }
     <button type="submit" class="btn btn-default">搜索</button>
 </form>
 
@@ -39,15 +51,16 @@
 
 <table class="table table-striped">
     <tr>
-        <th style="width:10%">#</th>
-        <th style="width:20%">时间</th>
-        <th style="width:20%">题目</th>
-        <th style="width:10%">用户</th>
-        <th style="width:10%">语言</th>
+        <th style="width: 10%">#</th>
+        <th style="width: 20%">时间</th>
+        <th style="width: 20%">题目</th>
+        <th style="width: 10%">用户</th>
+        <th style="width: 10%">语言</th>
         <th>状态</th>
     </tr>
 
-    @foreach (var item in Model) {
+    @foreach (var item in Model)
+    {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.SubmitID)
@@ -65,9 +78,9 @@
                 @Html.DisplayFor(modelItem => item.Lang)
             </td>
             <td>
-                @Html.ActionLink(item.State, "Details", new { id=item.SubmitID })
+                @Html.ActionLink(item.State, "Details", new { id = item.SubmitID })
             </td>
         </tr>
-}
+    }
 
 </table>

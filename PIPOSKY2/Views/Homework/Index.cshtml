@@ -53,14 +53,19 @@
                     <td>无记录</td>
                     }
                     else
-                        if (DateTime.Compare(DateTime.Now, Model.EndTime) < 0)
+                        if (t.ToList().Last().State == "wait")
                         {
-                    <td>未测</td>
+                    <td>等待中</td>
                         }
                         else
-                        {
+                            if (t.ToList().Last().State == "run")
+                            {
+                    <td>评测中</td>
+                            }
+                            else
+                            {
                     <td>@t.ToList().Last().Score</td>
-                        }
+                            }
                 }
                 }
             </tr>
@@ -106,9 +111,19 @@
                     <td>无记录</td>
                 }
                 else
-                {
+                    if (t.ToList().Last().State == "wait")
+                    {
+                    <td>等待中</td>
+                    }
+                    else
+                        if (t.ToList().Last().State == "run")
+                        {
+                    <td>评测中</td>
+                        }
+                        else
+                        {
                     <td>@t.ToList().Last().Score</td>
-                }
+                        }
             }
                 }
                 <td>

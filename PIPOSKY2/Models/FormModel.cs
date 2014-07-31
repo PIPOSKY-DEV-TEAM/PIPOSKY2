@@ -3,21 +3,21 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Web;
-
+using System.Web.Mvc;
 namespace PIPOSKY2.Models
 {
     public class LoginFormModel
     {
         [Required]
         [Display(Name = "用户名")]
-        [StringLength(100, MinimumLength = 4, ErrorMessage = "用户名长度不能大于{2} 且要小于{1}")]
+        [StringLength(100, MinimumLength = 4, ErrorMessage = "用户名长度不能大于{1} 且要小于{2}")]
         [RegularExpression(@"^[^\s]*$",
             ErrorMessage = "用户名格式有误，不能有空格")]
         public string UserName { get; set; }
         [Required]
         [Display(Name = "密码")]
         [DataType(DataType.Password)]
-        [StringLength(20, MinimumLength = 6, ErrorMessage = "密码不能大于{2} 且要小于{1}")]
+        [StringLength(20, MinimumLength = 6, ErrorMessage = "密码不能大于{1} 且要小于{2}")]
         [RegularExpression(@"^[^\s]*$",
             ErrorMessage = "密码格式有误，不能有空格")]
         public string UserPwd { get; set; }
@@ -30,7 +30,7 @@ namespace PIPOSKY2.Models
     {
         [Required]
         [Display(Name = "用户名")]
-        [StringLength(100, MinimumLength = 4, ErrorMessage = "用户名长度不能大于{2} 且要小于{1}")]
+        [StringLength(100, MinimumLength = 4, ErrorMessage = "用户名长度不能大于{1} 且要小于{2}")]
         [RegularExpression(@"^[^\s]*$",
             ErrorMessage = "用户名格式有误，不能有空格")]
         public string UserName { get; set; }
@@ -38,7 +38,7 @@ namespace PIPOSKY2.Models
         [Required]
         [Display(Name = "密码")]
 		[DataType(DataType.Password)]
-        [StringLength(20, MinimumLength = 6, ErrorMessage = "密码不能大于{2} 且要小于{1}")]
+        [StringLength(20, MinimumLength = 6, ErrorMessage = "密码不能大于{1} 且要小于{2}")]
         [RegularExpression(@"^[^\s]*$",
             ErrorMessage = "密码格式有误，不能有空格")]
         public string UserPwd { get; set; }
@@ -51,6 +51,20 @@ namespace PIPOSKY2.Models
         [Required]
         [Display(Name = "Email")]
 		[DataType(DataType.EmailAddress)]
+        public string UserEmail { get; set; }
+    }
+
+    public class EditPersonalInfoModel {
+        [Required]
+        [Display(Name = "用户名")]
+        [StringLength(100, MinimumLength = 4, ErrorMessage = "用户名长度不能大于{1} 且要小于{2}")]
+        [RegularExpression(@"^[^\s]*$",
+            ErrorMessage = "用户名格式有误，不能有空格")]
+        public string UserName { get; set; }
+
+        [Required]
+        [Display(Name = "Email")]
+        [DataType(DataType.EmailAddress)]
         public string UserEmail { get; set; }
     }
 
@@ -73,6 +87,60 @@ namespace PIPOSKY2.Models
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
     }
+
+    public class CheckinLoginAttribute : ActionFilterAttribute
+    {
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            if (filterContext.HttpContext.Session["User"] == null)
+            {
+                filterContext.HttpContext.Response.Redirect("/User/Login");
+            }
+        }
+    }
+
+    public class CheckinLogOffAttribute : ActionFilterAttribute
+    {
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            if (filterContext.HttpContext.Session["User"] != null)
+            {
+                filterContext.HttpContext.Response.Redirect("/User/info");
+            }
+        }
+    }  
+
+    public class CheckAdminAttribute : ActionFilterAttribute
+    {
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            if (filterContext.HttpContext.Session["User"] == null)
+            {
+                filterContext.HttpContext.Response.Redirect("/User/Login");
+            }
+            User tmp = filterContext.HttpContext.Session["User"] as User;
+            if (tmp.UserType != "admin")
+            {
+                filterContext.HttpContext.Response.Redirect("/User/info");
+            }
+        }
+    }
+
+    public class CheckAdminOrEditorAttribute : ActionFilterAttribute
+    {
+        public override void OnActionExecuting(ActionExecutingContext filterContext)
+        {
+            if (filterContext.HttpContext.Session["User"] == null)
+            {
+                filterContext.HttpContext.Response.Redirect("/User/Login");
+            }
+            User tmp = filterContext.HttpContext.Session["User"] as User;
+            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
+            {
+                filterContext.HttpContext.Response.Redirect("/User/info");
+            }
+        }
+    } 
 
     public class HomeworkFormModel
     {
@@ -110,7 +178,7 @@ namespace PIPOSKY2.Models
 		public string Lang { get; set; }
 
 		[Required]
-		[Display(Name="题目")]
+		[Display(Name="题目ID")]
 		public int? PID { get; set; }
 
 		[Required]

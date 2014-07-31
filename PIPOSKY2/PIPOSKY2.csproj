@@ -159,6 +159,7 @@
     <Content Include="Scripts\keeplogin.js" />
     <Content Include="Scripts\jquery-1.7.1.js" />
     <Content Include="Scripts\userManagefunction.js" />
+    <Content Include="Scripts\warningInfoStyle.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -226,6 +227,8 @@
     <Content Include="Views\Courses\Add.cshtml" />
     <Content Include="Views\Courses\Delete.cshtml" />
     <Content Include="Views\Shared\_Pagination.cshtml" />
+    <Content Include="Views\User\BatchRemoveUsers.cshtml" />
+    <Content Include="Views\Course\Delete.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Problem\Content.cshtml" />
@@ -252,7 +255,7 @@
         <WebProjectProperties>
           <UseIIS>True</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>55334</DevelopmentServerPort>
+          <DevelopmentServerPort>60206</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:61070/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>

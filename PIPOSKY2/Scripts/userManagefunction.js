@@ -13,3 +13,20 @@ $("a.deleteTd").click(function deleteEnsure() {
         return false;
     }
 })
+$("#SelectAll").click(function selectall() {
+    var numOfCheckBox = $(".selected").size();
+    var IsSelected;
+    IsSelected = document.getElementById("SelectAll").checked;
+    for (var i = 0; i < numOfCheckBox; i++) {
+        ($(".selected").get(i)).checked = IsSelected;
+    }
+})
+$("#ensureBatchRemove").click(function deleteEnsure() {
+    if (window.confirm('你确定要删除用户吗？')) {
+        //alert("确定");
+        return true;
+    } else {
+        //alert("取消");
+        return false;
+    }
+})

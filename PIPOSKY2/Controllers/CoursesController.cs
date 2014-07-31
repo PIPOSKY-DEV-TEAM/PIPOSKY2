@@ -16,24 +16,16 @@ namespace PIPOSKY2.Controllers
             return View(db.Courses);
         }
 
+        [CheckAdminOrEditor]
         public ActionResult Add()
         {
-            User tmp = Session["User"] as User;
-            if (tmp == null)
-                return RedirectToAction("Index");
-            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
-                return RedirectToAction("Index");
             return View();
         }
 
         [HttpPost]
+        [CheckAdminOrEditor]
         public ActionResult Add(Course addCourse)
         {
-            User tmp = Session["User"] as User;
-            if (tmp == null)
-                return RedirectToAction("Index");
-            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
-                return RedirectToAction("Index");
             try
             {
                 addCourse.CourseName = addCourse.CourseName.Trim();
@@ -56,27 +48,21 @@ namespace PIPOSKY2.Controllers
             Course.CourseName = addCourse.CourseName;
             db.Courses.Add(Course);
             db.SaveChanges();
+            Session["alertetype"] = "success";
+            Session["alertetext"] = "添加成功";
             return RedirectToAction("Index");
         }
 
+        [CheckAdminOrEditor]
         public ActionResult Delete()
         {
-            User tmp = Session["User"] as User;
-            if (tmp == null)
-                return RedirectToAction("Index");
-            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
-                return RedirectToAction("Index");
             return View();
         }
 
         [HttpPost]
+        [CheckAdminOrEditor]
         public ActionResult Delete(Course Course, FormCollection form)
         {
-            User tmp = Session["User"] as User;
-            if (tmp == null)
-                return RedirectToAction("Index");
-            if ((tmp.UserType != "admin") && (tmp.UserType != "editor"))
-                return RedirectToAction("Index");
             PIPOSKY2DbContext dbtemp1 = new PIPOSKY2DbContext();
             PIPOSKY2DbContext dbtemp2 = new PIPOSKY2DbContext();
             foreach (var i in dbtemp1.Courses)
@@ -90,6 +76,8 @@ namespace PIPOSKY2.Controllers
                     }
                     db.Courses.Remove(db.Courses.Find(i.CourseID));
                 }
+            Session["alertetype"] = "success";
+            Session["alertetext"] = "删除成功";
             db.SaveChanges();
             return RedirectToAction("Index");
         }

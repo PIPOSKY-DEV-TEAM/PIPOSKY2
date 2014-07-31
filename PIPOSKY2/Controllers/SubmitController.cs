@@ -28,6 +28,7 @@ namespace PIPOSKY2.Controllers
             return View(tmp);
         }
 
+        [CheckinLogin]
         public ActionResult Create(int? id)
         {
             var tmp =new SubmitFormModel();
@@ -36,6 +37,8 @@ namespace PIPOSKY2.Controllers
         }
 
         [HttpPost]
+        [CheckinLogin]
+        [ValidateInput(false)]
 		public ActionResult Create(SubmitFormModel info)
         {
 			var tmp = new Submit {
@@ -107,6 +110,5 @@ namespace PIPOSKY2.Controllers
             tmp = tmp.OrderBy(_ => - _.SubmitID).Skip((page-1)*PAGE_SIZE).Take(PAGE_SIZE);
             return View(tmp.ToList());
         }
-
     }
 }
