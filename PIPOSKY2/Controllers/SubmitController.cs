@@ -36,6 +36,7 @@ namespace PIPOSKY2.Controllers
         }
 
         [HttpPost]
+        [ValidateInput(false)]
 		public ActionResult Create(SubmitFormModel info)
         {
 			var tmp = new Submit {

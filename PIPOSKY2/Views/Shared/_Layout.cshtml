@@ -54,11 +54,11 @@
         {
             Session["alertetype"] = "info";
         }
-        <div class="alert alert-@Session["alertetype"] alert-dismissible" role="alert">
-            <div class="container">
+        <div class="alert alert-@Session["alertetype"] alert-dismissible container" role="alert">
+            
             <button type="button" class="close" data-dismiss="alert"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
             @Session["alertetext"]
-            </div>
+            
         </div> 
         Session.Remove("alertetype");
         Session.Remove("alertetext");
