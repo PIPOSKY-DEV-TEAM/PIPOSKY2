@@ -132,10 +132,8 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\HomeworkController.cs" />
-    <Compile Include="Controllers\CoursesController.cs" />
+    <Compile Include="Controllers\ContestController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
-    <Compile Include="Controllers\CourseController.cs" />
     <Compile Include="Controllers\JudgeController.cs" />
     <Compile Include="Controllers\ProblemController.cs" />
     <Compile Include="Controllers\SubmitController.cs" />
@@ -169,7 +167,6 @@
     </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Course\Index.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
@@ -179,9 +176,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\User\Reg.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Course\Add.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Problem\Index.cshtml" />
@@ -208,13 +202,7 @@
     <Content Include="Views\User\EditInfo.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Homework\Index.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Views\User\EditPwd.cshtml" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Homework\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.css.map" />
@@ -223,12 +211,9 @@
     <Content Include="Views\Problem\Delete.cshtml" />
     <Content Include="Views\User\AdministrateUsers.cshtml" />
     <Content Include="Views\Problem\Upload.cshtml" />
-    <Content Include="Views\Courses\Index.cshtml" />
-    <Content Include="Views\Courses\Add.cshtml" />
-    <Content Include="Views\Courses\Delete.cshtml" />
     <Content Include="Views\Shared\_Pagination.cshtml" />
     <Content Include="Views\User\BatchRemoveUsers.cshtml" />
-    <Content Include="Views\Course\Delete.cshtml" />
+    <Content Include="Views\Contest\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Problem\Content.cshtml" />

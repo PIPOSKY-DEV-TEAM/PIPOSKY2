@@ -18,11 +18,8 @@ namespace PIPOSKY2.Models
         { }
         public DbSet<User> Users { set; get; }
         public DbSet<Problem> Problems { set; get; }
-        public DbSet<Homework> Course { set; get; }
+        public DbSet<Contest> Contest { set; get; }
 		public DbSet<Submit> Submits { get; set; }
-        public DbSet<HomeworkProblem> HomeworkProblems { set; get; }
-        public DbSet<Course> Courses { set; get; }
-
     }
 
 	public class DBInitializer : DropCreateDatabaseIfModelChanges<PIPOSKY2DbContext>
@@ -73,37 +70,18 @@ namespace PIPOSKY2.Models
         public string Config { set; get; }
     }
 
-    public class Homework
+    public class Contest
     {
         [Key]
-        public int HomeworkID { set; get; }
+        public int ContestID { set; get; }
         [Required]
-        public int CourseID { set; get; }
-        [Required]
-        public string HomeworkName { set; get; }
+        public string ContestName { set; get; }
         [Required]
         public DateTime StartTime { set; get; }
         [Required]
         public DateTime EndTime { set; get; }
-        public string ScorePath { set; get; }
-    }
-
-    public class Course
-    {
-        [Key]
-        public int CourseID { set; get; }
-        [Required]
-        public string CourseName { set; get; }
-    }
-
-    public class HomeworkProblem
-    {
-        [Key]
-        public int HomeworkProblemID { set; get; }
-        [Required]
-        public int HomeworkID { set; get; }
-        [Required]
-        public int ProblemID { set; get; }
+        public virtual ICollection<User> Users { set; get; }
+        public virtual ICollection<Problem> Problmems { set; get; }
     }
 
 	public class Submit
@@ -112,9 +90,7 @@ namespace PIPOSKY2.Models
 		public int SubmitID { get; set; }
 		[Required]
 		public string Lang { get; set; }
-
 		public virtual Problem Prob { get; set; }
-
 		public virtual User User { get; set; }
 		[Required]
 		public DateTime Time { get; set; }

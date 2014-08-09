@@ -1,0 +1,24 @@
+﻿@{
+    ViewBag.Title = "Index";
+}
+@using PIPOSKY2.Models;
+@model List<PIPOSKY2.Models.Contest>
+
+<h2>比赛列表</h2>
+<table class="table table-striped">
+    <tr>
+        <th>#</th>
+        <th>比赛名称</th>
+        <th>比赛时间</th>
+        <th>操作</th>
+    </tr>
+    @foreach (var i in Model)
+    {
+        <tr>
+            <td>@i.ContestID</td>
+            <td>@i.ContestName</td>
+            <td>@i.StartTime ~ @i.EndTime</td>
+            <td>@Html.ActionLink("进入","Details",new { id =i.ContestID })</td>
+        </tr>
+    }
+</table>

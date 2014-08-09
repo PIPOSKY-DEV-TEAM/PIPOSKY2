@@ -149,14 +149,12 @@ namespace PIPOSKY2.Models
         public string HomeworkName { get; set; }
         [Required]
         [Display(Name = "开始时间")]
-        public string StartTime { get; set; }
+        public DateTime StartTime { get; set; }
         [Required]
         [Display(Name = "结束时间")]
-        public string EndTime { get; set; }
+        public DateTime EndTime { get; set; }
         [Required]
         public int HomeworkID { get; set; }
-        [Required]
-        public int CourseID { get; set; }
     }
 
     public class UploadProblemFormModel

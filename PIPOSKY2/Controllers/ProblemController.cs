@@ -263,10 +263,6 @@ namespace PIPOSKY2.Controllers
             foreach (var i in dbtemp.Problems)
                 if (form[i.ProblemID.ToString()] == "on")
                 {
-                    foreach (var j in db.HomeworkProblems.Where(p => p.ProblemID == i.ProblemID))
-                    {
-                        db.HomeworkProblems.Remove(j);
-                    }
                     if (System.IO.File.Exists(i.ProblemPath))
                         System.IO.File.Delete(i.ProblemPath);
                     db.Problems.Remove(db.Problems.Find(i.ProblemID));
